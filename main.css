@@ -1,11 +1,7 @@
 body{
-	background-color: red;
+	background-color: #E5D0CC;
 }
 
-h1{
+h1,p{
 	text-align:center;	
 }
-
-/*p{
-	text-align:center;
-}*/
