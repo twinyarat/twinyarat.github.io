@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Tutch Sottithat Winyarat | A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Tutch Sottithat Winyarat" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<meta property="og:description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<link rel="canonical" href="twinyarat.github.io/projects/eskf" />
+<meta property="og:url" content="twinyarat.github.io/projects/eskf" />
+<meta property="og:site_name" content="Tutch Sottithat Winyarat" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Tutch Sottithat Winyarat" />
+<script type="application/ld+json">
+{"description":"A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021","headline":"Tutch Sottithat Winyarat","url":"twinyarat.github.io/projects/eskf","@type":"WebPage","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="twinyarat.github.io/feed.xml" title="Tutch Sottithat Winyarat" /><!-- for mathjax support -->
+	
+	  <script type="text/x-mathjax-config">
+	    MathJax.Hub.Config({
+	    TeX: { equationNumbers: { autoNumber: "AMS" } }
+	    });
+	  </script>
+	  <script type="text/javascript" async src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Tutch Sottithat Winyarat</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/notes/">Notes</a><a class="page-link" href="/projects/">Projects</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title"></h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="sensor-fusion-and-error-state-kalman-filter"><strong>Sensor Fusion and Error State Kalman Filter</strong></h2>
+<hr />
+<hr />
+<p>\(\)</p>
+<h4 id="objective"><strong>Objective</strong></h4>
+
+<p>The objective of this project is to estimate the state of a micro aerial vehicle. We perform state estimation by fusing IMU signals and stereo sequences; we do so within the framework of the Error State Kalman Filter <a class="citation" href="#SolaEskf">(Solà, 2017)</a>. The Error State Kalman Filter (ESKF) allows us to model the dynamics of the vehicle’s true state as the dynamics of a composition of two separate substates: the nominal-state and the error-state. In a decomposition of the true state, any uncertainty– whether in the prediction of the state evolution or in the correction of the state observation– is captured by the behavior of the error-state covariance. This happens while the nominal-state is driven purely by IMU signals. To recover the underlying true state of the system is a matter of recomposing the nominal-state with the Kalman-corrected error-state. In this project, we study the machinery of such decomposition, recomposition, and evolution of these states. We organize the project content into the following sections:</p>
+
+<p><a href="#motion-and-system-dynamics">1) Motion and System Dynamics</a><br />
+<a href="#prediction-and-motion-jacobian">2) Prediction and Motion Jacobian</a><br />
+<a href="#perception-and-measurement-model">3) Perception and Measurement Model</a><br />
+<a href="#correction-and-measurement-jacobian">4) Correction and Measurement Jacobian</a><br />
+<a href="#state-recovery-and-error-state-reset">5) State Recovery and Error-State Reset</a><br />
+<a href="#evaluation">6) Evaluation</a></p>
+
+<p><em>Motion and System Dynamics</em> contains a derivation of the system dynamics. <em>Prediction and Motion Jacobian</em> discusses the system’s evolution in discrete time and the integration of IMU signals. <em>Perception and Measurement Model</em> discusses the stereo camera model. <em>Correction and Measurement Jacobian</em> discusses the incorporation of visual measurements in the Kalman correction stage. And lastly, <em>State Recovery and Error-State Reset</em> closes with a short discussion of recovering the underlying true state.</p>
+
+<hr />
+<hr />
+<p>\(\)</p>
+<h4 id="data-set-and-reference-frames"><strong>Data Set and Reference Frames</strong></h4>
+
+<p>A project of the Autonomous System Lab at ETH Zurich, the EuRoC MAV Data Set provides time-stamped IMU signals and raw stereo sequences gathered onboard an Asctec Firefly hexrotor from several flight missions <a class="citation" href="#Burri">(Burri et al., 2016)</a>. It also includes groundtruth poses captured by a Vicon 6D-motion capture system and tracked 3D positions captured by a Leica MS50 laser tracker. Additionally, the data set comes with calibration information such as noise parameters, camera intrinsics, and camera-IMU extrinsics(relative pose). For more information on the data set and the manner in which it is gathered, please refer to <a href="https://projects.asl.ethz.ch/datasets/doku.php?id=kmavvisualinertialdatasets">the lab website</a>.</p>
+
+<p>It is important to note that we perform estimation locally with respect to the <em>initial</em> left camera frame \(L\) so as to avoid unnecessary transformation during the incorporation of visual measurements in the Kalman correction stage. Therefore, all raw IMU signals are mapped from the body-fixed frame \(B\) into the left camera frame \(L\) before being integrated. The gravity vector \(\boldsymbol{g}\) is initialized to the negative world z-axis. We map this negative z-axis into the left camera frame \(L\) and rescale it so that its magnitude is 9.8. It is also important to note that the provided groundtruth data is expressed in an unknown absolute world reference frame \(W\). We use the initial groundtruth pose to recover the relative transformation \({}^WT^B\) between the body-fixed frame \(B\) and \(W\).</p>
+
+<p>We evaluate our filter implementation on the <em>Machine Hall 01, Machine Hall 03</em>, and <em>Machine Hall 04</em> missions.</p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="motion-and-system-dynamics"><strong>Motion and System Dynamics</strong></h4>
+
+<p>Following the exposition in <a class="citation" href="#SolaEskf">(Solà, 2017)</a>, we denote by \(\boldsymbol{x_t}\) the true state, by \(\boldsymbol{x}\) the nominal-state, and by \(\delta \boldsymbol{x}\) the error-state of the system. Outlined in the table below, all elements except orientation are 3-vector objects. Orientation is encoded by a unit quaternion \(\boldsymbol{q}\).</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Quantities</th>
+      <th>\(\boldsymbol{x_t}\)</th>
+      <th>\(\boldsymbol{x}\)</th>
+      <th>\(\delta \boldsymbol{x}\)</th>
+      <th>Composition: \(\boldsymbol{x_t} = \boldsymbol{x} \oplus \delta \boldsymbol{x}\)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Position</td>
+      <td>\(\boldsymbol{p_t}\)</td>
+      <td>\(\boldsymbol{p}\)</td>
+      <td>\(\delta \boldsymbol{p}\)</td>
+      <td>\(\boldsymbol{p_t} = \boldsymbol{p} +   \delta \boldsymbol{p}\)</td>
+    </tr>
+    <tr>
+      <td>Velocity</td>
+      <td>\(\boldsymbol{v_t}\)</td>
+      <td>\(\boldsymbol{v}\)</td>
+      <td>\(\delta \boldsymbol{v}\)</td>
+      <td>\(\boldsymbol{v_t} = \boldsymbol{v} +   \delta \boldsymbol{v}\)</td>
+    </tr>
+    <tr>
+      <td>Orientation</td>
+      <td>\(\boldsymbol{q_t}\)</td>
+      <td>\(\boldsymbol{q}\)</td>
+      <td>\(\delta \boldsymbol{q}\)</td>
+      <td>\(\boldsymbol{q_t} = \boldsymbol{q} \otimes   \delta \boldsymbol{q}\)</td>
+    </tr>
+    <tr>
+      <td>Accelerometer Bias</td>
+      <td>\(\boldsymbol{a_{bt}}\)</td>
+      <td>\(\boldsymbol{a_b}\)</td>
+      <td>\(\delta \boldsymbol{a_b}\)</td>
+      <td>\(\boldsymbol{a_{bt}} = \boldsymbol{a_b} +   \delta \boldsymbol{a_b}\)</td>
+    </tr>
+    <tr>
+      <td>Gyroscope Bias</td>
+      <td>\(\boldsymbol{\omega_{bt}}\)</td>
+      <td>\(\boldsymbol{\omega_b}\)</td>
+      <td>\(\delta \boldsymbol{\omega_b}\)</td>
+      <td>\(\boldsymbol{\omega_{bt}} = \boldsymbol{\omega_{b}} +   \delta \boldsymbol{\omega_{b}}\)</td>
+    </tr>
+    <tr>
+      <td>Gravity Vector</td>
+      <td>\(\boldsymbol{g_t}\)</td>
+      <td>\(\boldsymbol{g}\)</td>
+      <td>\(\delta \boldsymbol{g}\)</td>
+      <td>\(\boldsymbol{g_t} = \boldsymbol{g} +   \delta \boldsymbol{g}\)</td>
+    </tr>
+  </tbody>
+</table>
+
+\[\tiny{ \text{Table 1. *Remark: }+ \text{ denotes the usual vector addition, and } \otimes \text{ denotes the quaternion multiplication.} }\]
+
+<p>Driven by linear acceleration \(a_t\), angular rates \(\omega_t\), and white noises \(a_w, \omega_w\),  the evolution of the true state of the system can be described by the following set of differential equations:</p>
+
+\[\scriptsize{ \begin{align*}
+	\dot{\boldsymbol{p_t}} &amp;= \boldsymbol{v_t}  \tag{1.1}\\
+	\dot{\boldsymbol{v_t}} &amp;= \boldsymbol{a_t} = \boldsymbol{R}(a_m - \boldsymbol{a_{bt}} - a_n) + g_t   \tag{1.2}\\
+	\dot{\boldsymbol{q_t}} &amp;= \frac{1}{2}\boldsymbol{q} \otimes \omega_t = \frac{1}{2}\boldsymbol{q}\otimes (\omega_{m} - \boldsymbol{\omega_{bt}} - \omega_n) \tag{1.3}\\
+	\dot{\boldsymbol{a_{bt}}} &amp;= a_w \tag{1.4}\\
+	\dot{\boldsymbol{\omega_{bt}}} &amp;= \omega_w \tag{1.5}\\
+	\dot{\boldsymbol{g_t}} &amp;= 0 \tag{1.6}\\
+
+\end{align*} }\]
+
+<p>Eq. 1.2 and 1.3 follow from the oberservation that the \(a_n\)-noise-corrupted acceleration measurement \(a_m\) read by the IMU is</p>
+
+\[\scriptsize{ a_m = \boldsymbol{R^T}(\boldsymbol{a_t} - \boldsymbol{g_t}) + \boldsymbol{a_{bt}} + a_n  \tag{1.7}}\]
+
+<p>and that the \(\omega_n\)-noise-corrupted gyroscopic measurement \(\omega_m\) read by the IMU is</p>
+
+\[\scriptsize{ \omega_m = \omega_{t} + \boldsymbol{\omega_{bt}} + \omega_{n} \tag{1.8}}\]
+
+<p>where \(\boldsymbol{R}\) denotes a rotation matrix parameterized by orientation \(\boldsymbol{q}\). Please refer to this <a href="\notes\rotationJacobian">note</a> for a derivation of the time derivative of quaternions.</p>
+
+<p>The evolution of the nominal-state \(\boldsymbol{x}\) can likewise be described without any noise by the following set of differential equations:</p>
+
+\[\scriptsize{ \begin{align*}
+	\dot{\boldsymbol{p}} &amp;= \boldsymbol{v}  \tag{2.1}\\
+	\dot{\boldsymbol{v}} &amp;=  \boldsymbol{R}(a_m - \boldsymbol{a_{b}}) + g  \tag{2.2}\\
+	\dot{\boldsymbol{q}} &amp;= \frac{1}{2}\boldsymbol{q}\otimes (\omega_{m} - \boldsymbol{\omega_{b}}) \tag{2.3}\\
+	\dot{\boldsymbol{a_{b}}} &amp;= 0\tag{2.4}\\
+	\dot{\boldsymbol{\omega_{b}}} &amp;= 0 \tag{2.5}\\
+	\dot{\boldsymbol{g}} &amp;= 0 \tag{2.6}\\
+
+\end{align*} }\]
+
+<p>The evolution of the error-state \(\delta \boldsymbol{x}\), although more involved, can be described with noise by the following set of differential equations:</p>
+
+\[\scriptsize{ \begin{align*}
+	\dot{\delta\boldsymbol{p}} &amp;= \delta\boldsymbol{v}  \tag{3.1}\\
+	\dot{\delta\boldsymbol{v}} &amp;=  -\boldsymbol{R}[(a_m - \boldsymbol{a_{b}})]_{\times}\delta \boldsymbol{\theta} -\boldsymbol{R}\delta\boldsymbol{a_b} + \delta \boldsymbol{g} - a_n \tag{3.2}\\
+	\dot{\delta\boldsymbol{\theta}} &amp;= -[\omega_m - \boldsymbol{\omega_b}]_{\times} \delta \boldsymbol{\theta} - \delta\boldsymbol{\omega_b} - \omega_n \tag{3.3}\\
+	\dot{\delta\boldsymbol{a_{b}}} &amp;= a_w\tag{3.4}\\
+	\dot{\delta\boldsymbol{\omega_{b}}} &amp;= \omega_w \tag{3.5}\\
+	\dot{\delta\boldsymbol{g}} &amp;= 0 \tag{3.6}\\
+
+\end{align*} 
+
+}\]
+
+<p>where \([\cdot]_{\times}\) is equivalent to the hat operator and \(\delta\boldsymbol{\theta}\) denotes the infinitesimal rotation vector perturbation.</p>
+
+<p>To see where eq. 3.2 comes from, let us first rewrite some familiar quantities:</p>
+
+\[\scriptsize{
+\begin{align*}
+	\boldsymbol{R_t} &amp;= \boldsymbol{R}(\boldsymbol{I} + [\delta \boldsymbol{\theta}]_\times) + O(\vert \vert\boldsymbol{\theta} \vert \vert^2) \tag{4.1}\\
+	\dot{\boldsymbol{v}} &amp;= \boldsymbol{R}\boldsymbol{a_\mathcal{B}} + \boldsymbol{g} \tag{4.2}\\
+	\boldsymbol{a_t} &amp;= \boldsymbol{R_t}(\boldsymbol{a_\mathcal{B}} + \delta \boldsymbol{a_\mathcal{B}}) + \boldsymbol{g} + \delta \boldsymbol{g} \tag{4.3}
+\end{align*}	}\]
+
+<p>Eq.4.1 is a linear approximation of the true rotation matrix. By defining</p>
+
+\[\scriptsize{ \boldsymbol{a_\mathcal{B}} := a_m - \boldsymbol{a_b} \\
+	\delta\boldsymbol{a_\mathcal{B}} := - \delta\boldsymbol{a_b} - a_n }\]
+
+<p>,eq.4.2 and 4.3 follow from eq.2.2 and eq.1.7, respectively. Proceed by expressing the time derivative of the true velocity \(\dot{\boldsymbol{v_t}}\) in two ways: The LHS as a derivative of state-composition and the RHS as a direct expression of eq. 1.2.</p>
+
+\[\scriptsize{
+\begin{align*}
+ \dot{\boldsymbol{v}} + \dot{\delta \boldsymbol{v}}  =&amp; \quad \dot{\boldsymbol{v_t}} &amp;&amp;= \boldsymbol{R}(\boldsymbol{I}+[\delta \boldsymbol{\theta}]_{\times})(\boldsymbol{a_\mathcal{B}} + \delta \boldsymbol{a_\mathcal{B}}) + \boldsymbol{g} + \delta \boldsymbol{g}   \\
+ &amp; {} &amp;&amp;\text{by dropping the higher order term } O(\vert \vert\boldsymbol{\theta}^2 \vert \vert) \\
+\boldsymbol{R}\boldsymbol{a_\mathcal{B}} + \boldsymbol{g} +\dot{\delta \boldsymbol{v}}  =&amp;   { }     &amp;&amp;= \boldsymbol{R}\boldsymbol{a_\mathcal{B}} + \boldsymbol{R}\delta \boldsymbol{a_\mathcal{B}} + \boldsymbol{R}[\delta \boldsymbol{\theta}]_{\times}\boldsymbol{a_\mathcal{B}} + \boldsymbol{R}[\delta \boldsymbol{\theta}]_{\times}\delta\boldsymbol{a_\mathcal{B}} + \boldsymbol{g} + \delta \boldsymbol{g} \\
+\Rightarrow \dot{\delta \boldsymbol{v}}  =&amp; { } &amp;&amp;= \boldsymbol{R}(\delta\boldsymbol{a_\mathcal{B}} + [\delta \boldsymbol{\theta}]_{\times}\boldsymbol{a_\mathcal{B}}) + \boldsymbol{R}[\delta \boldsymbol{\theta}]_{\times}\delta\boldsymbol{a_\mathcal{B}}  + \delta \boldsymbol{g} \\
+&amp; {} &amp;&amp; = \boldsymbol{R}(\delta\boldsymbol{a_\mathcal{B}} - [\boldsymbol{a_\mathcal{B}}]_{\times}\delta \boldsymbol{\theta}) + \delta \boldsymbol{g}  \\
+&amp;{} &amp;&amp; \text{by dropping the second order infinitesimal term and rearranging the cross product.} \\
+&amp; {} &amp;&amp;= -\boldsymbol{R}([a_m-\boldsymbol{a_b}]_{\times} \delta \boldsymbol{\theta}) - \boldsymbol{R}\delta \boldsymbol{a_b} + \delta\boldsymbol{g} - \boldsymbol{R}a_n \\
+&amp;{} &amp;&amp; \text{by the definition of } \boldsymbol{a_\mathcal{B}} \text{ and }\delta\boldsymbol{a_\mathcal{B}} \\
+&amp; {} &amp;&amp;= -\boldsymbol{R}([a_m-\boldsymbol{a_b}]_{\times} \delta \boldsymbol{\theta}) - \boldsymbol{R}\delta \boldsymbol{a_b} + \delta\boldsymbol{g} - a_n  = eq. 3.2\\
+&amp;{} &amp;&amp; \text{by the assumption that the accelerometer noise } a_n \text{ is rotational invariant.} \\
+\end{align*}
+}\]
+
+<p>To see where eq. 3.3 comes from, let us first rewrite eq. 1.8 as</p>
+
+\[\omega_t = \omega + \delta \omega\]
+
+<p>where we define \(\omega:= \omega_m - \boldsymbol{\omega_b}\) and \(\delta \omega := -\delta \boldsymbol{\omega_b} - \omega_n\)</p>
+
+<p>Let us also in a similar fashion express the time derivative of the true quaternion \(\dot{\boldsymbol{q_t}}\)  in two ways: The LHS as a derivative of state-composition and the RHS as a direct expression of eq. 1.3.</p>
+
+\[\scriptsize{
+\begin{align*}
+   \dot{(\boldsymbol{q} \otimes \delta \boldsymbol{q})} =&amp; \quad \dot{\boldsymbol{q_t}} &amp;&amp;= \frac{1}{2}\boldsymbol{q_t} \otimes \boldsymbol{\omega_t} \\
+   \dot{\boldsymbol{q}} \otimes \delta \boldsymbol{q} + \boldsymbol{q} \otimes \dot{\delta \boldsymbol{q}} =&amp; {} &amp;&amp;= \frac{1}{2}\boldsymbol{q}\otimes \delta\boldsymbol{q}\otimes \boldsymbol{\omega_t}\\
+   \frac{1}{2}\boldsymbol{q}\otimes \omega \otimes \delta \boldsymbol{q} + \boldsymbol{q} \otimes \dot{\delta \boldsymbol{q}} =&amp; {} \\
+\end{align*}	
+}\]
+
+<p>Applying \(2\boldsymbol{q^{*}}\) to both sides of the equation gives:</p>
+
+\[\scriptsize{
+\begin{align*}
+   2\dot{\delta\boldsymbol{q}} &amp;= \delta\boldsymbol{q}\otimes \boldsymbol{\omega_t} - \omega \otimes \delta \boldsymbol{q} \\
+   &amp;= [\boldsymbol{q}]_R(\boldsymbol{\omega_t})\delta \boldsymbol{q} - [\boldsymbol{q}]_L(\omega)\delta \boldsymbol{q} \\
+   &amp;\text{by matrix equivalents of the left and right quaternion composition}\\
+   &amp;= \begin{bmatrix} 0 &amp;&amp; -\boldsymbol{\omega_t}^T \\ \boldsymbol{\omega_t} &amp;&amp; -[\boldsymbol{\omega_t}]_{\times} \end{bmatrix}\delta \boldsymbol{q}      - \begin{bmatrix} 0 &amp;&amp; -\omega^T \\ \omega &amp;&amp; [\omega]_{\times} \end{bmatrix}\delta \boldsymbol{q} \\
+   &amp;= \begin{bmatrix} 0 &amp;&amp; -(\boldsymbol{\omega_t} - \omega)^T \\ (\boldsymbol{\omega_t} - \omega) &amp;&amp; -[\boldsymbol{\omega_t} + \omega]_{\times} \end{bmatrix}\begin{bmatrix} 1\\ \frac{\delta \boldsymbol{\theta}}{2} \end{bmatrix} + O(\vert\vert \delta \boldsymbol{\theta}\vert\vert^2 ) \\
+   &amp;\text{by linear approximation of } \delta \boldsymbol{q} \\
+   &amp;= \begin{bmatrix} 0 &amp;&amp; -\delta\omega^T \\ \delta\omega &amp;&amp; -[ 2\omega + \delta \omega]_{\times} \end{bmatrix}\begin{bmatrix} 1\\ \frac{\delta \boldsymbol{\theta}}{2} \end{bmatrix} + O(\vert\vert \delta \boldsymbol{\theta}\vert\vert^2 ) = \begin{bmatrix} 0 \\ \dot{\delta\boldsymbol{\theta}} \end{bmatrix} \\
+   &amp;\text{by our definition of } \delta\boldsymbol{\omega_t} 
+\end{align*}	
+}\]
+
+<p>The bottom equation above reads</p>
+
+\[\delta \dot{\boldsymbol{\theta}} = \delta\omega - [\omega]_{\times}\delta\boldsymbol{\theta} - \frac{1}{2}[\delta\omega]_{\times} \delta \boldsymbol{\theta} + O(\vert\vert \delta \boldsymbol{\theta}\vert\vert^2 )\]
+
+<p>Dropping the high order and infinitesimal cross terms, we arrive at</p>
+
+\[\begin{align*} \dot{\delta \boldsymbol{\theta}} &amp;= - [\omega]_{\times} \delta \boldsymbol{\theta} + \delta \omega\\
+&amp;= -[\omega_m - \boldsymbol{\omega_b}]_{\times} \delta\boldsymbol{\theta} - \delta\boldsymbol{\omega_b} - \omega_n = eq. 3.3
+\end{align*}\]
+
+<p>For a discussion of quaternion-matrix operations, quaternion perturbations, and their derivatives, please refer to this <a href="\notes\rotationJacobian">note</a>.</p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="prediction-and-motion-jacobian"><strong>Prediction and Motion Jacobian</strong></h4>
+
+<p>When integrated over a discrete time \(\Delta t\), the continuous-time dynamics of the nonimal-state and error-state in eq.2 and eq.3 give us the following corresponding sets of difference equations:</p>
+
+\[\scriptsize{ 
+\begin{align*}
+ \boldsymbol{p'} &amp;= \boldsymbol{p} + \boldsymbol{v} \Delta t + \frac{1}{2}(\boldsymbol{R}(a_m-\boldsymbol{a_b})  + \boldsymbol{g} )\Delta t^2  \tag{5.1}\\
+\boldsymbol{v'} &amp;=  \boldsymbol{v} +(\boldsymbol{R}(a_m-\boldsymbol{a_b})  + \boldsymbol{g} )\Delta t \tag{5.2}\\
+\boldsymbol{q'} &amp;= \boldsymbol{q}\otimes \boldsymbol{q}\{ (\omega_m - \boldsymbol{\omega_b}) \Delta t \} \tag{5.3}\\
+&amp;\text{where } \boldsymbol{q}\{ \cdot \} \text{ is a quaternion object parameterized} \\ &amp;\text{by the rotation vector }  (\omega_m - \boldsymbol{\omega_b}) \Delta t \\
+ \boldsymbol{a_b'} &amp;= \boldsymbol{a_b} \tag{5.4}\\
+\boldsymbol{\omega_b'} &amp;= \boldsymbol{\omega_b}  \tag{5.5}\\
+\boldsymbol{g'} &amp;= \boldsymbol{g}\tag{5.6}
+\end{align*}
+}\]
+
+<p>and</p>
+
+\[\scriptsize{ 
+\begin{align*}
+\delta \boldsymbol{p'} &amp;= \delta \boldsymbol{p} +  \delta \boldsymbol{v} \Delta t \tag{6.1}\\
+\delta \boldsymbol{v'} &amp;= \delta \boldsymbol{v} +(-\boldsymbol{R}[a_m- \boldsymbol{a_b}]_{\times} \delta \boldsymbol{\theta} - \boldsymbol{R}\delta \boldsymbol{a_b} + \delta\boldsymbol{g} )\Delta t + \boldsymbol{v_i}\tag{6.2}\\
+\delta \boldsymbol{\theta'} &amp;= \boldsymbol{R^T}\{(\omega_m -\boldsymbol{\omega_b})\Delta t \} \delta\boldsymbol{\theta} - \delta\boldsymbol{\omega_b}\Delta t + \boldsymbol{\theta_i} \tag{6.3}\\
+\delta \boldsymbol{a_b'} &amp;= \delta \boldsymbol{a_b} + \boldsymbol{a_i} \tag{6.4}\\
+\delta \boldsymbol{\omega_b'} &amp;= \delta \boldsymbol{\omega_b} + \boldsymbol{\omega_i} \tag{6.5}\\
+\delta \boldsymbol{g'} &amp;= \delta \boldsymbol{g}\tag{6.6}
+\end{align*}
+}\]
+
+<p>where \(\boldsymbol{R^T}\{ \cdot \}\) is a rotation matrix parameterized by \((\omega_m -\boldsymbol{\omega_b})\Delta t\). The terms \(\boldsymbol{v_i}, \boldsymbol{\theta_i}\) are random impulses, and \(\boldsymbol{a_i}, \boldsymbol{\omega_i}\) are white Gaussian noises applied to IMU biases. Eq. 6 can be succinctly written  as</p>
+
+\[\delta \boldsymbol{x'} = f(\boldsymbol{x}, 	\delta \boldsymbol{x}, \boldsymbol{u_m}, \boldsymbol{i}) \tag{6.7}\]
+
+<p>where \(\boldsymbol{u_m} = [a_m, \omega_m]^T\) and \(\boldsymbol{i} = [\boldsymbol{v_i},\boldsymbol{\theta_i},\boldsymbol{a_i},\boldsymbol{\omega_i}]^T\).</p>
+
+<p>An update to the nominal state is carried out according to eq.5 upon each arrival of \(a_m, \omega_m\) signals from the IMU. Notice that the signals affect all terms except the biases and gravity. Meanwhile, uncertainty induced by both motion and random impulses is absorbed into the covariance \(\boldsymbol{P}\) of the error-state, apriori:</p>
+
+\[\boldsymbol{P'} = \boldsymbol{F_x}\boldsymbol{P}\boldsymbol{F_x}^T + \boldsymbol{F_i}\boldsymbol{Q_i}\boldsymbol{F_i}^T\]
+
+<p>where \(\boldsymbol{F_x} = \frac{\partial f}{\partial \delta \boldsymbol{x}} \bigg\rvert_{\boldsymbol{x}, \boldsymbol{u_m}}\), the Jacobian of the error-state dynamics taken with respect to the error-state evaluated at the current nominal-state and IMU signals; \(\boldsymbol{F_i} = \frac{\partial f}{\partial  \boldsymbol{i}}\bigg\rvert_{\boldsymbol{x}, \boldsymbol{u_m}}\), the Jacobian with respect to the random impulses evaluated at the same nominal-state and IMU signals; the diagonal \(\boldsymbol{Q_i}\) denotes  the impulse covariance.</p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="perception-and-measurement-model"><strong>Perception and Measurement Model</strong></h4>
+
+<p>In this project, all measurements signals are stereo images. To build the measurement model, first denote a normalized stereo coordinate by</p>
+
+\[\scriptsize{ \begin{bmatrix} u \\  v \\ d\end{bmatrix}:= \begin{bmatrix} X/Z \\ Y/Z \\ 1/Z \end{bmatrix}}\]
+
+<p>where \(X,Y,\) and \(Z\) are coordinates of a scene point expressed in the left camera frame \(L\). Upon each arrival of a stereo image pair, we perform stereo rectification, ORB feature extraction, and a stereo correspondence match to recover depth of a detected scene point (feature), \(Z\). With each detected scene point, we associate with it a normalized stereo coordinated pair \([u,v,d]\) defined as above.</p>
+
+<p>Denoting a scene point expressed in the absolute world reference frame by \(P_w\), we can map it into the left camera frame \(L\) by</p>
+
+\[\scriptsize{ P_{C} = [X_C, Y_C, Z_C] = \boldsymbol{R_t^T}(P_w - \boldsymbol{p_t}) } \tag{7.1}\]
+
+<p>whose normalized stereo coordinate has the following \(uv\) component</p>
+
+\[\begin{bmatrix} u\\ v \end{bmatrix} = \frac{1}{Z_C}\begin{bmatrix} X_C\\ Y_C \end{bmatrix} \tag{7.2}\]
+
+<p>Eq. 7.2 provides us with a measurement model and can be succinctly written as a function of the predicted system’s true-state:</p>
+
+\[\begin{bmatrix} u \\v  \end{bmatrix} = h(\boldsymbol{\hat{x_t}}) = h(\boldsymbol{\hat{x}} \oplus \delta \boldsymbol{x}) \tag{7.3}\]
+
+<p>When given a temporal (frame-to-frame) correspondence \(\{ (uvd1),(uvd2) \}\), we calculate \(P_w\) by back projecting \((uvd1)\) into the world reference frame using the current estimate of the true oritentation \(\boldsymbol{\hat{R_t}}\) and the true position \(\boldsymbol{\hat{p_t}}\). The innovation term is the  difference between the \(uv\) component of \((uvd2)\) and the expected measurement returned by \(h(\cdot)\).</p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="correction-and-measurement-jacobian"><strong>Correction and Measurement Jacobian</strong></h4>
+
+<p>To perform the Kalman correction on the error-state, we carry out the following computations:</p>
+
+\[\scriptsize{ \begin{align*}
+	\boldsymbol{K} &amp;= \boldsymbol{P'}\boldsymbol{H^T}(\boldsymbol{H}\boldsymbol{P'}\boldsymbol{H^T} + \boldsymbol{V})^{-1} \tag{8.1} \\
+	\delta \boldsymbol{\hat{x}} &amp;= \boldsymbol{K}(y - h(\boldsymbol{\hat{x_t}}))  \tag{8.2}\\
+	\boldsymbol{P} &amp;= (I - \boldsymbol{K} \boldsymbol{H})\boldsymbol{P'} \tag{8.3}
+	\end{align*}
+}\]
+
+<p>where \(\boldsymbol{K}\) denotes the Kalman gain, \(\boldsymbol{H}\) the Jacobian of the measurement model taken with respect to the error-state, \(\boldsymbol{V}\) the covariance of measurement noise, and \((y - h(\boldsymbol{\hat{x_t}}))\) the innovation term. Eq. 8.2 is as written because \(\delta \boldsymbol{x}\) is always predicted to be at the origin, apriori.</p>
+
+<p>To compute \(\boldsymbol{H}\), we make use of the chain rule:</p>
+
+\[\scriptsize{ \begin{align*}  \boldsymbol{H} &amp;= \frac{\partial h}{\partial \delta \boldsymbol{x}}\bigg\rvert_{\boldsymbol{\hat{x}}}\\
+&amp;= \frac{\partial h}{\partial  P_{C}}\bigg\rvert_{\boldsymbol{\hat{x}}} \frac{\partial P_{C}}{\partial \delta \boldsymbol{x}}\bigg\rvert_{\boldsymbol{\hat{x}}}
+\end{align*} }\]
+
+<p>From eq. 7.2, it follows that</p>
+
+\[\scriptsize{ \begin{align*} 
+\frac{\partial h}{\partial  P_{C}}\bigg\rvert_{\boldsymbol{\hat{x}}} &amp;= \frac{1}{Z_C}\begin{bmatrix} 1 &amp; 0 &amp; -X_C/Z_C \\
+0 &amp; 1 &amp; -Y_C/Z_C \end{bmatrix} \\
+\end{align*} 
+}\]
+
+<p>From eq. 7.3, it follows that</p>
+
+\[\scriptsize{
+\begin{align*}	
+P_C &amp;= \boldsymbol{R^T_t}(P_w - \boldsymbol{p}) \\
+&amp;\approx \big(\boldsymbol{\hat{R}}(I + [\delta \boldsymbol{\theta}]_{\times})\big)^T (P_w - (\boldsymbol{p}+ \delta \boldsymbol{p}) ) \\
+&amp;\text{by linear approximation of rotation}\\
+&amp;= P_C + [\delta \boldsymbol{\theta}]^T_{\times} P_C - \boldsymbol{\hat{R}}^T(\delta \boldsymbol{p} - [\delta \boldsymbol{\theta}]_{\times}\delta \boldsymbol{p}) \\
+&amp;\approx P_C + [\delta \boldsymbol{\theta}]^T_{\times} P_C - \boldsymbol{\hat{R}}^T(\delta \boldsymbol{p}) \\
+&amp;\text{by dropping the infinitesimal cross term}
+\end{align*}
+}\]
+
+<p>Therefore,</p>
+
+\[\scriptsize{
+	\frac{\partial P_{C}}{\partial \delta \boldsymbol{x}}\bigg\rvert_{\boldsymbol{\hat{x}}} 
+	= \begin{bmatrix} -\boldsymbol{\hat{R}^T} &amp; 0 &amp; [P_C]_{\times} &amp; 0 &amp; 0 &amp; 0 \end{bmatrix}
+}\]
+
+<hr />
+<p>\(\)</p>
+<h4 id="state-recovery-and-error-state-reset"><strong>State Recovery and Error-State Reset</strong></h4>
+
+<p>Once the covariance and the error-state have been estimated, we recover the aposteriori true-state by composing the apriori nominal-state \(\boldsymbol{x}\) with the estimated error-state \(\delta \boldsymbol{\hat{x}}\) according to Table 1:</p>
+
+\[\boldsymbol{x^+} = \boldsymbol{x} \oplus \delta \boldsymbol{\hat{x}}\]
+
+<p>We then reset the estimated error-state state \(\delta \boldsymbol{\hat{x}}\) to the origin. Doing so however leaves us with one caveat: At this point, the covariance of the aposteriori error \(\boldsymbol{P}\) needs to be modified to reflect the fact that the aposteriori error-state is now with respect to the aposteriori nominal-state. This new nominal-state <em>is</em> the new true-state of the system, albeit momentarily, before the subsequent Kalman prediction stage resumes. Following the exposition in <a class="citation" href="#SolaEskf">(Solà, 2017)</a>, let \(g(\delta \boldsymbol{x})\) denote the reset operation:</p>
+
+\[\delta \boldsymbol{x^{+}} \leftarrow g(\delta \boldsymbol{x}) = \delta \boldsymbol{x} \ominus \delta \boldsymbol{\hat{x}}\]
+
+<p>where \(\ominus\) denotes composition inverse. It follows that the updated covariance \(\boldsymbol{P}\) is</p>
+
+\[\boldsymbol{P} \leftarrow \boldsymbol{G}\boldsymbol{P}\boldsymbol{G^T}\]
+
+<p>where \(\boldsymbol{G}:= \frac{\partial g}{\partial \delta \boldsymbol{x}} \bigg\rvert_{\delta \boldsymbol{\hat{x}}}\). Examing the orientation component of the state, we observe that its true state does not change on error reset:</p>
+
+\[\scriptsize{
+\begin{align*}
+\boldsymbol{q_t^+} &amp;= \boldsymbol{q_t} \\
+\Rightarrow \boldsymbol{q^+} \otimes \delta \boldsymbol{q^+} &amp;= \boldsymbol{q} \otimes \delta \boldsymbol{q}\\
+\Rightarrow \boldsymbol{q}\otimes \delta \boldsymbol{\hat{q}} \otimes \delta \boldsymbol{q^+} &amp;= \boldsymbol{q} \otimes \delta \boldsymbol{q} \\
+\Rightarrow \delta \boldsymbol{q^+} &amp;= ( \boldsymbol{q} \otimes \delta \boldsymbol{\hat{q}})^{\star} \otimes \boldsymbol{q} \otimes \delta \boldsymbol{q} \\
+&amp;= \delta \boldsymbol{\hat{q}}^{\star} \otimes \delta \boldsymbol{q} \\
+&amp;= [\delta \boldsymbol{\hat{q}}^{\star}]_L \delta \boldsymbol{q} \\
+&amp;\text{by matrix equivalent of the left quaternion composition} \\
+\Rightarrow \begin{bmatrix} 1\\ \frac{1}{2} \delta \boldsymbol{\theta^+} \end{bmatrix} &amp;=  \begin{bmatrix} 1 &amp; \frac{1}{2}\delta \boldsymbol{\hat{\theta}}^T \\ -\frac{1}{2}\delta \boldsymbol{\hat{\theta}} &amp; I - [\frac{1}{2} \delta \boldsymbol{\hat{\theta}}]_{\times} \end{bmatrix} \begin{bmatrix} 1 \\ \frac{1}{2} \delta \boldsymbol{\theta} \end{bmatrix} + O(\vert \vert \delta\boldsymbol{\theta} \vert \vert^2)\\
+&amp;\text{by linear approximations of } \delta\boldsymbol{q^+}, \delta \boldsymbol{\hat{q}}^{\star}, \delta\boldsymbol{q}
+\end{align*}	
+}\]
+
+<p>Dropping the higher order term, the bottom equation gives us the angular component of \(\boldsymbol{G}\):</p>
+
+\[\frac{\partial \delta \boldsymbol{\theta^+} }{\partial \delta \boldsymbol{\theta}}  = I - [\frac{1}{2} \delta \boldsymbol{\hat{\theta}}]_{\times}\]
+
+<p>so that</p>
+
+\[\boldsymbol{G} = \begin{bmatrix} I_6 &amp; 0 &amp; 0 \\ 0 &amp; \frac{\partial \delta \boldsymbol{\theta^+} }{\partial \delta \boldsymbol{\theta}} &amp;0 \\ 0 &amp; 0 &amp; I_9  \end{bmatrix}\]
+
+<p>The identity blocks \(I_6,I_9\) result from the fact that resetting other components of the error-state involves only vector addition.</p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="evaluation"><strong>Evaluation</strong></h4>
+
+<p>For each mission, table 2 shows Absolute Trajectory Errors on position, velocity, and rotation angle <a class="citation" href="#VIOeval">(Zhang &amp; Scaramuzza, 2018)</a>.
+Figures 1.x show the resulting state trajectories from applying the ESKF algorithm to the Machine Hall 01 mission (easy). 
+Figures 2.x show the result for the Machine Hall 03 mission (medium), and Figures 3.x for the Machine Hall 04 mission (difficult).</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Mission</th>
+      <th>Position ATE (RMSE)</th>
+      <th>Angular ATE (RMSE)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Machine Hall 01</td>
+      <td>1.96</td>
+      <td>1.09</td>
+    </tr>
+    <tr>
+      <td>Machine Hall 03</td>
+      <td>3.435</td>
+      <td>1.21</td>
+    </tr>
+    <tr>
+      <td>Machine Hall 04</td>
+      <td>13.69</td>
+      <td>1.039</td>
+    </tr>
+  </tbody>
+</table>
+
+\[\tiny{ \text{Table 2.} }\]
+
+<hr />
+
+<p>Machine Hall 01</p>
+<div style="text-align: center; display: flex">
+	<figure>
+		<img style="width: 100%" src="/images/eskf/mh01_pos_est.png" />
+		<figcaption>Fig.1.1</figcaption>
+	</figure>
+	<figure>
+		<img style="width: 100%" src="/images/eskf/mh01_pos_gt.png" />
+		<figcaption>Fig.1.2</figcaption>
+	</figure>
+</div>
+<div style="text-align: center; display: flex">
+	<figure>
+		<img style="width: 100%" src="/images/eskf/mh01_vel_est.png" />
+		<figcaption>Fig.1.3</figcaption>
+	</figure>
+	<figure>
+		<img style="width: 100%" src="/images/eskf/mh01_vel_gt.png" />
+		<figcaption>Fig.1.4</figcaption>
+	</figure>
+</div>
+<div style="text-align: center; display: flex">
+	<figure>
+		<img style="width: 100%" src="/images/eskf/mh01_rotAng_est.png" />
+		<figcaption>Fig.1.5</figcaption>
+	</figure>
+	<figure>
+		<img style="width: 100%" src="/images/eskf/mh01_rotAng_gt.png" />
+		<figcaption>Fig.1.6</figcaption>
+	</figure>
+</div>
+
+<hr />
+
+<p>Machine Hall 03</p>
+<div style="text-align: center; display: flex">
+	<figure>
+		<img style="width: 100%" src="/images/eskf/mh03_pos_est.png" />
+		<figcaption>Fig.2.1</figcaption>
+	</figure>
+	<figure>
+		<img style="width: 100%" src="/images/eskf/mh03_pos_gt.png" />
+		<figcaption>Fig.2.2</figcaption>
+	</figure>
+</div>
+<div style="text-align: center; display: flex">
+	<figure>
+		<img style="width: 100%" src="/images/eskf/mh03_vel_est.png" />
+		<figcaption>Fig.2.3</figcaption>
+	</figure>
+	<figure>
+		<img style="width: 100%" src="/images/eskf/mh03_vel_gt.png" />
+		<figcaption>Fig.2.4</figcaption>
+	</figure>
+</div>
+<div style="text-align: center; display: flex">
+	<figure>
+		<img style="width: 100%" src="/images/eskf/mh03_rotAng_est.png" />
+		<figcaption>Fig.2.5</figcaption>
+	</figure>
+	<figure>
+		<img style="width: 100%" src="/images/eskf/mh03_rotAng_gt.png" />
+		<figcaption>Fig.2.6</figcaption>
+	</figure>
+</div>
+
+<hr />
+
+<p>Machine Hall 04</p>
+<div style="text-align: center; display: flex">
+	<figure>
+		<img style="width: 100%" src="/images/eskf/mh04_pos_est.png" />
+		<figcaption>Fig.3.1</figcaption>
+	</figure>
+	<figure>
+		<img style="width: 100%" src="/images/eskf/mh04_pos_gt.png" />
+		<figcaption>Fig.3.2</figcaption>
+	</figure>
+</div>
+<div style="text-align: center; display: flex">
+	<figure>
+		<img style="width: 100%" src="/images/eskf/mh04_vel_est.png" />
+		<figcaption>Fig.3.3</figcaption>
+	</figure>
+	<figure>
+		<img style="width: 100%" src="/images/eskf/mh04_vel_gt.png" />
+		<figcaption>Fig.3.4</figcaption>
+	</figure>
+</div>
+<div style="text-align: center; display: flex">
+	<figure>
+		<img style="width: 100%" src="/images/eskf/mh04_rotAng_est.png" />
+		<figcaption>Fig.3.5</figcaption>
+	</figure>
+	<figure>
+		<img style="width: 100%" src="/images/eskf/mh04_rotAng_gt.png" />
+		<figcaption>Fig.3.6</figcaption>
+	</figure>
+</div>
+
+<hr />
+
+<hr />
+<p>\(\)</p>
+<h3 id="references">References</h3>
+<ol class="bibliography"><li><span id="SolaEskf">Solà, J. (2017). Quaternion kinematics for the error-state Kalman filter. <i>CoRR</i>, <i>abs/1711.02508</i>. http://arxiv.org/abs/1711.02508</span></li>
+<li><span id="Burri">Burri, M., Nikolic, J., Gohl, P., Schneider, T., Rehder, J., Omari, S., Achtelik, M. W., &amp; Siegwart, R. (2016). The EuRoC micro aerial vehicle datasets. <i>The International Journal of Robotics Research</i>. https://doi.org/10.1177/0278364915620033</span></li>
+<li><span id="VIOeval">Zhang, Z., &amp; Scaramuzza, D. (2018). A Tutorial on Quantitative Trajectory Evaluation for Visual(-Inertial) Odometry. <i>2018 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)</i>, 7244–7251. https://doi.org/10.1109/IROS.2018.8593941</span></li></ol>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Tutch Sottithat Winyarat</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Tutch Sottithat Winyarat</li><li><a class="u-email" href="mailto:winyarat@seas.upenn.edu">winyarat@seas.upenn.edu</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/twinyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">twinyarat</span></a></li><li><a href="https://www.linkedin.com/in/winyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">winyarat</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Tutch Sottithat Winyarat | A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Tutch Sottithat Winyarat" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<meta property="og:description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<link rel="canonical" href="twinyarat.github.io/notes/gaussian/" />
+<meta property="og:url" content="twinyarat.github.io/notes/gaussian/" />
+<meta property="og:site_name" content="Tutch Sottithat Winyarat" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Tutch Sottithat Winyarat" />
+<script type="application/ld+json">
+{"description":"A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021","headline":"Tutch Sottithat Winyarat","url":"twinyarat.github.io/notes/gaussian/","@type":"WebPage","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="twinyarat.github.io/feed.xml" title="Tutch Sottithat Winyarat" /><!-- for mathjax support -->
+	
+	  <script type="text/x-mathjax-config">
+	    MathJax.Hub.Config({
+	    TeX: { equationNumbers: { autoNumber: "AMS" } }
+	    });
+	  </script>
+	  <script type="text/javascript" async src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Tutch Sottithat Winyarat</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/notes/">Notes</a><a class="page-link" href="/projects/">Projects</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title"></h1>
+  </header>
+
+  <div class="post-content">
+    <h3 id="the-stubborn-gaussian-distribution"><strong>The Stubborn Gaussian Distribution</strong></h3>
+<hr />
+<hr />
+<p>\(\)</p>
+
+<p>A member of the exponential family of distributions, the Gaussian distribution \(\boldsymbol{\Phi}\), known also by the name of the normal distribution \(\boldsymbol{\mathcal{N}}(\cdot)\), is perhaps the most ubiquitous in Science and Engineering. In its most naked guise, it is written as</p>
+
+\[\frac{d\boldsymbol{\Phi}}{dx} = \phi(x) = ce^{-ax^2}\]
+
+<p>for \(a,c &gt;0\), and whose totality obeys the second axiom of probability:</p>
+
+\[I = \int_{-\infty}^{\infty} \phi(x)dx = 1\]
+
+<p>which implies that</p>
+
+\[\scriptsize{
+\begin{align*}
+1^2 &amp;= c^2 \big(\int_{-\infty}^{\infty} e^{-ax^2} dx\big)^2 = c^2 \int_{-\infty}^{\infty}\int_{-\infty}^{\infty} e^{-a(x^2+y^2)} dxdy \\
+&amp;= c^2 \int_{0}^{2\pi} \int_{0}^{\infty} e^{-ar^2}r dr d\theta \\
+&amp;\text{by change of coordinates}\\
+&amp;= \frac{1}{2a} c^2 \int_{0}^{2\pi} d\theta = \frac{\pi}{a} c^2 = 1 \\
+&amp;\therefore \sqrt{\frac{a}{\pi}} = c 
+\end{align*}	
+}\]
+
+<p>Centering \(x\) about \(\mu\) and rescaling it by \(\sigma\sqrt{2}\) compels us to write</p>
+
+\[a = \frac{1}{2 \sigma^2}  \Rightarrow c = \frac{1}{\sqrt{2 \pi \sigma^2 }}\]
+
+<p>so that</p>
+
+\[\phi(x; \mu, \sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}}e^{-\frac{1}{2}(\frac{x-\mu}{\sigma})^2} \tag{1.1}\]
+
+<p>and that</p>
+
+\[\phi(\vec{x}; \boldsymbol{\mu}, \Sigma) = \frac{1}{(2\pi)^{n/2} \sqrt{det\vert \Sigma \vert}}e^{-\frac{1}{2}(\vec{x} - \boldsymbol{\mu})^T\Sigma^{-1} (\vec{x} - \boldsymbol{\mu})} \tag{1.2}\]
+
+<p>when \(x\) is generalized to \(\vec{x} \in \mathbb{R^n}\).</p>
+
+<hr />
+
+<p>\(\)</p>
+<h4 id="marginalization"><strong>Marginalization</strong></h4>
+
+<p>Suppose a random vector \(\vec{x}\) is normally distributed according to  \(\vec{x} := [x_1, x_2]^T \sim \boldsymbol{\mathcal{N}} (\boldsymbol{\mu}, \Sigma)\) , what is the marginal density of \(x_1\) ?</p>
+
+<p>Let’s partition \(\boldsymbol{\mu}\) and \(\Sigma\) into
+\(\boldsymbol{\mu}  = \begin{bmatrix} \mu_1 \\ \mu_2 \end{bmatrix}\) and \(\Sigma = \begin{bmatrix} \Sigma_{1} &amp; \Sigma_{1,2} \\ \Sigma_{1,2}^T &amp; \Sigma_2 \end{bmatrix}\). 
+Let’s also define \(\begin{bmatrix} \Omega_{1} &amp; \Omega_{1,2} \\ \Omega_{1,2}^T &amp; \Omega_2 \end{bmatrix} := \Sigma^{-1}\).</p>
+
+<p>Before we proceed, it may be favorable to visit <a href="\notes\schur">what Issai Schur has to say about the inversion of square block matrices</a>.</p>
+
+<p>Taking the integral of \(\phi(\vec{x})\) over \(x_2\) yields</p>
+<p style="font-size: 0.85em;">
+$$ \scriptsize{
+\begin{align*}
+ p(x_1) = \int_{-\infty}^{\infty} \phi(x_1,x_2) dx_2 &amp;= \int_{-\infty}^{\infty} \frac{1}{(2\pi)^{n/2} \sqrt{det\vert \boldsymbol{\Sigma} \vert}}e^{-\frac{1}{2}(\vec{x} - \boldsymbol{\mu})^T\Sigma^{-1} (\vec{x} - \boldsymbol{\mu})}  dx_2 \\
+ &amp;=  \frac{1}{\eta}\int_{-\infty}^{\infty} e^{-\frac{1}{2} \big( (\vec{x} - \boldsymbol{\mu})^T\Sigma^{-1} (\vec{x} - \boldsymbol{\mu}) \big)}  dx_2 \\
+ &amp;\eta \text{ subsuming all constant factors} \\
+ &amp;= \frac{1}{\eta} \int_{-\infty}^{\infty} exp\bigg\{ -\frac{1}{2} \big(  \Delta x_1^T\Omega_1 \Delta x_1 + 2 \Delta x_1^T \Omega_{1,2} \Delta x_2 + \Delta x_2^T\Omega_2 \Delta x_2  \big)  \bigg\} dx_2 \\
+ &amp;\text{by defining } \Delta x_1:= x_1 - \mu_1 \text{ and }\Delta x_2:= x_2 - \mu_2 \\
+ &amp;= \frac{1}{\eta}\int_{-\infty}^{\infty} exp\bigg\{ -\frac{1}{2} \big(   (\Delta x_2 + \Omega_2^{-1}\Omega_{1,2}^T \Delta x_1) \Omega_2  (\Delta x_2 + \Omega_2^{-1}\Omega_{1,2}^T\Delta x_1) + \Delta x_1^T(\Omega_1  -\Omega_{1,2} \Omega_{2}^{-1} \Omega_{1,2}^T )\Delta x_1  \big)  \bigg\} dx_2 \\
+ &amp;\text{by completion of square and isolation of the } \Delta x_1 \text{ terms}. \\
+ &amp;= \frac{1}{\eta} exp\{-\frac{1}{2}\Delta x_1^T(\Omega_1  -\Omega_{1,2} \Omega_{2}^{-1} \Omega_{1,2}^T )\Delta x_1 \} \int_{-\infty}^{\infty} exp\bigg\{ -\frac{1}{2}    (\Delta x_2 + \Omega_2^{-1}\Omega_{1,2}^T\Delta x_1) \Omega_2  (\Delta x_2 + \Omega_2^{-1}\Omega_{1,2}^T \Delta x_1)  \bigg\} dx_2 \\
+ &amp;= \frac{(2\pi)^{m/2} \sqrt{det\vert \Omega_2^{-1} \vert} } {(2\pi)^{n/2} \sqrt{det\vert \boldsymbol{\Sigma} \vert}}  exp\bigg\{-\frac{1}{2}(x_1-\mu_1)^T(\Omega_1  -\Omega_{1,2} \Omega_{2}^{-1} \Omega_{1,2}^T )(x_1-\mu_1)\bigg\}   \\
+ &amp;\text{by eq.1.2 and by unpacking } \eta, \Delta x_1\\
+&amp;= \frac{1 } {(2\pi)^{(n-m)/2} \sqrt{ det\vert \Sigma \vert  det\vert\Omega_2 \vert} } exp\bigg\{-\frac{1}{2}(x_1-\mu_1)^T(\Sigma_1^{-1} )(x_1-\mu_1)  \bigg\} = \frac{1}{(2\pi)^{(n-m)/2} \sqrt{ det\vert \Sigma_1 \vert}} e^{-\frac{1}{2}(x_1-\mu_1)^T\Sigma_1^{-1} (x_1-\mu_1)  }  \\
+&amp;\text{by the definition of the Schur complement of } \Omega_2 \text{ in } \Omega \text{ and the corollary on the determinant}\\\\
+&amp;= \phi(x_1; \mu_1, \Sigma_1)
+ \end{align*}	
+}
+$$</p>
+
+<p>A Gaussian density has fallen into our lap.</p>
+
+<hr />
+
+<p>\(\)</p>
+<h4 id="conditioning"><strong>Conditioning</strong></h4>
+
+<p>We observe a manifestation of the random variable \(x_2 = \boldsymbol{x_2} \in \mathbb{R^m}\) and would like to know what the density of \(x_1\) is when \([x_1, x_2]^T \sim \boldsymbol{\mathcal{N}}(\mu, \Sigma)\). That is, given this extra piece of information about \(x_2\), what is the conditional density \(p(x_1 \vert x_2 = \boldsymbol{x_2}) ?\)</p>
+
+<p>Let’s again define \(\Sigma^{-1} := \Omega = \begin{bmatrix}\Omega_1 &amp; \Omega_{1,2} \\ \Omega_{2,1} &amp; \Omega_{2} \end{bmatrix}\)</p>
+
+<p>Now, Thomas Bayes would tell us that</p>
+<p style="font-size: 0.85em;">
+$$\scriptsize{ \begin{align*}
+ p(x_1 \vert x_2 = \boldsymbol{x_2}) &amp;:= \frac{p(x_1 ,\boldsymbol{x_2})}{p(\boldsymbol{x_2})} \\
+ &amp;= \frac{\phi(x_1 ,\boldsymbol{x_2} ; \mu,\Sigma)}{\phi(\boldsymbol{x_2}; \mu_2, \Sigma_{2})} \\
+&amp;\text{by the definition of the marginal density of } x_2 \\
+&amp;= \frac{(2\pi)^{(m/2)}\sqrt{det \vert \Sigma_2 \vert}}{(2\pi)^{n/2} \sqrt{det\vert \Sigma \vert}} \frac{exp\big\{  -\frac{1}{2}\big(   \Delta x_1^T \Omega_1 \Delta x_1 + 2 \Delta x_1^T \Omega_{1,2} \Delta x_2 + \Delta x_2 ^T \Omega_2 \Delta x_2 \big) \big\}}{ exp \big\{ -\frac{1}{2} \big( \Delta x_2^T \Sigma_2^{-1} \Delta x_2   \big) \big\}}\\
+&amp;\text{by defining } \Delta x_1 := x_1 - \mu_1, \Delta x_2 := \boldsymbol{x_2} - \mu_2 \\
+&amp;= \frac{(2\pi)^{(m/2)}\sqrt{det \vert \Sigma_2 \vert}}{(2\pi)^{n/2} \sqrt{det\vert \Sigma \vert}}exp\big\{  -\frac{1}{2}\big(   \Delta x_1^T \Omega_1 \Delta x_1 + 2\Delta x_1^T \Omega_{1,2} \Delta x_2 + \Delta x_2 ^T \Omega_2 \Delta x_2 -\Delta x_2^T \Sigma_2^{-1} \Delta x_2 \big) \big\} \\
+&amp;= \frac{(2\pi)^{(m/2)}\sqrt{det \vert \Sigma_2 \vert}}{(2\pi)^{n/2} \sqrt{det\vert \Sigma \vert}}exp\big\{  -\frac{1}{2}\big(   \Delta x_1^T \Omega_1 \Delta x_1 + 2\Delta x_1^T \Omega_{1,2} \Delta x_2 + \Delta x_2 ^T \Omega_2 \Delta x_2 -\Delta x_2^T (\Omega_2 - \Omega_{2,1}\Omega_{1}^{-1}\Omega_{1,2} ) \Delta x_2 \big) \big\} \\
+&amp;\text{by the definition of the Schur complement of }  \Sigma_2 \text{ in }  \Sigma \\
+&amp;= \frac{(2\pi)^{(m/2)}\sqrt{det \vert \Sigma_2 \vert}}{(2\pi)^{n/2} \sqrt{det\vert \Sigma \vert}}exp\big\{  -\frac{1}{2}\big(   (\Delta x_1 -\Omega_1^{-1}\Omega_{1,2}\Delta x_2 )^T \Omega_1 (\Delta x_1 -\Omega_1^{-1}\Omega_{1,2}\Delta x_2)   \big) \big\} \\
+&amp; \text{by completion of square}\\
+&amp;= \frac{(2\pi)^{(m/2)}\sqrt{det \vert \Sigma_2 \vert}}{(2\pi)^{n/2} \sqrt{det\vert \Sigma \vert}}exp\big\{  -\frac{1}{2}\big(   (\Delta x_1 -\Sigma_{1,2}\Sigma_{2}^{-1}\Delta x_2 )^T (\Sigma_1 -\Sigma_{1,2}\Sigma_2^{-1}\Sigma_{2,1})^{-1} (\Delta x_1 -\Sigma_{1,2}\Sigma_{2}^{-1}\Delta x_2)   \big) \big\} \\
+&amp;\text{by the definition of } \Omega^{-1}:= \Sigma \text{ and by the definition of the Schur complement of } \Omega_1 \text{ in } \Omega \\
+&amp;= \frac{1}{(2\pi)^{(n-m)/2} \sqrt{det\vert \Omega_1^{-1} \vert}}exp\big\{  -\frac{1}{2}\big(   (\Delta x_1 -\Sigma_{1,2}\Sigma_{2}^{-1}\Delta x_2 )^T (\Sigma_1 -\Sigma_{1,2}\Sigma_2^{-1}\Sigma_{2,1})^{-1} (\Delta x_1 -\Sigma_{1,2}\Sigma_{2}^{-1}\Delta x_2)   \big) \big\} \\
+&amp;\text{by the determinant corollary that } det\vert \Omega_1^{-1}\vert = det\vert \Sigma \vert det\vert \Sigma_2^{-1}\vert \\
+&amp;= \frac{1}{(2\pi)^{(n-m)/2} \sqrt{det\vert (\Sigma_1 -\Sigma_{1,2}\Sigma_2^{-1}\Sigma_{2,1}) \vert}}exp\big\{  -\frac{1}{2}\big(   (\Delta x_1 -\Sigma_{1,2}\Sigma_{2}^{-1}\Delta x_2 )^T (\Sigma_1 -\Sigma_{1,2}\Sigma_2^{-1}\Sigma_{2,1})^{-1} (\Delta x_1 -\Sigma_{1,2}\Sigma_{2}^{-1}\Delta x_2)   \big) \big\} \\
+&amp;= \phi(x_1; \mu_1 + \Sigma_{1,2}\Sigma_2^{-1}(\boldsymbol{x_2}-\mu_2), \Sigma_1 -\Sigma_{1,2}\Sigma_2^{-1}\Sigma_{2,1})
+\end{align*}
+}
+$$</p>
+
+<p>Yet another Gaussian has fallen into our lap.</p>
+
+<hr />
+
+<p>\(\)</p>
+<h4 id="convolution"><strong>Convolution</strong></h4>
+
+<p>The sum \(s = x_1 + x_2\) of independent random variables \(x_1 \sim \boldsymbol{\mathcal{N}}(\mu_1, \Sigma_1)\) and \(x_2 \sim \boldsymbol{\mathcal{N}}(\mu_2, \Sigma_2)\) is distributed according to</p>
+
+\[\scriptsize{ p(s) = \int_{-\infty}^{\infty} p(x_1)p(s-x_1)dx_1 = \int_{-\infty}^{\infty} \phi_1(x_1)\phi_2(s-x_1)dx_1 := (\phi_1 \star \phi_2)(s) = (\phi_2 \star \phi_1)(s) \tag{2.1} }\]
+
+<p>The last equality holds due to symmetry. Eq.2.1 constitutes what we call a convolution of two densities, \(\phi_1\) and  \(\phi_2\). Because \(x_1\) and \(x_2\) are independent, for a given fixed \(s\), the density evaluated at \(s\) is the integral of the product of \(\phi_1\) and  \(\phi_2\). This integral is taken over all possible values of \(x_1\) so as to consider all permutations of \(x_1\) and \(x_2 = s-x_1\) that produce \(s\). The convolution operation is often spoken of pictorially as smearing the shape of \(\phi_1\) with that of \(\phi_2\).</p>
+
+<p>To compute \(p(s)\), let us proceed by unpacking eq.2.1:</p>
+
+<p style="font-size: 0.85em;">
+$$
+\scriptsize{
+	\begin{align*}
+	p(s) &amp;= \int_{-\infty}^{\infty} \phi_1(x_1)\phi_2(s-x_1)dx_1 \\
+	&amp;= \int_{-\infty}^{\infty}\frac{1}{(2\pi)^{n} \sqrt{det \vert \Sigma_1 \vert  det \vert \Sigma_2 \vert}} exp\big\{ -\frac{1}{2}  \big((x_1 -\mu_1)^T \Sigma_1^{-1}(x_1 -\mu_1) \big) \big\}exp\big\{ -\frac{1}{2} \big((s-x_1 -\mu_2)^T \Sigma_2^{-1}(s-x_1 -\mu_2)\big)  \big\} dx_1\\
+	&amp;= \int_{-\infty}^{\infty}\frac{1}{(2\pi)^{n} \sqrt{det \vert \Sigma_1 \vert  det \vert \Sigma_2 \vert}} exp\bigg\{ -\frac{1}{2}  \bigg( (x_1-\mu_1)^T\Sigma_1^{-1}(x_1-\mu_1) + (s-x_1-\mu_2)^T\Sigma_2^{-1}(s-x_1-\mu_2) \bigg) \bigg\} dx_1 \\
+	&amp;= \int_{-\infty}^{\infty}\frac{1}{(2\pi)^{n} \sqrt{det \vert \Sigma_1 \vert  det \vert \Sigma_2 \vert}} exp\bigg\{ -\frac{1}{2}  \bigg( x_1^T \Sigma_1^{-1} x_1  -2x_1^T\Sigma_1^{-1}\mu_1 +\mu_1^T\Sigma_1^{-1}\mu_1 + s^T\Sigma_2^{-1}s + x_1^T \Sigma_2^{-1} x_1 + \mu_2^T\Sigma_2^{-1}\mu_2 - 2x_1^T\Sigma_2^{-1}s + 2 x_1^{-1}\Sigma_2^{-1}\mu_2 -2s^T\Sigma_2^{-1}\mu_2  \bigg) \bigg\} dx_1 \\  
+	&amp;= \int_{-\infty}^{\infty}\frac{1}{(2\pi)^{n} \sqrt{det \vert \Sigma_1 \vert  det \vert \Sigma_2 \vert}} exp\bigg\{ -\frac{1}{2}  \bigg(  x_1^T\Sigma_2^{-1}(\Sigma_2 + \Sigma_1)\Sigma_1^{-1}x_1 - 2x_1^T(\Sigma_2^{-1}s -\Sigma_2^{-1}\mu_2 +\Sigma_1^{-1}\mu_1) + (s-\mu_2)^T\Sigma_2^{-1}(s-\mu_2) + \mu_1^T\Sigma_1^{-1}\mu_1  \bigg) \bigg\} dx_1 \\  
+	&amp;= \frac{1}{(2\pi)^{n} \sqrt{det \vert \Sigma_1 \vert  det \vert \Sigma_2 \vert}} \int_{-\infty}^{\infty} exp\bigg\{ -\frac{1}{2}  \bigg(  (x_1-(\Sigma_2^{-1}s - \Sigma_2^{-1}\mu_2 +\Sigma_1^{-1}\mu_1))^T\{\Sigma_2^{-1}(\Sigma_2+\Sigma_1)\Sigma_1^{-1}\}(x_1-(\Sigma_2^{-1}s - \Sigma_2^{-1}\mu_2 +\Sigma_1^{-1}\mu_1))  \bigg) \bigg\} dx_1 \\  
+	&amp;\qquad \qquad\qquad \times exp\bigg\{ -\frac{1}{2}  \bigg(    (s-\mu_2)^T\Sigma_2^{-1}(s-\mu_2) + \mu_1^T\Sigma_1^{-1}\mu_1 - (\Sigma_2^{-1}(s-\mu_2+\Sigma_2\Sigma_1^{-1}\mu_1))^T \big\{ \Sigma_2^{-1}(\Sigma_2+\Sigma_1 )\Sigma_1^{-1}  \big\}^{-1} (\Sigma_2^{-1}(s-\mu_2+\Sigma_2\Sigma_1^{-1}\mu_1))     \bigg) \bigg\} \\
+	&amp;\text{by completion of square and isolation of } x_1 \text{ dependent terms}\\
+	&amp;= \frac{1}{(2\pi)^{n/2} \sqrt{det \vert (\Sigma_2+\Sigma_1) \vert}}exp\bigg\{ -\frac{1}{2}  \bigg(    (s-\mu_2)^T\Sigma_2^{-1}(s-\mu_2) + \mu_1^T\Sigma_1^{-1}\mu_1 - (\Sigma_2^{-1}(s-\mu_2+\Sigma_2\Sigma_1^{-1}\mu_1))^T \big\{ \Sigma_1(\Sigma_2+\Sigma_1 )^{-1}\Sigma_2  \big\} (\Sigma_2^{-1}(s-\mu_2+\Sigma_2\Sigma_1^{-1}\mu_1))     \bigg) \bigg\} \\
+	&amp;\text{by the fact that for any given } s, \mu_1,\text{ and } \mu_2 \text{, the integral is evaluated to } (2\pi)^{n/2}\sqrt{det\vert (\Sigma_2^{-1}(\Sigma_2+\Sigma_1)\Sigma_1^{-1} )^{-1}\vert} \text{ in accordance with eq.1.2 }\\
+	&amp;= \frac{1}{(2\pi)^{n/2} \sqrt{det \vert (\Sigma_2+\Sigma_1) \vert}}exp\bigg\{ -\frac{1}{2}  \bigg(    (s-\mu_2)^T(\Sigma_2+ \Sigma_1)^{-1}(\Sigma_2+ \Sigma_1)\Sigma_2^{-1}(s-\mu_2) + \mu_1^T(\Sigma_2+ \Sigma_1)^{-1}(\Sigma_2+ \Sigma_1)\Sigma_1^{-1}\mu_1 \\
+	&amp;  \qquad \qquad \qquad \qquad \qquad \qquad \qquad - (s-\mu_2+\Sigma_2\Sigma_1^{-1}\mu_1)^T \Sigma_2^{-1} \Sigma_1(\Sigma_2+\Sigma_1 )^{-1}(s-\mu_2+\Sigma_2\Sigma_1^{-1}\mu_1)     \bigg) \bigg\} \\
+	&amp;\text{by the gentle injection of } (\Sigma_2+ \Sigma_1)^{-1}(\Sigma_2+ \Sigma_1) \\
+	&amp;= \frac{1}{(2\pi)^{n/2} \sqrt{det \vert (\Sigma_2+\Sigma_1) \vert}}exp\bigg\{ -\frac{1}{2}  \bigg(    (s-\mu_2)^T(\Sigma_2+ \Sigma_1)^{-1}(I+ \Sigma_1\Sigma_2^{-1})(s-\mu_2) + \mu_1^T(\Sigma_2+ \Sigma_1)^{-1}(I+ \Sigma_2\Sigma_1^{-1})\mu_1 \\
+	&amp;  \qquad \qquad \qquad \qquad \qquad \qquad \qquad - (s-\mu_2+\Sigma_2\Sigma_1^{-1}\mu_1)^T \Sigma_2^{-1} \Sigma_1(\Sigma_2+\Sigma_1 )^{-1}(s-\mu_2+\Sigma_2\Sigma_1^{-1}\mu_1)     \bigg) \bigg\} \\
+	&amp;= \frac{1}{(2\pi)^{n/2} \sqrt{det \vert (\Sigma_2+\Sigma_1) \vert}}exp\bigg\{ -\frac{1}{2}  \bigg(    (s-\mu_2)^T(\Sigma_2+ \Sigma_1)^{-1}(s-\mu_2) +  (s-\mu_2)^T(\Sigma_2+ \Sigma_1)^{-1}\Sigma_1\Sigma_2^{-1}(s-\mu_2)  +\mu_1^T(\Sigma_1+\Sigma_2)^{-1}\mu_1 + \mu_1^T(\Sigma_1+\Sigma_2)^{-1}\Sigma_2\Sigma_1^{-1}\mu_1 \\
+ 	&amp;\qquad \qquad \qquad \qquad \qquad \qquad \qquad -(s-\mu_2)^T(\Sigma_2^{-1}\Sigma_1)(\Sigma_2+\Sigma_1)^{-1}(s-\mu_2) -\mu_1^T (\Sigma_2+\Sigma_1)^{-1}\Sigma_2\Sigma_1^{-1} \mu_1 -2 \mu_1^T(\Sigma_2+\Sigma_1)^{-1}(s-\mu_2)\bigg) \bigg\} \\
+	&amp;=\frac{1}{(2\pi)^{n/2} \sqrt{det \vert (\Sigma_2+\Sigma_1) \vert}}exp\bigg\{ -\frac{1}{2}  \bigg(  (s-\mu_2)^T(\Sigma_2+\Sigma_1)^{-1}(s-\mu_2) +\mu_1^T (\Sigma_2+\Sigma_1)^{-1}\mu_1 -2 \mu_1^T(\Sigma_2+\Sigma_1)^{-1}(s-\mu_2) \bigg) \bigg\}\\
+	&amp;\text{by symmetry in } \Sigma_1, \Sigma_2 \text{ and by natural cancellation}\\
+	&amp;=\frac{1}{(2\pi)^{n/2} \sqrt{det \vert (\Sigma_2+\Sigma_1) \vert}}exp\bigg\{ -\frac{1}{2}  \bigg( (s-\mu_2-\mu_1)^T(\Sigma_2+\Sigma_1)^{-1}(s-\mu_2-\mu_1) \bigg) \bigg\}\\ 
+	&amp;= \phi(s; \mu_1+\mu_2; \Sigma_1+\Sigma_2 )\\
+	\end{align*}
+}
+
+$$
+
+</p>
+
+<p>We have arrived at yet another Gaussian.</p>
+
+<p>The 2-fold convolution above segues naturally into the inductive argument that the sum \(s = x_1 + x_2 + \dots + x_k\) of \(k\) independent normally distributed variables must be distributed according to \(\phi(s; \mu_1+\mu_2 + \dots + \mu_k, \Sigma_1+\Sigma_2 + \dots + \Sigma_k )\). With such additive behavior, Gaussian distributions are said to be stable under convolution.</p>
+
+<hr />
+
+<hr />
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Tutch Sottithat Winyarat</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Tutch Sottithat Winyarat</li><li><a class="u-email" href="mailto:winyarat@seas.upenn.edu">winyarat@seas.upenn.edu</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/twinyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">twinyarat</span></a></li><li><a href="https://www.linkedin.com/in/winyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">winyarat</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

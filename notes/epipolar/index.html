@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Tutch Sottithat Winyarat | A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Tutch Sottithat Winyarat" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<meta property="og:description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<link rel="canonical" href="twinyarat.github.io/notes/epipolar/" />
+<meta property="og:url" content="twinyarat.github.io/notes/epipolar/" />
+<meta property="og:site_name" content="Tutch Sottithat Winyarat" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Tutch Sottithat Winyarat" />
+<script type="application/ld+json">
+{"description":"A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021","headline":"Tutch Sottithat Winyarat","url":"twinyarat.github.io/notes/epipolar/","@type":"WebPage","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="twinyarat.github.io/feed.xml" title="Tutch Sottithat Winyarat" /><!-- for mathjax support -->
+	
+	  <script type="text/x-mathjax-config">
+	    MathJax.Hub.Config({
+	    TeX: { equationNumbers: { autoNumber: "AMS" } }
+	    });
+	  </script>
+	  <script type="text/javascript" async src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Tutch Sottithat Winyarat</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/notes/">Notes</a><a class="page-link" href="/projects/">Projects</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title"></h1>
+  </header>
+
+  <div class="post-content">
+    <h3 id="epipolar-geometry"><strong>Epipolar Geometry</strong></h3>
+<hr />
+<hr />
+
+<p><br />
+Two cameras \(c_0\) and \(c_1\) see the same scene point \(\boldsymbol{p}\). Expressed in \(c_0\)’s frame, it has coordinate \(p_0\). Expressed in \(c_1\)’s frame, \(\boldsymbol{p}\) has coordinate \(p_1\). The two coordinates are related by the following transformation</p>
+
+\[\hat{x}_0 \propto p_0  = \boldsymbol{R}p_1  + t  \propto \boldsymbol{R}\hat{x}_1 + t  \tag{eq.1}\]
+
+<p>where \(\hat{x}_0 \propto [u_1, v_1, 1]^T\) and \(\hat{x}_1 \propto [u_2, v_2, 1]^T\) are rays emanating from their respective cameras, and \(\{\boldsymbol{R}, t\} \in SE(3)\) describes the relative pose between \(c_1\) and \(c_0\).</p>
+
+<p>Taking the cross product with \(t\) on both sides of eq.1 gives</p>
+
+\[[t]_{\times}\hat{x}_0 \propto [t]_{\times}\boldsymbol{R}\hat{x}_1 \tag{eq.2}\]
+
+<p>Taking the dot product with \(\hat{x}_0\) on both sides of eq.2 gives</p>
+
+\[\hat{x}_0^T [t]_{\times}\hat{x}_0  \propto  \hat{x}_0^T \underbrace{[t]_{\times}\boldsymbol{R}}_{:= \boldsymbol{E}}\hat{x}_1  \tag{eq.3 } = 0\]
+
+<p>Known as the Epipolar constraint, eq.3 geometrically says that the vectors \(t\), \(\hat{x}_0\), and \(\boldsymbol{R}\hat{x}_1\) are coplanar. The plane in which the three vectors live is called the Epipolar plane. The matrix \(\boldsymbol{E}\) that maps the ray \(\hat{x}_1\) to a line \(l_0\) in \(c_0\)’s image plane is known as the Essential Matrix.</p>
+
+<p>Given an \(i^{th}\) correspondence \((x_{i0},x_{i,1})\), eq.3 gives us the Epipolar constraint that is linear in the entries of \(\boldsymbol{E}\):</p>
+
+\[{\scriptsize \begin{align*}
+ &amp;u_{i0}u_{i1}e_{00} + v_{i0}u_{i1}e_{01} + u_{i1}e_{02} + \\
+ &amp;u_{i0}v_{i1}e_{10} + v_{i0}v_{i1}e_{11} + v_{i1}e_{12} +  \\
+&amp; u_{i0}e_{20} + v_{i0}e_{21} + e_{22}  = 0
+
+\end{align*} 
+
+\scriptsize}\]
+
+<p>With at least 8 (true) correspondences, we can estimate \(\boldsymbol{E}\) up to scale. Once \(\boldsymbol{E}\) has been recovered, we further recover (also up to scale) the translation vector \(t\) by noticing that \(t\) is the singular vector of \(\boldsymbol{E}\). Performing singular value decomposition on \(\boldsymbol{E}\) yields</p>
+
+\[\boldsymbol{E} = U\Sigma V^T =  \begin{bmatrix} u_0 &amp; u_1 &amp; t\end{bmatrix} \begin{bmatrix} \sigma_0 &amp; &amp; \\ &amp; \sigma_1 &amp; \\ &amp; &amp; \sigma_2 \end{bmatrix}
+\begin{bmatrix} v^T_0 \\ v^T_1 \\ v^T_2 \end{bmatrix}\]
+
+<p>Since \(\boldsymbol{E}\) is only known up to scale, \(\sigma_0\) and \(\sigma_1\) should be similar but could be non-units. In the presence of noise, \(\sigma_2\) would be close to 0.</p>
+
+<p>To recover the relative rotation \(\boldsymbol{R}\), first write out the skew-symmetric matrix \([t]_{\times}\) as</p>
+
+\[[t]_{\times} = SZR_{\pi/2}S^T = 
+\begin{bmatrix}s_0 &amp; s_1 &amp; t \end{bmatrix} 
+\begin{bmatrix} 1 &amp; &amp; \\ &amp; 1 &amp; \\ &amp; &amp; 0 \end{bmatrix}
+\begin{bmatrix} 0 &amp; -1 &amp; 0  \\1 &amp; 0  &amp;0 \\ 0&amp; 0&amp; 1 \end{bmatrix}
+\begin{bmatrix}s_0^T \\ s_1^T \\ t^T \end{bmatrix}\]
+
+<p>In words, taking the cross product of \(t\) with a vector \(x\) is equivalent to projecting it onto a set of orthogonal bases \(S\), rotating it by \(\pi/2\), zeroing out its \(t's\) component, and back-projecting it from \(S\). It follows that</p>
+
+\[\boldsymbol{E} = [t]_{\times}\boldsymbol{R} = SZR_{\pi/2}S^TR = U\Sigma V^T\]
+
+<p>Since \(Z\) is diagonal and \(S\) orthogonal by construction, we conclude that \(S = U\) and hence</p>
+
+\[R_{\pi/2}U^TR = V^T  \Rightarrow R = UR^T_{\pi/2}V^T\]
+
+<p>Since both \(\boldsymbol{E}\) and \(t\) are known up to a sign, and the matrices \(U\) and \(V\) are not guaranteed to be rotation matrices, we must generate all 4 possible choices for \(R\):</p>
+
+\[R = \pm UR^T_{\pm\pi/2}V^T\]
+
+<p>and keep the 2 whose determinant \(\vert R \vert  = 1\). To choose between the last 2 candidates, we pair \(R\) with both signs of \(t\) and settle with the combination that agrees with the largest number of scene points seen by both cameras. <a class="citation" href="#szeliski2011">(Szeliski, 2011, p. 310)</a></p>
+
+<hr />
+<p>\(\)</p>
+<h3 id="references">References</h3>
+<ol class="bibliography"><li><span id="szeliski2011">Szeliski, R. (2011). <i>Computer vision algorithms and applications</i>. Springer.</span></li></ol>
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Tutch Sottithat Winyarat</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Tutch Sottithat Winyarat</li><li><a class="u-email" href="mailto:winyarat@seas.upenn.edu">winyarat@seas.upenn.edu</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/twinyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">twinyarat</span></a></li><li><a href="https://www.linkedin.com/in/winyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">winyarat</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

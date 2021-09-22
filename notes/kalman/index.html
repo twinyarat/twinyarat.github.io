@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Tutch Sottithat Winyarat | A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Tutch Sottithat Winyarat" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<meta property="og:description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<link rel="canonical" href="twinyarat.github.io/notes/kalman/" />
+<meta property="og:url" content="twinyarat.github.io/notes/kalman/" />
+<meta property="og:site_name" content="Tutch Sottithat Winyarat" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Tutch Sottithat Winyarat" />
+<script type="application/ld+json">
+{"description":"A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021","headline":"Tutch Sottithat Winyarat","url":"twinyarat.github.io/notes/kalman/","@type":"WebPage","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="twinyarat.github.io/feed.xml" title="Tutch Sottithat Winyarat" /><!-- for mathjax support -->
+	
+	  <script type="text/x-mathjax-config">
+	    MathJax.Hub.Config({
+	    TeX: { equationNumbers: { autoNumber: "AMS" } }
+	    });
+	  </script>
+	  <script type="text/javascript" async src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Tutch Sottithat Winyarat</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/notes/">Notes</a><a class="page-link" href="/projects/">Projects</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title"></h1>
+  </header>
+
+  <div class="post-content">
+    <h3 id="the-assumptions-kalman-filter-makes"><strong>The Assumptions Kalman Filter Makes</strong></h3>
+<hr />
+<hr />
+<p>\(\)</p>
+
+<p>Oftentimes we are unable to directly measure the state of a physical system we work with, or even when we could, the measurements would often be distorted by random noise and perturbations. What is then an optimal way to estimate a system’s state, one that informs us of an approximation of the true state with least uncertainty?</p>
+
+<p>Firstly, assume a linear discrete-time system model:</p>
+
+\[\scriptsize{ x_{k} = Ax_{k-1} + B u_{k-1} + \epsilon_{1,k} \tag{1}  }\]
+
+<p>and a linear measurement model:</p>
+
+\[\scriptsize{ y_k = Cx_k + \epsilon_{2,k} \tag{2}}\]
+
+<p>where \(x_k\) denotes the system’s latent state at some discrete timestep \(k\), \(u_{k-1}\) denotes a control input applied at timestep \(k-1\), \(y_k\) denotes a measurement taken at timestep \(k\), and \(\epsilon_{1,k}\) and \(\epsilon_{2,k}\) denote random noise variables with zero mean:</p>
+
+\[\scriptsize{ \mathbb{E}[\epsilon_{1,k}] = \mathbb{E}[\epsilon_{2,k}] = 0  \space \forall k \geq 0 }\]
+
+<p>and a time-uncorrelated covariance \(R\):</p>
+
+\[\scriptsize{ \mathbb{E}[ \begin{bmatrix} \epsilon_{1,i} \\ \epsilon_{2,i} \end{bmatrix} \begin{bmatrix} \epsilon_{1,j} &amp; \epsilon_{2,j} \end{bmatrix}] = \begin{cases} R \space; i = j \\ 0 \space ; \space \text{otherwise}  \end{cases} \tag{3} }\]
+
+<p>\(\text{where } R = \begin{bmatrix}R_1 &amp; R_{1,2} \\ R_{1,2}^T &amp; R_2 \end{bmatrix}\) is symmetric and semipositive definite.</p>
+
+<p>Let \(\hat{x}_{i:j}\) denote an estimate of \(x_i\) at timestep \(i\) incorporating all information available from timestep 0 up to and including timstep \(j\). Additionally, for a given control input \(u_{k-1}\), assume that an apriori estimate \(\hat{x}_{k:k-1}\) is generated by</p>
+
+\[\scriptsize{ \hat{x}_{k:k-1} = A\hat{x}_{k-1:k-1} + Bu_{k-1} + \epsilon_{1,k}\tag{4} 
+}\]
+
+<p>where \(\hat{x}_{k-1:k-1}\) is the aposteriori estimate from the previous timestep \(k-1\).</p>
+
+<p>Assume furthermore that, given a true measurement of the system’s state \(y_k\), there exists a gain \(K_k\) that corrects \(\hat{x}_{k:k-1}\) to \(\hat{x}_{k:k}\):</p>
+
+\[\scriptsize{ \hat{x}_{k:k} =  \hat{x}_{k:k-1} + K_k(y_k - C\hat{x}_{k:k-1}) \tag{5} }\]
+
+<p>so that by incorporating a sample measurement \(C\hat{x}_{k:k-1}\) at timestep k, \(\hat{x}_{k:k}\) estimates the true state \(x_k\) with maximum confidence. \(K_k\) is commonly known as a Kalman gain (after Dr. Rudolf E. Kálmán), and we call the mechanism by which such state predictions are made a Kalman filter. For the purpose of analysis, let’s define an estimate error as</p>
+
+\[\scriptsize{ x^e_{i:j} = x_i - \hat{x}_{i:j} \tag{6} }\]
+
+<p>Given the assummed structures above, how does the error \(x^e_{k:k}\) evolve over time? <br />
+From eq.1 to eq.5, we know that</p>
+
+\[\scriptsize{ \begin{align*}
+x_{k} &amp;= Ax_{k-1} + B u_{k-1} + \epsilon_{1,k} \\
+y_k &amp;= Cx_k + \epsilon_{2,k} \\
+\hat{x}_{k:k-1} &amp;= A\hat{x}_{k-1:k-1} + Bu_{k-1} + \epsilon_{1,k} \\
+&amp;\space\\
+&amp;\text{and} \\
+&amp;\space\\
+\hat{x}_{k:k} &amp;=  \hat{x}_{k:k-1} + K_k(y_k - C\hat{x}_{k:k-1}) \\
+&amp;= \hat{x}_{k:k-1} +  K_k(Cx_k + \epsilon_{2,k} -  C\hat{x}_{k:k-1}) \\
+&amp;= \hat{x}_{k:k-1} +  K_k(C(x_k  - \hat{x}_{k:k-1}) +  \epsilon_{2,k}) 
+\end{align*} \tag{7}
+}\]
+
+<p>The estimate error \(x^e_{k:k}\) therefore updates according to</p>
+
+\[\scriptsize{ {\small \begin{align*} x^e_{k:k} &amp;= x_k - \hat{x}_{k:k} \\[0.8em]
+ &amp; = x_k - \hat{x}_{k:k-1} -  K_k(C(x_k  - \hat{x}_{k:k-1}) +  \epsilon_{2,k}) \\ &amp; \text{by eq.7 }\\[0.8em]
+ &amp;= (I - K_kC)x^e_{k:k-1} -K_k\epsilon_{2,k} \\  &amp; \text{by eq.6 } \tag{8}\\[0.8em]
+ &amp;= (I - K_kC)(Ax^e_{k-1:k-1} + \epsilon_{1,k-1}) - K_k\epsilon_{2,k} \\
+ &amp;= (A-K_kCA)x^e_{k-1:k-1} + (I - K_kC)\epsilon_{1,k-1}-K_k\epsilon_{2,k}\tag{9}
+\end{align*}} }\]
+
+<hr />
+<p>\(\)</p>
+<h4 id="estimate-error-covariance"><strong>Estimate Error Covariance</strong></h4>
+
+<p>Before we analyze the covariance of \(x^e_{k:k}\), it will be convenient to first compute the covariance of the apriori error \(x^e_{k: k-1}\). Proceed by letting  \(P_{k:k}\) denote the covariance of the aposteriori error and \(P_{k:k-1}\) the covariance of the apriori error:<br />
+\(\)</p>
+
+<p>\({\scriptsize
+\begin{align*}
+  P_{k:k-1}  &amp;= \mathbb{E} \big[  (x^e_{k:, k-1})(x^e_{k:, k-1})^T   \big]  \\[0.8em]
+  &amp;= \mathbb{E} \big[ (Ax^e_{k-1:k-1} + \epsilon_{1,k-1}) (Ax^e_{k-1:k-1} + \epsilon_{1,k-1})^T  \big] \\
+  &amp;\text{by eq.4 and eq.6  } \\[0.8em]
+  &amp;= \mathbb{E} \big[ (Ax^e_{k-1:k-1} + \epsilon_{1,k-1})  (x^e_{k-1:k-1})^TA^T + (\epsilon_{1,k-1})^T\big ] \\[0.8em]
+  &amp;= \mathbb{E} \big[ Ax^e_{k-1:k-1}(x^e_{k-1:k-1})^T A^T  \big] + \mathbb{E} \big[ Ax^e_{k-1:k-1} \epsilon_{1,k-1}^T\big] + \mathbb{E} \big[ \epsilon_{1,k-1}(x^e_{k-1:k-1})^TA^T  \big] + \mathbb{E} \big[ \epsilon_{1,k-1} \epsilon_{1,k-1}^T \big] \\
+  &amp;\text{by linearity of expectation}\\[0.8em]
+  &amp;= \mathbb{E} \big[ Ax^e_{k-1:k-1}(x^e_{k-1:k-1})^T A^T  \big] + \mathbb{E} \big[ \epsilon_{1,k-1} \epsilon_{1,k-1}^T \big]  \\
+  &amp;\text{by uncorrelatedness between }x^e_{k-1:k-1} \text{ and } \epsilon_{1,k-1} \\[0.8em]
+  &amp;= A\mathbb{E} \big[ x^e_{k-1:k-1}(x^e_{k-1:k-1})^T \big] A^T + R_{1} \\[0.8em]
+  &amp;= AP_{k-1:k-1} A^T + R_{1} &amp;\text{(10)} \\
+   &amp;\text{by the definition of } P_{k:k} \\
+\end{align*} }%\)<br />
+\(\)</p>
+
+<p>Now, onto the covariance of the aposteriori error:</p>
+
+\[{\scriptsize \begin{align*}
+ P_{k:k}  &amp;= \mathbb{E} \big[  \big(x^e_{k:, k} \big) \big(x^e_{k:, k} \big)^T   \big]  \\
+ &amp;= \mathbb{E} \big[ \big([I-K_kC]x^e_{k:k-1}-K_k\epsilon_{2,k}\big )\big ([I-K_kC]x^e_{k:k-1}-K_k\epsilon_{2,k}\big)^T\big] \\
+ &amp;\text{by eq.8 }\\[0.8em]
+ &amp;= \mathbb{E} \big[ \big([I-K_kC]x^e_{k:k-1}-K_k\epsilon_{2,k}\big)\big((x^e_{k:k-1})^T[I-K_kC]^T-\epsilon_{2,k}^T K_k^T\big)\big]\\[0.8em]
+ &amp;= \mathbb{E} \big[ [I-K_kC]x^e_{k:k-1}(x^e_{k:k-1})^T[I-K_kC]^T   - [I-K_kC]x^e_{k:k-1}\epsilon_{2,k}^T K_k^T) -K_k\epsilon_{2,k}(x^e_{k:k-1})^T[I-K_kC]^T +  K_k\epsilon_{2,k}\epsilon_{2,k}^T K_k^T \big] \\[0.8em]
+ &amp;= [I-K_kC] \mathbb{E} \big[x^e_{k:k-1}(x^e_{k:k-1})^T\big][I-K_kC]^T - [I-K_kC]\mathbb{E} \big[x^e_{k:k-1}\epsilon_{2,k}^T \big] K_k^T) -K_k\mathbb{E} \big[\epsilon_{2,k}(x^e_{k:k-1})^T \big][I-K_kC]^T + K_k\mathbb{E} \big[\epsilon_{2,k}\epsilon_{2,k}^T \big] K_k^T \\
+ &amp;\text{by linearity of expectation} \\[0.8em]
+ &amp;= [I-K_kC] \mathbb{E} \big[x^e_{k:k-1}(x^e_{k:k-1})^T\big][I-K_kC]^T + K_k\mathbb{E} \big[\epsilon_{2,k}\epsilon_{2,k}^T \big] K_k^T \\
+ &amp;\text{by uncorrelatedness between } \epsilon_{2,k} \text{ and } x^e_{k:k-1}  \\[0.8em]
+ &amp;= [I-K_kC] P_{k:k-1}[I-K_kC]^T + K_kR_2 K_k^T \\
+ &amp;\text{by the definition of }P_{k:k-1} \\[0.8em]
+ &amp;= K_k \underbrace{\big( CP_{k:k-1} C^T + R_2 \big)}_{:= S_k} K_k^T - K_kCP_{k:k-1} - \big(  K_kCP_{k:k-1} \big)^T \\[0.8em]
+ &amp;= \big( K_k - P_{k:k-1}C^TS_k^{-1} \big) S_k \big(K_k - P_{k:k-1}C^TS_k^{-1}  \big)^T + P_{k:k-1} - P_{k:k-1}C^TS_k^{-1}CP_{k:k-1} &amp;\text{(11)}\\
+ &amp;\text{via completion of square} 
+\end{align*} }%\]
+
+<p>\(P_{k:k}\) is minimized when we eliminate the first term in eq.11 . We do so by setting \(K_k = P_{k:k-1}C^TS_k^{-1}\). This way, we reduce the spread of the aposteriori error, equivalently maximizing confidence in the estimate. Since \(S_k \succ 0\) and therefore invertible, the Kalman gain \(K_k\) at timestep \(k\) is always computable. In summary,</p>
+
+\[P_{k:k} = (I- K_kC)P_{k:k-1} \tag{12}\]
+
+<p>where <br />
+  \(\)<br />
+  \(\begin{gather*} P_{k:k-1} = AP_{k-1:k-1} A^T + R_{1} \\[0.8em]
+  S_k = CP_{k:k-1} C^T + R_2 ; \\[0.8em]
+K_k = P_{k:k-1}C^TS_k^{-1}; \tag{13} \\
+  \end{gather*}\)</p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="asymptotic-behavior"><strong>Asymptotic Behavior</strong></h4>
+
+<p>Interestingly, since \(P_{k:k-1} \succ 0,\) the product of two positive definite matrices \(\space K_kC = P_{k:k-1}C^TS_k^{-1}C\) must as well be positive definite. Consequently, the expression \(P_{k:k} = (I- K_kC)P_{k:k-1}\) tells us that by incorporating a sample measurement at timestep \(k\), the estimate uncertainty captured by \(P_{k:k-1}\) always decreases intermediately (in definiteness). Rearranging eq.12 and substituting in the expression for \(K_k\) from eq.13, we arrive at</p>
+
+\[P_{k:k} - P_{k:k-1} =  - P_{k:k-1}C^TS_k^{-1}CP_{k:k-1}\]
+
+<p>The reduction of uncertainty now becomes clearer as \(P_{k:k}\) satisfies <a href="\notes\lyapunov">the discrete Lyapunov equation</a> and is hence always  non-increasing aposteriori before possibly increasing again through a subsequent state evolution. To analyze the global behavior of the covariance \(P_{k:k-1}\), let us revisit eq.10:</p>
+
+\[{\scriptsize \begin{align*}
+P_{k:k-1} &amp;= AP_{k-1:k-1} A^T + R_{1} \\[0.8em]
+&amp;= A \big\{ P_{k-1:k-2}  - P_{k-1:k-2}C^TS_k^{-1}CP_{k-1:k-2} \big\} A^T + R_{1} \\
+&amp;= A P_{k-1:k-2} A^T - A P_{k-1:k-2}C^TS_{k-1}^{-1}CP_{k-1:k-2} A^T + R_{1} \\[0.8em]
+&amp;= A P_{k-1:k-2} A^T - A P_{k-1:k-2}C^T \big( CP_{k-1:k-2} C^T + R_2 \big)^{-1} CP_{k-1:k-2} A^T + R_{1} \\
+&amp;\text{by the definition of } S_{k-1}\\[0.8em]
+\end{align*}
+}%\]
+
+<p>From the last equation above, we observe that if \(P_{k:k-1}\) converges to a steady-state matrix, that is \(\lim_{k \to \infty} P_{k:k-1} = P_{\infty}\), then it must asymptotically satisfy the algebraic Riccati Equation:</p>
+
+\[P_{\infty} =  A P_{\infty}  A^T - A P_{\infty} C^T \big( CP_{\infty}  C^T + R_2 \big)^{-1} CP_{\infty}  A^T + R_{1}\]
+
+<p>To analyze the mean of \(x^e_{k:k}\), let us revisit eq.9:</p>
+
+\[x^e_{k:k} = (A-K_kCA)x^e_{k-1:k-1} + (I - K_kC)\epsilon_{1,k-1}-K_k\epsilon_{2,k}\]
+
+<p>\(x^e_{k:k}\)  is a function linear both in the estimate and in the random noise variables.
+The recursive structure in eq.9 allows us to rewrite \(x^e_{k:k}\) explicitly as a function of the initial-time error \(x^e_{0:0}\) as<br />
+\(\)</p>
+
+\[{\scriptsize x^e_{k:k}  = \Big [\prod_{i = 1}^k(A-K_iCA) \Big]x^e_{0:0} + \sum_{i=1}^{k} \Bigg\{ \Big [\prod_{j = i+1}^k(A-K_jCA) \Big ](I-K_iC)(\epsilon_{1,i-1}) \Bigg \} - \sum_{i=1}^{k} \Bigg\{  \Big [\prod_{j = i+1}^k(A-K_jCA) \Big ]K_i \epsilon_{2,i}      \Bigg \} }%\]
+
+<p>Taking the expectation of \(x^e_{k:k}\) gives</p>
+
+<p>\({\scriptsize  \begin{align*} \mathbb{E}[x^e_{k:k}] &amp;= \Big [\prod_{i = 1}^k(A-K_iCA) \Big]\mathbb{E}[x^e_{0:0}] +  \sum_{i=1}^{k} \Bigg\{ \Big [\prod_{j = i+1}^k(A-K_jCA) \Big ](I-K_iC)\mathbb{E}[\epsilon_{1,i-1}] \Bigg \} - \sum_{i=1}^{k} \Bigg\{  \Big [\prod_{j = i+1}^k(A-K_jCA) \Big ]K_i \mathbb{E}[\epsilon_{2,i-1} ]   \Bigg \} \\
+&amp;\text{by linearity of expectation} \\[0.8em]
+&amp;= \Big [\prod_{i = 1}^k(A-K_iCA) \Big]\mathbb{E}[x^e_{0:0}] \\
+&amp;\text{by the assumption that the noise variables have zero mean}
+\end{align*} }%\)<br />
+\(\)</p>
+
+<p>Here we observe that if all eigenvalues of \((A-K_{\infty}CA)\) reside in the open unit circle, \(\lim_{k \rightarrow \infty} \mathbb{E}[x^e_{k:k}] = 0.\) Put differently, as \(k\) tends to \(\infty\), \(\hat{x}^e_{k:k}\) is an asymptotically unbiased estimator of the true state if \((A-K_{\infty}CA)\) is stable.</p>
+
+<hr />
+<hr />
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Tutch Sottithat Winyarat</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Tutch Sottithat Winyarat</li><li><a class="u-email" href="mailto:winyarat@seas.upenn.edu">winyarat@seas.upenn.edu</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/twinyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">twinyarat</span></a></li><li><a href="https://www.linkedin.com/in/winyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">winyarat</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

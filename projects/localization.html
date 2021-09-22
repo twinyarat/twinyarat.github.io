@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Tutch Sottithat Winyarat | A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Tutch Sottithat Winyarat" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<meta property="og:description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<link rel="canonical" href="twinyarat.github.io/projects/localization" />
+<meta property="og:url" content="twinyarat.github.io/projects/localization" />
+<meta property="og:site_name" content="Tutch Sottithat Winyarat" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Tutch Sottithat Winyarat" />
+<script type="application/ld+json">
+{"description":"A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021","headline":"Tutch Sottithat Winyarat","url":"twinyarat.github.io/projects/localization","@type":"WebPage","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="twinyarat.github.io/feed.xml" title="Tutch Sottithat Winyarat" /><!-- for mathjax support -->
+	
+	  <script type="text/x-mathjax-config">
+	    MathJax.Hub.Config({
+	    TeX: { equationNumbers: { autoNumber: "AMS" } }
+	    });
+	  </script>
+	  <script type="text/javascript" async src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Tutch Sottithat Winyarat</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/notes/">Notes</a><a class="page-link" href="/projects/">Projects</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title"></h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="localization-of-mobile-robots"><strong>Localization of Mobile Robots</strong></h2>
+<hr />
+<hr />
+<p>\(\)</p>
+<h4 id="objective"><strong>Objective</strong></h4>
+<p>The objective of this project is to localize an indoor mobile robot. Given a stream of odometry data, monocular sensor readings, and known landmark correspondences, we would like to compute an estimate of the robot’s pose over time. Our approach to the problem will draw on knowledge of state estimation and stochastics, resulting in C++ implementations of three algorithms:</p>
+
+<p>1). <a href="#extended-kalman-filter">Extended Kalman filter</a> <br />
+2). <a href="#unscented-kalman-filter">Unscented Kalman filter</a> <br />
+3). <a href="#particle-filter">Particle filter</a></p>
+
+<p>The two Kalman filters are variants of the standard Kalman filter discussed in this <a href="\notes\kalman">note</a>. The particle filter is a sampling-based algorithm. More details on the mathematical derivation of the particle filter can be found in <a class="citation" href="#probabilisticRobotics">(Thrun et al., 2005)</a>. We analyze the performance of the three algorithms based on their computational complexity and present their <a href="#experimental-results">estimation accuracy results</a>.</p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="data-set"><strong>Data Set</strong></h4>
+<p><a href="http://asrl.utias.utoronto.ca/">The Autonomous Space Robotics Laboratory</a> at the University of Toronto owns and makes publicly available all the data used in this project <a class="citation" href="#Leung">(Leung K Y K &amp; T, 2011)</a>. The data set is gathered from five robots roaming in a 15x8m indoor environment consisting of barcoded landmark posts. Each robot is an iRobot Create platform equipped with a monocular camera. A data subset associated with each robot contains range-bearing measurements with barcoded correspondence to a local landmark post, odometry measurements of linear and angular velocities, and the robot’s groundtruth poses. Additionally, the data set also comes with positions of the landmark posts serving as a map of the environment. In this project, only data from robots 1, 2, and 3 are used. For more details on the entire data set and the manner in which it is gathered, please refer to <a href="http://asrl.utias.utoronto.ca/datasets/mrclam/index.html">the laboratory website</a>.</p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="kalman-filter-revisited"><strong>Kalman Filter Revisited</strong></h4>
+<p>The robot’s motion and its measurement models are assumed respectively to be</p>
+
+\[{\scriptsize x_{k} = Ax_{k-1} + Bu_{k-1} + \epsilon_{1,k} \tag{1} \scriptsize}\]
+
+\[{\scriptsize y_k = Cx_k + \epsilon_{2,k} \scriptsize} \tag{2}\]
+
+<p>For convenience, let us reproduce here the Kalman update equations from this <a href="\notes\kalman">note</a>.
+The expected aposteriori estimate \(\hat{x}_{k-1:k-1}\) from timestep \(k-1\) evolves into an apriori estimate through the system’s motion model as</p>
+
+\[{\scriptsize \hat{x}_{k:k-1} = A\hat{x}_{k-1:k-1} + Bu_{k-1} \scriptsize} \tag{3}\]
+
+<p>In this project, the control input \(u_{k-1}\) will be an odometry measurement. The covariance of the aposterirori estimate \(P_{k-1:k-1}\) evolves via</p>
+
+\[{\scriptsize  P_{k:k-1}  = AP_{k-1:k-1} A^T + R_{1} \scriptsize}  \tag{4}\]
+
+<p>where \(R_1\) denotes the motion noise covariance. Incoporating a range-bearing observation measurement \(y_k\), 
+the expected aposteriori estimate at time \(k\) becomes</p>
+
+\[{\scriptsize \hat{x}_{k:k} =  \hat{x}_{k:k-1} + K_k(y_k - C\hat{x}_{k:k-1}) \scriptsize} \tag{5}\]
+
+<p>where</p>
+
+<p>\({\scriptsize K_k = P_{k:k-1}C^TS_k^{-1} \tag{6} \scriptsize}\)<br />
+\({\scriptsize S_k = CP_{k:k-1} C^T + R_2  \tag{7} \scriptsize}\)</p>
+
+<p>\((y_k - C\hat{x}_{k:k-1})\) in eq.5 is commonly known as the innovation term and captures the discrepency between the actual observation measurement and the expected measurement taken at \(\hat{x}_{k:k-1}\). \(R_2\) denotes the measurement noise covariance. And lastly, the covariance of the aposteriori estimate at time \(k\) is</p>
+
+<p>\({\scriptsize P_{k:k} = (I- K_kC)P_{k:k-1} \scriptsize} \tag{8}\)
+\(\)</p>
+
+<p>Notably, much effort will be spent on computing the gain matrix \(K_k\) and the \(P_{k:k}\) matrix. Before proceeding onto time complexity analysis, let \(n\) be the dimensionality of \(x_k\) and \(m\) that of \(y_k\). To perform work in eq.6, computing \(S_k\) in eq.7 must be first carried out, which by itself incurs a cost of</p>
+
+\[{\scriptsize \mathcal{O}(mn^2) + \mathcal{O}(m^2)  \scriptsize}\]
+
+<p>Computing the gain matrix \(K_k\) entails inverting \(S_k\) and multiplying three matrices, which together in turn incur a cost of</p>
+
+\[{\scriptsize \mathcal{O}(n^{2.376}) + \mathcal{O}(nm^2) + \mathcal{O}(mn^2) \scriptsize}\]
+
+<p>Similarly, to compute \(P_{k:k}\), the work in eq.4 must be first carried out, which has a time complexity of</p>
+
+\[{\scriptsize \mathcal{O}(n^{2.376}) + \mathcal{O}(n^{2}) \scriptsize}\]
+
+<p>And lastly, multiplying the three matrices in eq.8 incurs a cost of</p>
+
+\[{\scriptsize \mathcal{O}(mn^2)  +\mathcal{O}(n^{2.376}) \scriptsize}\]
+
+<p>Therefore, with a constant \(m &lt; n\), the algorithm has an overall time complexity of \(\mathcal{O}(n^{2.376})\)
+<a class="citation" href="#CoreyKalmanFilter">(Montella, 2011)</a>.</p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="extended-kalman-filter"><strong>Extended Kalman Filter</strong></h4>
+
+<p>Let \(\vec{x}_k = \begin{bmatrix} x, y, \theta \end{bmatrix}^T_k\) denote the state estimate of our robot at timestep \(k\), where \(x\) and \(y\) are position coordinates in some global frame and \(\theta\) the robot’s heading angle measured against the global frame’s x-axis. Having received an odometry control input \(\vec{u}_k = \begin{bmatrix} v &amp; \omega \end{bmatrix}^T\), the state \(\vec{x}_k\) evolves over a predefined discrete time inverval \(\Delta t\) according to <br />
+\(\)</p>
+
+<p>\({\scriptsize \begin{align*} \begin{bmatrix}
+x' \\
+y'\\
+\theta'
+\end{bmatrix} &amp;=  \begin{bmatrix}
+x \\
+y\\
+\theta \end{bmatrix}  + 
+\frac{v}{\omega}\begin{bmatrix} -sin(\theta) + sin(\theta + \omega\Delta t) \\
+cos(\theta)-cos(\theta + \omega\Delta t)  \\
+\omega \Delta t \end{bmatrix} = f(\vec{x},\vec{u}) \tag{9}
+\end{align*} \scriptsize}\) <br />
+\(\)</p>
+
+<p>Furthermore, given a landmark correspondence \(c[\cdot]\) mapping landmark barcodes to their associated positions \((x_{lm}, y_{lm})\), a range-bearing measurement \(y_k = \begin{bmatrix} r &amp; \beta  \end{bmatrix}^T\)  taken at \(\vec{x}\) with respect to a particular landmark is modeled as
+\(\)</p>
+
+<p>\({\scriptsize  \begin{align*}
+\begin{bmatrix} r \\ \beta  \end{bmatrix} &amp;= \begin{bmatrix} \sqrt{(x_{lm} -x)^2 + (y_{lm}-y)^2} \\ atan2((y_{lm}-y), (x_{lm} -x) ) - \theta \end{bmatrix} = h(\vec{x}, c[\cdot]) \tag{10}
+\end{align*} \scriptsize}\)
+\(\)</p>
+
+<p>Since the standard Kalman filter, by eq.1 and eq.2 above, assumes that motion and measurement models are linear in the state, the extended Kalman filter linearizes them by taking first order approximations of eq.9 and eq.10:</p>
+
+\[{\scriptsize  \begin{align*} \begin{bmatrix}
+x' \\
+y'\\
+\theta'
+\end{bmatrix} &amp;\approx \nabla_{\vec{x}}f(\vec{x}, \vec{u}) \cdot \begin{bmatrix} 
+x \\
+y\\
+\theta \end{bmatrix} = A_k\hat{x}_k \tag{11} \\
+
+\begin{bmatrix}
+r \\
+\beta
+\end{bmatrix} &amp;\approx  \nabla_{\vec{x}}h(\vec{x}, c[\cdot]) \cdot \begin{bmatrix} 
+x \\
+y\\
+\theta \end{bmatrix} = C_k\hat{x}_k \tag{12}
+\end{align*} \scriptsize}\]
+
+<p>It’s important to note that, while eq.2 and eq.3 are functions linear in the state estimate \(\hat{x}_{k-1:k-1}\), our implementation passes \(\hat{x}_{k-1:k-1}\) directly through the nonlinear models in eq.9 and 10. The Jacobians \(A_k\) and \(C_k\) are computed for each timestep \(k\) and used only in the Kalman updates according to eq.4-8.</p>
+
+<p>At this point, there remain two crucial terms we need to examine: the noise covariance matrices \(R_1\) and \(R_2\). Assuming that motion noise \(\epsilon_{1,k}\) is solely induced by the control input \(\vec{u}_k\), how should we compute the covariance marix \(R_1\)? To approximate \(R_1\), we follow the approach taken in <a class="citation" href="#probabilisticRobotics">(Thrun et al., 2005)</a> by writing</p>
+
+\[{\scriptsize  R_1 \approx [\nabla_{\vec{u}}f] \times [M] \times [\nabla_{\vec{u}}f]^T \tag{13} \scriptsize}\]
+
+<p>where \(M = \mathbb{E}\big[ \begin{bmatrix} v - \bar{v} \\ \omega -\bar{\omega}   \end{bmatrix} \begin{bmatrix} v - \bar{v} &amp; \omega -\bar{\omega}  \end{bmatrix}  \big]\) denotes the control noise covariance matrix.<br />
+\(\bar{v}\) and \(\bar{\omega}\) are the expected control inputs, and \([\nabla_{\vec{u}}f]\) corrects the dimensionality of \(M\) to that of the state. In particular, \(M\) is assumed to be parameterized by \(\alpha\) such that</p>
+
+\[{\scriptsize  M = \begin{bmatrix} (\alpha_0 v+\alpha_1\omega)^2 &amp;	(\alpha_4 v+\alpha_5 \omega)^2 \\						  (\alpha_4 v+\alpha_5 \omega)^2&amp;  (\alpha_2 v+\alpha_3 \omega)^2 \end{bmatrix} \tag{14} \scriptsize}\]
+
+<p>We implement a method that learns the parameter \(\alpha\) from groundtruth data using the method of least square. Unlike \(R_1\), the measurement noise covariance \(R_2\) can be directly approximated without parameter estimation or projection. We implement a method that computes the maximum likelihood estimate of \(R_2\) from groundtruth data.</p>
+
+<p>While \(R_1\) and \(R_2\) computed this way could be used to initialize the algorithm, additional tuning of \(R_1\) and \(R_2\) is required to achieve high estimation accuracy. We use the ratio \(\frac{det(M)}{det(\rho R_2)}\) as a hyperparameter with \(\rho\) and \(\gamma \cdot \alpha\) as tuning variables across all three algorithms.</p>
+
+<p>Since the linearization of the system models and the evaluation of the nonlinear motion and measurement models take almost constant time and hence do not affect the overall time complexity of the algorithm, the extended Kalman filter has the same complexity as the standard Kalman filter.</p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="unscented-kalman-filter"><strong>Unscented Kalman Filter</strong></h4>
+
+<p>Like the extended Kalman filter, the unscented Kalman filter keeps track of the first and second central moments of the state estimate distribution over time <a class="citation" href="#JulierUKF">(Julier &amp; Uhlmann, 1997)</a>. Unlike the extended Kalman filter, however, the unscented Kalman filter represents the distribution at timestep \(k-1\) by a set of weighted samples \(\mathcal{X}_{k-1:k-1}\) (also known as sigma points). Eliminating the need for linear approximations of the system’s models, each sigma point \(\mathcal{x}_{k-1} \in \mathcal{X}_{k-1:k-1}\) is propagated through the nonlinear motion in eq.9. The sample covariance of this set of propagated sigma points is then inflated by the motion noise covariance \(R_1\). The resulting distribution is of apriori state estimates. The covariance of this distribution is equivalent to \(P_{k:k-1}\) in eq.4. From this distribution a secondary set of sigma points \(\mathcal{X}_{k:k-1}\) is generated, each of which is passed through the nonlinear measurement model in eq.10, forming a set of measurement samples \(\mathcal{Z}_k\). The set of these measurement samples represents the distribution of measurements as though taken by the robot at timestep \(k\). The covariance of this distribution is dilated by the measurement noise covariance \(R_2\) and is effectively equivalent to the \(S_k\) term in eq.7. The mean \(\bar{z}_k\) of this distribution, together with the mean \(\hat{x}_{k:k-1}\) of the apriori distribution, are used to compute the state-measurement cross covariance \(\Sigma^{x,z}_k\). This cross covariance is equivalent to the \(P_{k:k-1}C^T\) term in eq.6.</p>
+
+<p>With these matrix equivalences at our disposal, we can then rewrite the Kalman updates from eq.4-8 as</p>
+
+\[{\scriptsize \hat{x}_{k:k} =  \hat{x}_{k:k-1} + K_k(y_k - Mean(\mathcal{Z}_k )) \tag{15} \scriptsize}\]
+
+\[{\scriptsize P_{k:k} = P_{k:k-1} - K_k S_K K_k \tag{16}  \scriptsize}\]
+
+<p>where</p>
+
+\[{\scriptsize  \hat{x}_{k:k-1}  = Mean(\mathcal{X}_{k-1:k-1}  )  \tag{17} \scriptsize}\]
+
+\[{\scriptsize  P_{k:k-1}  = Covar(\mathcal{X}_{k:k-1} ) + R_1  \tag{18} \scriptsize}\]
+
+\[{\scriptsize K_k =\Sigma^{x,z}_k S_k^{-1} \tag{19} \scriptsize}\]
+
+\[{\scriptsize S_k = Covar(\mathcal{Z}_k) + R_2 \tag{20}  \scriptsize}\]
+
+<p>While computing the sample mean and covariance of weighted sigma points is relatively straightforward (although care must be taken when computing the mean of the heading angle \(\theta\) component), to perform the inverse operation – that is to extract sigma points from a distribution parameterized by a mean and covariance – requires a matrix decomposition technique such as the <a href="/notes/cholesky">Cholesky decomposition</a>. This operation will consume most computational resources, dominating other matrix operations with its time complexity of \(\mathcal{O}(n^3)\), where \(n\) is the dimensionality of the system’s state <a class="citation" href="#HighamCholesky">(Higham, 2009)</a>.</p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="particle-filter"><strong>Particle Filter</strong></h4>
+
+<p>One merit of the unscented Kalman filter is its ability to make use of the system’s nonlinear models directly without resorting to linear approximations that characterize the extended Kalman filter. Yet, to represent a state distribution by sigma points still poses a limitation: Sigma points by their design are not able to represent multi-modal or non-Gaussian distributions. Particle filter naturally extends the idea to approximating any form of state distributions by samples (also known as particles) drawn directly from that particular distribution. In this project, it does so by taking samples directly from the apriori estimate distribution described by the motion model and calculates their measurement likelihood scores according to the measurement model. Samples drawn from the apriori are then weighted by their corresponding likelihood scores (also known as importance weights and represent the likelihood ratio between the target distribution and a proposal distribution). Sampling once again from this set of <em>reweighted</em> particles has the similar effect of drawing from the target aposteriori distribution. Such resampling technique, known formally as importance sampling, is a defining character of this algorithm.</p>
+
+<p>Let us examine futher how these sampling mechanisms work. Firstly, let N denote the number of particles. To sample state particles from the motion model, we perturb the control input \(u_{k-1}\) by a control noise variable \(\epsilon_{1,k} \sim \mathcal{N}(\vec{0}, M)\). We then propagate each aposteriori state particle \(\mathcal{x}_{k-1:k-1}^j  \in \mathcal{X}_{k-1:k-1} , \forall j \in \{1,...,N\}\), from the previous timestep \(k-1\) through the motion model in eq.9, using a freshly perturbed control input on each state to obtain a set of apriori particles \(\mathcal{X}_{k:k-1}\). For each propagated state particle \(\mathcal{x}_{k:k-1}^j \in \mathcal{X}_{k:k-1}\), we reweight the particle by its importance score \(\mathcal{w^j}\). This importance weight  \(\mathcal{w^j}\) is calculated by taking the product of two likelihoods, one of observing a given range reading \(r\) and one of observing a given bearing reading \(\beta\) against a particular landmark indicated by \(c[\cdot]\):</p>
+
+\[\mathcal{w^j}  = p( \beta \space \vert \mathcal{x^j}_{k:k-1}, c[\cdot] ) \cdot p(r \space \vert \mathcal{x^j}_{k:k-1}, c[\cdot] ) \tag{21}\]
+
+<p>The two likelihoods are assumed to be Gaussian, each parameterized by an expected value obtained from the measurement model and the variance encoded along the diagonal of the measurement noise covariance \(R_2\). In our implementation, we instead use scaled log-likelihoods, namely the sum of sqaured Mahalanobis distances for numberical stability. Finally we draw \(N\) samples from the set \(\mathcal{X}_{k:k-1}\) such that the probability of drawing \(\mathcal{x^j}_{k:k-1}\) is proportional to its importance weight. The set of \(N\) newly drawn particles \(\mathcal{X}_{k:k}\) represents the target distribution of aposteri estimates at timestep \(k\), and the algorithm proceeds onto subsequent iterations.</p>
+
+<p>To analyze the time complexity of this algorithm, let us examine first the work needed to sample from the motion model. Perturbing a control input and using it to drive a particle through the motion model takes at most \(\mathcal{O}(n^2)\) time when \(x_k\) moves linearly via \(A\). Computing the measurement likelihood for a particle similarly takes at most \(\mathcal{O}(nm)\) time when \(x_k\) is assumed to be scaled by \(C\) in eq.2 (  \(m &lt; n\) denoting the dimensionality of the measurement \(y_k\)). Since drawing \(N\) particles from the reweighted \(\mathcal{X}_{k:k-1}\) can take \(\mathcal{O}(N)\) time and since performing the two aforementioned operations for each of the \(N\) particles amounts to a complexity of \(\mathcal{O}(Nn^2)\), the overall time complexity of this algorithm is \(\mathcal{O}(Nn^2) + \mathcal{O}(N)  = \mathcal{O}(Nn^2)\)</p>
+
+<p>Like in both the extended Kalman filter and the unscented Kalman filter, estimation accuracy of the particle filter also heavily depends on the tuning of \(R_2\). Since there is no explicit need for the motion noise covariance \(R_1\), we tune \(M\) via \(\alpha\) instead.</p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="experimental-results"><strong>Experimental Results</strong></h4>
+<p>Figure 1 shows the mean sqaured estimate error as a function of the tuning parameter \(\frac{det(M)}{det(\rho R_2)}\) across the three algorithms. For each robot, we choose ones that minimize the errors and tune the control noise covariance \(M\) and measurement noise covariance \(R_2\) accordingly. <br />
+\(\)</p>
+
+<p><img src="/assets/images/tuning_plot.jpg" alt="Tuning" />
+<em>Fig. 1</em></p>
+
+<hr />
+<p>\(\)</p>
+
+<p>Figure 2 and 3 below show estimates of robot#1 from the three algorithms. Here we observe that while the three algorithms perform relatively well when the robot’s path is linear, position errors increase drastically when the robot first enters circular motion and worsen even more at subsequent sharp turns.</p>
+
+<p><img src="/assets/images/bot1Pos.png" alt="bot1pos" />
+<em>Fig. 2</em></p>
+
+<p><img src="/assets/images/bot1ang.png" alt="bot1ang" />
+<em>Fig. 3</em></p>
+
+<hr />
+<p>\(\)</p>
+
+<p>The adverse effect of nonlinear motion on position errors is more apparent in robot#2. This is, on one hand, especially true for the errors produced by the extended Kalman filter and the unscented Kalman filter – two algorithms that make certain assumptions about linearity of the robot’s motion or about the Gaussian form of the estimate distribution. The particle filter, on the other hand, outperforms the other two algoritms in terms of estimatation accuracy; by sacrificing computational efficiency for expressiveness, the particle filter is able to more accurately track robot#2 as it undergoes highly nonlinear motion.</p>
+
+<p><img src="/assets/images/bot2Pos.png" alt="bot2pos" />
+<em>Fig. 4</em></p>
+
+<p><img src="/assets/images/bot2ang.png" alt="bot2ang" />
+<em>Fig. 5</em></p>
+
+<hr />
+<p>\(\)</p>
+
+<p>Figure 6 shows another mixture of straight and curved paths. Here we observe that position estimates made by the extended Kalman filter and the unscented Kalman filter deviate from the true path even when robot#3 travels on a straight line, and the errors become unstable when it enters large loops. Although better behaved, the estimate made by the particle filter also suffers from offsets and drifts. To further improve accuracy, we hope to incorporate visual information from cameras along with range-bearing and wheel odometry information, and also to experiment with the error state Kalman filter in future work.</p>
+
+<p><img src="/assets/images/bot3Pos.png" alt="bot3pos" />
+<em>Fig. 6</em></p>
+
+<p><img src="/assets/images/bot3ang.png" alt="bot3ang" />
+<em>Fig. 7</em></p>
+
+<hr />
+
+<hr />
+<p>\(\)</p>
+<h3 id="references">References</h3>
+<ol class="bibliography"><li><span id="probabilisticRobotics">Thrun, S., Burgard, W., &amp; Fox, D. (2005). <i>Probabilistic Robotics</i>. MIT Press.</span></li>
+<li><span id="Leung">Leung K Y K, B. T. D., Halpern Y, &amp; T, L. H. H. (2011). The UTIAS Multi-Robot Cooperative Localization and Mapping Dataset. In <i>International Journal of Robotics Research</i>.</span></li>
+<li><span id="CoreyKalmanFilter">Montella, C. (2011). <i>The Kalman Filter and Related Algorithms: A Literature Review</i>.</span></li>
+<li><span id="JulierUKF">Julier, S. J., &amp; Uhlmann, J. K. (1997). New extension of the Kalman filter to nonlinear systems. In I. Kadar (Ed.), <i>Signal Processing, Sensor Fusion, and Target Recognition VI</i> (Vol. 3068, pp. 182–193). SPIE.</span></li>
+<li><span id="HighamCholesky">Higham, N. J. (2009). Cholesky factorization. <i>Wiley Interdisciplinary Reviews: Computational Statistics</i>, <i>1</i>(2), 251–254.</span></li></ol>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Tutch Sottithat Winyarat</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Tutch Sottithat Winyarat</li><li><a class="u-email" href="mailto:winyarat@seas.upenn.edu">winyarat@seas.upenn.edu</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/twinyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">twinyarat</span></a></li><li><a href="https://www.linkedin.com/in/winyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">winyarat</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

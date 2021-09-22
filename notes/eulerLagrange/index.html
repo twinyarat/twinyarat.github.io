@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Tutch Sottithat Winyarat | A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Tutch Sottithat Winyarat" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<meta property="og:description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<link rel="canonical" href="twinyarat.github.io/notes/eulerLagrange/" />
+<meta property="og:url" content="twinyarat.github.io/notes/eulerLagrange/" />
+<meta property="og:site_name" content="Tutch Sottithat Winyarat" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Tutch Sottithat Winyarat" />
+<script type="application/ld+json">
+{"description":"A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021","headline":"Tutch Sottithat Winyarat","url":"twinyarat.github.io/notes/eulerLagrange/","@type":"WebPage","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="twinyarat.github.io/feed.xml" title="Tutch Sottithat Winyarat" /><!-- for mathjax support -->
+	
+	  <script type="text/x-mathjax-config">
+	    MathJax.Hub.Config({
+	    TeX: { equationNumbers: { autoNumber: "AMS" } }
+	    });
+	  </script>
+	  <script type="text/javascript" async src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Tutch Sottithat Winyarat</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/notes/">Notes</a><a class="page-link" href="/projects/">Projects</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title"></h1>
+  </header>
+
+  <div class="post-content">
+    <h3 id="the-euler-lagrange-equation-of-motion"><strong>The Euler-Lagrange Equation of Motion</strong></h3>
+<hr />
+<hr />
+<p>\(\)</p>
+
+<p>Any mechanical system parameterized by a set of generalized coordinates \(\{q_i\}\) will produce</p>
+
+\[\scriptsize{\boldsymbol{D}(q)\ddot{q} + \boldsymbol{C}(q,\dot{q})\dot{q}+g(q) = \tau } \tag{1.1}\]
+
+<p>as its equation of motion if its potential energy \(\mathcal{P}\) is independent of \(\dot{q} = [\dot{q}_1,\dot{q}_2 \dots \dot{q}_n ]^T\) and its kinetic energy \(\mathcal{K}\) can be expressed in the quadratic form of</p>
+
+\[\scriptsize{\frac{1}{2}\dot{q}^T\boldsymbol{D}(q)\dot{q} }\]
+
+<p>where the inertia matrix \(\boldsymbol{D}(q)\) is symmetric and positive definite <a class="citation" href="#spong">(Spong et al., 2006)</a>.</p>
+
+<p>To see where eq.1.1 comes from and what is hidden inside the matrices \(\boldsymbol{D}, \boldsymbol{C}, g\), and \(\tau\), let us begin our investigation with the unassuming concept of rigidity.</p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="virtual-displacement"><strong>Virtual Displacement</strong></h4>
+
+<p>First denote by \(r_i = r_i(q_1, \dots ,q_n)\) the position vector of the \(i^{th}\) particle. Here \(r_i\) is a function of some underlying independent generalized coordinates \(\{q_1, \dots q_n \}\). A body of 2 particles \(r_1\) and \(r_2\) is rigid if they are constrained to</p>
+
+\[\scriptsize{ \vert \vert r_1 - r_2     \vert \vert } = l\]
+
+<p>for a fixed length \(l\). We could classify a constraint of this type as a holonomic constraint and succinctly write it as</p>
+
+\[\scriptsize{ h(r_1, r_2, \dots r_k) = 0 }\]
+
+<p>Since the system is rigid, perturbing the above 2-particle system by infinitesimals \(\delta r_1,\delta r_2\) must also yield the following constraint:</p>
+
+\[\scriptsize{ \begin{align*} &amp;\vert \vert (r_1 + \delta r_1) - (r_2  + \delta r_2 )   \vert \vert^2 = l^2 \\
+&amp;\rightarrow (r_1-r_2)^T(r_1-r_2) + (\delta r_1- \delta r_2)^T(\delta r_1-\delta r_2) - 2(r_1-r_2)^T(\delta r_1- \delta r_2) = l^2 \\
+&amp;\rightarrow (r_1-r_2)^T(\delta r_1-\delta r_2) = 0 \tag{2.1}\\
+&amp;\text{by discarding the negligible quadratic infinitesimal term }
+\end{align*}}\]
+
+<p>Any pair of infinitesimal perturbations \(\delta r_1, \delta r_2\) that satisfies eq.2.1 forms what we call virtual displacements of the system; the adjective seems apt considering that when in equilibrium, the net force on each <em>perturbed</em> particle is null, which implies that in equilibrium the total work done by any set of virtual displacement must also be null– as though no actual work was done. Denoting the net force on the \(i^{th}\) particle by \(F_i\), we can formalize this condition for a rigid k-particle system as</p>
+
+\[\scriptsize{ \begin{align*}
+0 &amp;= \sum_{i = 1}^{k} F_i^T\delta r_i  \\
+&amp;= \sum_{i = 1}^{k} (f_i^{c} + f_i^{a})^T\delta r_i \\
+&amp;\text{by decomposing the net force on particle i as a sum of} \\
+&amp;\text{the constraint force } f_{i}^c \text{ and the externally applied force }  f_i^a \\
+&amp;= \sum_{i = 1}^{k}(f_i^{c})^T \delta r_i + \sum_{i = 1}^{k} (f_i^{a})^T\delta r_i \\
+&amp;= \sum_{i = 1}^{k}\big(\sum_{j \neq i}^{k}\alpha_j(r_i - r_j) \big)^T \delta r_i + \sum_{i = 1}^{k} (f_i^{a})^T\delta r_i \\ 
+&amp;\text{by further decomposing the constraint force} \\
+&amp;\text{exerted by particle j on particle i into }\alpha_j(r_i - r_j); \alpha_j \in \mathbb{R} \\
+&amp;= \sum_{i, j; i\neq j}^{k}\big(\alpha_j(r_i - r_j) \big)^T \delta r_i + \sum_{i = 1}^{k} (f_i^{a})^T\delta r_i = \sum_{i = 1}^{k} (f_i^{a})^T\delta r_i = 0 \tag{2.2} 
+\end{align*}	
+}\]
+
+<p>At this point, we observe that the constraint force exerted on particle \(i\) by particle \(j\) is \(\alpha_j(r_i - r_j)\), whose negation is in turn the constraint force exerted on particle \(j\) by particle \(i\): \(-\alpha_j(r_i - r_j) = \alpha_i(r_j - r_i)\). Therefore, for any \(\{i,j \}\) pair, the work done by the constraint forces on the \(i^{th}\) and the \(j^{th}\) virtual displacements together is</p>
+
+\[\scriptsize{ \alpha_j(r_i - r_j)^T\delta r_i -\alpha_j(r_i - r_j)^T \delta r_j =  \alpha_j(r_i - r_j)^T(\delta r_i - \delta r_j) } = 0  \tag{2.3}\]
+
+<p>where the last equality follows from the definition of virtual displacements in eq.2.1. The constraint forces have vanished from our view. As a direct consequence, it follows that if eq.2.3 holds(or equivalently, if the system is rigid), the total work done by external forces on any set of virtual displacements <em>in equilibrium</em> is null. This statement about the work performed by virtual displacements \(\delta r\) is precisely that of the Principle of Virtual Work.</p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="dalembert-and-the-emergence-of-the-lagrangian"><strong>D’Alembert and The Emergence of The Lagrangian</strong></h4>
+
+<p>It is crucial to keep in mind that the virtual displacements \(\delta r_i\) in eq.2.2 are not independent since they are interrelated by eq.2.1, and hence we cannot conclude that the individual externally applied forces \(f_i^{a}\) are null. At this point it may seem as though we have come to a deadend and not much else can be said, but D’Alembert will come to the rescue. D’Alembert suggests us view eq.2.2 in light of disequilibrium, namely when \(\sum_{i = 1}^{k} (f_i^{a})^T\delta r_i \neq 0\), and denote by \(p_i = m_i\dot{r}_i\) the momentum of the \(i^{th}\) particle. To return to the state of equilibrium, each \(i^{th}\) perturbed particle in the system must internally experience a balancing counter force \(-\dot{p}_i\) to \(f_i^{a}\).  Once in equilibrium, the work performed by virtual displacements is again null:</p>
+
+<p style="font-size: 0.9em;">
+$$ \scriptsize{
+\begin{align*}
+
+0 = \sum_{i = 1}^{k} (f_i^{a} - \dot{p}_i )^T \delta r_i &amp;= \sum_{i = 1}^{k} (f_i^{a})^T\delta r_i - \sum_{i = 1}^{k} (\dot{p}_i )^T \delta r_i  \\
+&amp;= \sum_{i = 1}^{k} (f_i^{a})^T \sum_{j = 1}^{n} \frac{\partial r_i}{\partial q_j} \delta q_j - \sum_{i = 1}^{k} (\dot{p}_i )^T \delta r_i  \\
+&amp;= \sum_{j = 1}^{n} \underbrace{\sum_{i = 1}^{k}  (f_i^{a})^T\frac{\partial r_i}{\partial q_j}}_{:= \psi_j} \delta q_j - \sum_{i = 1}^{k} (\dot{p}_i )^T \delta r_i  \\
+&amp;\text{by defining } \psi_j \text{ as the } j^{th} \text{ generalized force}\\
+&amp;= \sum_{j = 1}^{n} \psi_j \delta q_j - \sum_{i = 1}^{k} (\dot{p}_i )^T \delta r_i  \\
+&amp;= \sum_{j = 1}^{n} \psi_j \delta q_j - \sum_{i = 1}^{k} (m_i \ddot{r_i} )^T \delta r_i  = \sum_{j = 1}^{n} \psi_j \delta q_j - \sum_{i = 1}^{k} (m_i \ddot{r_i} )^T \sum_{j = 1}^{n}\frac{\partial r_i}{\partial q_j} \delta q_j   \\
+&amp;= \sum_{j = 1}^{n} \psi_j \delta q_j -  \sum_{j = 1}^{n}\sum_{i = 1}^{k} m_i (\ddot{r_i} )^T\frac{\partial r_i}{\partial q_j} \delta q_j   \\
+&amp;=\sum_{j = 1}^{n} \psi_j \delta q_j -  \sum_{j = 1}^{n}\sum_{i = 1}^{k} \bigg\{ \frac{d}{dt} \big[ m_i \dot{r_i}^T \frac{\partial r_i}{\partial q_j}\big] - m_i\dot{r_i}^T \frac{d}{dt}\big[ \frac{\partial r_i}{\partial q_j}\big]  \bigg\}\delta q_j   \\
+&amp;\text{by the product rule and the injection of a cancelling term }\\
+&amp;=\sum_{j = 1}^{n} \psi_j \delta q_j -  \sum_{j = 1}^{n}\sum_{i = 1}^{k} \bigg\{ \frac{d}{dt} \big[ m_i {v_i}^T \frac{\partial v_i}{\partial \dot{q_j}}\big] - m_i{v_i}^T \frac{d}{dt}\big[ \frac{\partial r_i}{\partial q_j}\big]  \bigg\}\delta q_j   \\
+&amp;\text{by the fact that } v_i = \dot{r_i} = \sum_{j=1}^{n} \frac{\partial r_i}{\partial q_j} \dot{q_j} \text{ and hence that } \frac{\partial v_i}{\partial \dot{q_j}} = \frac{\partial r_i}{\partial q_j} \\
+&amp;=\sum_{j = 1}^{n} \psi_j \delta q_j -  \sum_{j = 1}^{n}\sum_{i = 1}^{k} \bigg\{ \frac{d}{dt} \big[ m_i {v_i}^T \frac{\partial v_i}{\partial \dot{q_j}}\big] - m_i{v_i}^T \frac{\partial v_i}{\partial q_j}  \bigg\}\delta q_j   \\
+&amp;\text{by the fact that } \frac{d}{dt}\big[ \frac{\partial r_i}{\partial q_j}\big]  = \sum_{l = 1}^{n} \frac{\partial^2 r_i}{\partial q_j \partial q_l}\dot{q_l} = \frac{\partial}{\partial q_j} \sum_{l = 1}^{n} \frac{\partial r_i}{ \partial q_l}\dot{q_l} = \frac{\partial v_i}{\partial q_j}\\
+&amp;=\sum_{j = 1}^{n} \psi_j \delta q_j -  \sum_{j = 1}^{n} \bigg\{ \frac{d}{dt} \frac{\partial \mathcal{K}}{\partial \dot{q_j}} - \frac{\partial \mathcal{K}}{\partial q_j}  \bigg\}\delta q_j   \\
+&amp;\text{by defining the kinetic energy as } \mathcal{K} := \sum_{i = 1}^{k} \frac{1}{2}m_i v_i^Tv_i \\
+&amp; = \sum_{j = 1}^{n} \bigg\{ \psi_j -  \bigg(\frac{d}{dt} \frac{\partial \mathcal{K}}{\partial \dot{q_j}} - \frac{\partial \mathcal{K}}{\partial q_j} \big) \bigg\} \delta q_j = 0 \tag{3.1}
+\end{align*}	
+}
+$$</p>
+
+<p>Since the generalized coordinates \(q_j\) are independent and so are their virtual displacements, we are now able to conclude that</p>
+
+\[\frac{d}{dt} \frac{\partial \mathcal{K}}{\partial \dot{q_j}} - \frac{\partial \mathcal{K}}{\partial q_j}  = \psi_j \tag{3.2}\]
+
+<p>for each \(j \in \{1,2,\dots, n \}\).</p>
+
+<p>If we write \(\psi_j = -\frac{\partial \mathcal{P}( q)}{\partial q_j} + \tau_j\) as the sum of the input force \(\tau_j\) and the derivative of a potential field \(\mathcal{P}\), we can modify eq.3.2 to say</p>
+
+\[\frac{d}{dt} \frac{\partial \mathcal{L}}{\partial \dot{q_j}} - \frac{\partial \mathcal{L}}{\partial q_j}  = \tau_j \tag{3.3}\]
+
+<p>We have here rediscovered the Euler-Lagrange equation of motion. The uncanny scalar quantiy \(\mathcal{L} = \mathcal{K} - \mathcal{P}\) is known as the Lagrangian of the system. We could view it as a summary of effort that the system internally expends without the influence of a potential field.</p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="constructing-the-lagrangian-kinetic-and-potential-energy"><strong>Constructing The Lagrangian: Kinetic and Potential Energy</strong></h4>
+
+<p>To form the Lagrangian \(\mathcal{L}\) requires expressions for the kinetic energy \(\mathcal{K}\) and the potential energy \(\mathcal{P}\). These expressions are to be written in terms of the generalized coordinates \(q_i\) and their time-derivatives \(\dot{q}_i\). Let’s handle the kinetic energy first, denoting by \(M\)  the total mass of a body \(\mathcal{B}\), \(\gamma\) the translational velocity of the body’s center of mass expressed in some inertial reference frame, \(v\) the velocity of an individual particle, and  \(dm\) the infinitesimal mass unit of that particle.</p>
+
+<p>The kinetic energy of a continuous rigid body is the sum of its translational and rotational components. Due to rigidity, the translational component is entirely subsumed by the body’s center of mass. We expand the rotational component into the velocities of individual constituent particles as they rotate about the body’s center of mass:</p>
+
+\[\scriptsize{
+\begin{align*}
+\mathcal{K} &amp;:= \frac{1}{2}M\gamma^T \gamma + \frac{1}{2} \int_{\mathcal{B}} (v^Tv) dm\\
+&amp;= \frac{1}{2}M\gamma^T \gamma + \frac{1}{2} \int_{\mathcal{B}} (\omega \times r)^T(\omega \times r) dm\\
+&amp;\text{by expressing } v \text{ in terms of the angular rate } \omega \text{ about the body's center of mass,}\\
+&amp;\text{and of the displacement vector } r \text{ from the body's center of mass.}\\
+&amp;\text{Both of these quantities are measured locally in the body-fixed frame.} \\
+&amp;= \frac{1}{2}M\gamma^T \gamma + \frac{1}{2} \int_{\mathcal{B}} (r^T[\omega]^T_{\times} [\omega]_\times r) dm\\
+&amp;\text{by writting the cross product with }\omega \text{ in matrix form}\\
+&amp;= \frac{1}{2}M\gamma^T \gamma + \frac{1}{2} \int_{\mathcal{B}} (\omega^T[r]_{\times} [-r]_\times \omega) dm\\
+&amp;= \frac{1}{2}M\gamma^T \gamma +\frac{1}{2} \omega^T ( \int_{\mathcal{B}} [r]_{\times} [-r]_\times  dm  )\omega\\
+&amp;= \frac{1}{2}M\gamma^T \gamma + \frac{1}{2}\omega^T  \underbrace{\bigg(\int_{\mathcal{B}} \begin{bmatrix} z^2+ y^2 &amp; -xy &amp; -xz \\ -xy &amp; z^2 + x^2 &amp; -yz \\ -xz &amp; -yz &amp; y^2 + x^2 \end{bmatrix}  dm \bigg)}_{:= I} \omega \tag{4.1}\\
+&amp;\text{where the integral of the matrix is to be taken entry-wise} \\
+\end{align*}
+}\]
+
+<p>Independent of the body’s motion, the matrix \(I\) is known as the inertia tensor. If we were given a mass distribution over the body, that is its mass density \(\rho(r) = \rho(x,y,z)\), we could compute the entries of \(I\) explicitly:</p>
+
+\[\scriptsize{ I = \begin{bmatrix} I_{xx} &amp; I_{xy} &amp; I_{xz}\\ I_{yx} &amp; I_{yy} &amp; I_{yz}\\  I_{zx} &amp; I_{zy} &amp; I_{zz}  \end{bmatrix} }\]
+
+<p>Denoting by \(dV\) the infinitesimal volume unit and equating \(dm = \rho(\cdot)dV\), the principal moments of inertia are</p>
+
+\[\scriptsize{
+	\begin{align*}
+	I_{xx} &amp;= \int_{\mathcal{B}} (y^2+z^2)\rho(x,y,z)dV \\
+	I_{yy} &amp;= \int_{\mathcal{B}} (x^2+z^2)\rho(x,y,z)dV \\
+	I_{zz} &amp;= \int_{\mathcal{B}} (x^2+y^2)\rho(x,y,z)dV \\
+	\end{align*}
+}\]
+
+<p>and the cross products of inertia are</p>
+
+\[\scriptsize{
+	\begin{align*}
+	I_{xy} &amp;= I_{yx} =  -\int_{\mathcal{B}} (xy)\rho(x,y,z)dV \\
+	I_{xz} &amp;= I_{zx} = -\int_{\mathcal{B}} (xz)\rho(x,y,z)dV \\
+	I_{yz} &amp;= I_{zy} = -\int_{\mathcal{B}} (yz)\rho(x,y,z)dV \\
+	\end{align*}
+}\]
+
+<p>Let’s now generalize our result to systems composed of \(k\) rigid bodies; a k-link manipulator arm for instance. Denote first by \(m_i\) the mass the of the \(i^{th}\) body and \(I_{i}\) the inertia tensor of the \(i^{th}\) body. Denote also by \(J_{v,i}(q)\) and \(J_{\omega,i}(q)\) the Jacobian matrices that map the time-derivatives \(\dot{q}\) of the generalized coordinates to the \(i^{th}\) body’s linear velocity and angular velocity, respectively. The two velocities are to be measured in a global inertial reference frame:</p>
+
+\[\scriptsize{v_{i} = J_{v,i}(q) \dot{q} \text{ and } \omega_{i} = J_{\omega,i}(q)\dot{q} }\]
+
+<p>The translational component of the kinetic energy \(\mathcal{K}_{trans,i}\) of the \(i^{th}\) body  is hence</p>
+
+\[\mathcal{K}_{trans,i}  = \frac{1}{2} m_i v_i^Tv_i  =  \frac{1}{2} m_i \dot{q}^T(J_{v,i}(q))^T(J_{v,i}(q))\dot{q}\]
+
+<p>However, the rotational component \(\mathcal{K}_{rot,i}\) of the kinetic energy of the \(i^{th}\) body as written in eq.4.1 is terms of its angular velocity expressed in the body-fixed frame. We therefore must not forget to convert the globally-measured \(\omega_{i} = J_{\omega,i}(q)\dot{q}\) into the body’s fixed frame:</p>
+
+\[\scriptsize{\boldsymbol{R_i}(q)^T\omega_{i} =  \boldsymbol{R_i}^T(q)J_{\omega,i}(q)\dot{q} }\]
+
+<p>so that \(\mathcal{K}_{rot,i}\) can now be written as</p>
+
+\[\mathcal{K}_{rot,i}  = \frac{1}{2}\dot{q}^T J_{\omega,i}^T(q)\boldsymbol{R}_{i}(q)I_{i}\boldsymbol{R}_{i}^T(q)J_{\omega,i}(q)\dot{q}\]
+
+<p>where \(\boldsymbol{R}_{i}\) denotes the orientation of the \(i^{th}\) body-fixed frame. And since the kinetic energy \(\mathcal{K}\) of the entire system is the sum of the kinetic energies of its parts, we write it as</p>
+
+\[\scriptsize{ \begin{align*}
+\mathcal{K} &amp;= \sum_{i = 1}^{k}\big(\mathcal{K}_{trans,i} + \mathcal{K}_{rot,i}\big) \\
+&amp;= \sum_{i = 1}^{k} \big(  \frac{1}{2} m_i \dot{q}^T(J_{v,i}(q))^T(J_{v,i}(q))\dot{q} + \frac{1}{2}\dot{q}^T J_{\omega,i}^T(q)R_{i}(q)I_{i}R_{i}^T(q)J_{\omega,i}(q)\dot{q} \big) \\
+&amp;= \frac{1}{2} \dot{q}^T \underbrace{\big( \sum_{i = 1}^{k}  m_i (J_{v,i}(q))^T(J_{v,i}(q)) + J_{\omega,i}^T(q)R_{i}(q)I_{i}R_{i}^T(q)J_{\omega,i}(q) \big)}_{:= \boldsymbol{D}(q)}\dot{q} \\
+&amp;:= \frac{1}{2} \dot{q}^T \boldsymbol{D}(q)\dot{q} \tag{4.2}
+\end{align*}
+}\]
+
+<p>The symmetric, positive definite, \(q-\)dependent matrix is called the inertia matrix (not to be confused with the inertia <em>tensor</em> \(I_i\) that it contains) for it encapsulates the inertial properties of the system when it is in a particular state \(q\).</p>
+
+<p>Finally, like the kinetic energy of the system, the potential energy \(\mathcal{P}\) due to gravity of the k-rigid-body system can be written as the sum of the individual bodies’ potential energies:</p>
+
+\[\scriptsize{\mathcal{P}(q) = \sum_{i=1}^{k} \mathcal{P}_i =  \sum_{i=1}^{k} m_i g^Tr_{c,i}(q)}\]
+
+<p>where \(r_{c,i}(q)\) denotes the position vector of the \(i^{th}\) body’s center of mass expressed in the global inertial frame, and \(g\) the acceleration due to gravity also expressed in the inertial frame.</p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="motion-and-a-second-order-differential-equation"><strong>Motion and A Second Order Differential Equation</strong></h4>
+
+<p>With expressions for the kinetic and potential energies at our disposal, we can now write the Lagrangian \(\mathcal{L}\) of the system parameterized by \(n\) generalized coordinates \(q\). We will see that forming the Lagrangian \(\mathcal{L}\) and taking the partial derivatives as prescribed by the Euler-Lagrange equation in eq.3.3 will lead us to a second order differential equation for each of the \(n\) coordinates. This set of \(n\) equations will come together to describe the dynamics of our system, giving us a model of its motion as the system evolves and responds to external inputs. Our possession of the system’s model will inevitably tempt us <a href="\notes\acrobot">to control it</a>.</p>
+
+<p>For our convenience, let us reproduce here eq.3.3:</p>
+
+\[\frac{d}{dt} \frac{\partial \mathcal{L}}{\partial \dot{q_j}} - \frac{\partial \mathcal{L}}{\partial q_j}  = \tau_j\]
+
+<p>Proceed by writing the Lagrangian \(\mathcal{L}\) of the system as</p>
+
+\[\scriptsize{ \begin{align*} \mathcal{L} &amp;= \mathcal{K} - \mathcal{P}(q) \\
+&amp;= \frac{1}{2} \dot{q}^T\boldsymbol{D}\dot{q} - \mathcal{P}(q) \\
+&amp;=  \frac{1}{2}\sum_{i,j} d_{i,j}(q) \dot{q}_i\dot{q}_j  - \mathcal{P}(q) \\
+&amp;\text{where } d_{i,j} \text{ denotes the entry of } \boldsymbol{D} \text{ indexed by row i and column j}
+\end{align*}
+}\]
+
+<p>Taking the partial derivative of \(\mathcal{L}\) with respect to the time derivative \(\dot{q}_k\) of the \(k^{th}\) coordinate gives</p>
+
+\[\scriptsize{ \frac{\partial \mathcal{L}}{\partial \dot{q}_k } = \sum_{j} d_{k,j} \dot{q}_j  }\]
+
+<p>whose time-derivative in turn is</p>
+
+\[\scriptsize{ \begin{align*} \frac{d}{dt} \frac{\partial \mathcal{L}}{\partial \dot{q}_k } &amp;=  \sum_{j} d_{k,j} \ddot{q}_j + \sum_{j} \frac{d}{dt} d_{k,j} \dot{q}_j \\
+&amp;= \sum_{j} d_{k,j} \ddot{q}_j + \sum_{i,j} \frac{\partial d_{k,j}}{\partial q_i} \dot{q}_i\dot{q}_j \tag{5.1}
+  \end{align*}}\]
+
+<p>Taking the partial derivative of \(\mathcal{L}\) with respect to the \(k^{th}\) coordinate gives</p>
+
+\[\scriptsize{ \frac{\partial \mathcal{L}}{\partial q_k}  = \frac{1}{2} \sum_{i,j} \frac{\partial d_{i,j}}{\partial q_k}\dot{q}_i  \dot{q}_j - \frac{\partial \mathcal{P}}{\partial q_k}   \tag{5.2} }\]
+
+<p>Combining eq.5.1 and eq.5.2 into the Euler-Lagrange equation produces a second order differential equation in the \(k^{th}\) coordinate \(q_k\):</p>
+
+\[\scriptsize{  \begin{align*} \sum_{j} d_{k,j} \ddot{q}_j + \sum_{i,j} \bigg\{ \frac{\partial d_{k,j}}{\partial q_i}-   \frac{1}{2}\frac{\partial d_{i,j}}{\partial q_k} \bigg\} \dot{q}_i  \dot{q}_j  + \frac{\partial \mathcal{P}}{\partial q_k} &amp;= \tau_k \\
+\sum_{j} d_{k,j} \ddot{q}_j + \sum_{i,j}\frac{1}{2} \bigg\{ \frac{\partial d_{k,j}}{\partial q_i} + \frac{\partial d_{k,i}}{\partial q_j}-   \frac{\partial d_{i,j}}{\partial q_k} \bigg\} \dot{q}_i  \dot{q}_j  + \frac{\partial \mathcal{P}}{\partial q_k} &amp;= \tau_k \\
+ \end{align*}  } \tag{5.3}\]
+
+<p>The last line holds due to symmetry in \(\boldsymbol{D}\), which justifies the fact that \(\scriptsize{\sum_{i,j} \bigg\{ \frac{\partial d_{k,j}}{\partial q_i}\bigg\}\dot{q}_i  \dot{q}_j =  \frac{1}{2} \sum_{i,j} \bigg \{ \frac{\partial d_{k,j}}{\partial q_i} + \frac{\partial d_{k,i}}{\partial q_j} \bigg\}\dot{q}_i  \dot{q}_j }\)</p>
+
+<p>We can do a little Spring cleaning by rewriting the cross first order terms as</p>
+
+\[\scriptsize{
+\begin{align*}
+\sum_{i,j}\frac{1}{2} \bigg\{ \frac{\partial d_{k,j}}{\partial q_i} + \frac{\partial d_{k,i}}{\partial q_j}-   \frac{\partial d_{i,j}}{\partial q_k} \bigg\} \dot{q}_i  \dot{q}_j  &amp;:= \sum_{i,j} c_{ijk}\dot{q}_i  \dot{q}_j \\ 
+\end{align*}	
+}\]
+
+<p>where \(c_{ijk} =  \frac{1}{2} \bigg\{ \frac{\partial d_{k,j}}{\partial q_i} + \frac{\partial d_{k,i}}{\partial q_j}-   \frac{\partial d_{i,j}}{\partial q_k} \bigg\}\) are known as Christoffel symbols of the first kind.</p>
+
+<p>Consequently, eq.5.3 can be rewritten as</p>
+
+\[\scriptsize{ \sum_{j} d_{k,j} \ddot{q}_j + \sum_{j}\sum_{i} c_{ijk} \dot{q}_i  \dot{q}_j  + \frac{\partial \mathcal{P}}{\partial q_k} = \tau_k } \tag{5.4}\]
+
+<p>And as a final clean-up, we could stack eq.5.4 vertically into a matrix form, whose \(k^{th}\) row corresponds to the equation of motion for the \(k^{th}\) generalized coordinate.</p>
+
+\[\boldsymbol{D}(q)\ddot{q} + \boldsymbol{C}(q,\dot{q})\dot{q}+g(q) = \tau\]
+
+<p>where the \((k,j)^{th}\) entry of the matrix \(\boldsymbol{C}(q,\dot{q})\) is defined as</p>
+
+\[\scriptsize{ \begin{align*} c_{kj} &amp;:= \sum_{i} c_{ijk} \dot{q}_i\\
+&amp;= \sum_{i} \frac{1}{2} \bigg\{ \frac{\partial d_{k,j}}{\partial q_i} + \frac{\partial d_{k,i}}{\partial q_j}-   \frac{\partial d_{i,j}}{\partial q_k} \bigg\} \dot{q}_i
+\end{align*}}\]
+
+<p>,the generalized gravity vector \(g(q) := [\frac{\partial \mathcal{P}}{\partial q_1}, \dots, \frac{\partial \mathcal{P}}{\partial q_n} ]^T\), and the generalized input forces \(\tau := [\tau_1, \dots, \tau_n]^T\).</p>
+
+<p>We have come full circle to the equation of motion in eq.1.1.</p>
+
+<hr />
+
+<hr />
+<p>\(\)</p>
+<h3 id="references">References</h3>
+<ol class="bibliography"><li><span id="spong">Spong, M. W., Hutchinson, S. A., &amp; Vidyasagar, M. (2006). <i>Robot modeling and control</i>.</span></li></ol>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Tutch Sottithat Winyarat</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Tutch Sottithat Winyarat</li><li><a class="u-email" href="mailto:winyarat@seas.upenn.edu">winyarat@seas.upenn.edu</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/twinyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">twinyarat</span></a></li><li><a href="https://www.linkedin.com/in/winyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">winyarat</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Tutch Sottithat Winyarat | A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Tutch Sottithat Winyarat" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<meta property="og:description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<link rel="canonical" href="twinyarat.github.io/notes/rotationJacobian/" />
+<meta property="og:url" content="twinyarat.github.io/notes/rotationJacobian/" />
+<meta property="og:site_name" content="Tutch Sottithat Winyarat" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Tutch Sottithat Winyarat" />
+<script type="application/ld+json">
+{"description":"A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021","headline":"Tutch Sottithat Winyarat","url":"twinyarat.github.io/notes/rotationJacobian/","@type":"WebPage","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="twinyarat.github.io/feed.xml" title="Tutch Sottithat Winyarat" /><!-- for mathjax support -->
+	
+	  <script type="text/x-mathjax-config">
+	    MathJax.Hub.Config({
+	    TeX: { equationNumbers: { autoNumber: "AMS" } }
+	    });
+	  </script>
+	  <script type="text/javascript" async src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Tutch Sottithat Winyarat</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/notes/">Notes</a><a class="page-link" href="/projects/">Projects</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title"></h1>
+  </header>
+
+  <div class="post-content">
+    <h3 id="jacobian-and-instantaneous-change-in-rotation"><strong>Jacobian and Instantaneous Change in Rotation</strong></h3>
+<hr />
+<hr />
+<p>\(\)</p>
+
+<p>Before we begin studying the derivatives of rotations in 3D space, it will be convenient to first establish a few notational conventions. Without further ado, let us follow the exposition in <a class="citation" href="#SolaEskf">(Solà, 2017)</a> and define <a href="\notes\rodrigues">the exponential map</a> \(Exp(\cdot)\)  to be an operation that takes elements \(\boldsymbol{\theta} \in \mathbb{R}^3\) directly to their associated Lie objects represented by rotation matrices \(\boldsymbol{R} \in SO(3)\). Formally,</p>
+
+\[Exp(\boldsymbol{\theta}) = e^{[\boldsymbol{\theta}]_{\times}}: \mathbb{R}^3 \mapsto SO(3)\]
+
+<p>,whose inverse is the logarithm map: 
+		\(Log(\boldsymbol{q}): SO(3) \mapsto \mathbb{R}^3\).</p>
+
+<p>Furthermore, denote by \(\oplus\) a composition of a rotation object with an element \(\boldsymbol{\theta} \in \mathbb{R}^3\)  :</p>
+
+\[\scriptsize{ \begin{align*} \boldsymbol{q} \oplus \boldsymbol{\theta} &amp;=  \boldsymbol{q} \otimes Exp({\boldsymbol{\theta}}) = \boldsymbol{q} \boldsymbol{q_{\theta}} =  \boldsymbol{q'} \\
+&amp;\text{for unit quaternions} \\
+\boldsymbol{R} \oplus \boldsymbol{\theta} &amp;= \boldsymbol{R}\boldsymbol{R_{\theta}} = \boldsymbol{R'}\\
+&amp;\text{for rotation matrices} \\
+\end{align*} }\]
+
+<p>and by \(\ominus\) the following operation such that</p>
+
+\[\scriptsize{ \begin{align*}
+\boldsymbol{\rho} &amp;= \boldsymbol{q'} \ominus \boldsymbol{q_{\theta}} = Log(\boldsymbol{q_{\theta}^*}\boldsymbol{q'}) \\
+&amp;= \boldsymbol{R'} \ominus \boldsymbol{R_{\theta}} = Log(\boldsymbol{R^T_{\theta}} \boldsymbol{R'})
+\end{align*}}\]
+
+<p>where, unlike \(\boldsymbol{\theta}\), \(\boldsymbol{\rho} \in \mathbb{R^3}\) resides in the vector space tangent to the \(SO(3)\) manifold.</p>
+
+<p>Additionally, recall from <a href="\notes\quaternion">this note</a> that a unit quaternion \(\boldsymbol{q}\) that rotates an arbitrary vector \(\vec{x}\) about \(\vec{u}\) by \(\phi\) can be parameterized by a rotation vector \(\phi\vec{u} = \boldsymbol{\phi} \in \mathbb{R}^3\)</p>
+
+\[\boldsymbol{q} = \begin{bmatrix} cos(\frac{\phi}{2}) \\ sin(\frac{\phi}{2})\vec{u}  \end{bmatrix}  \tag{1.1 }\]
+
+<p>whose infinitesimal <em>local</em> variation \(\delta \boldsymbol{q}\) in both the angle and axis can be approximated by Taylor expansions of the scalar and imaginary terms:</p>
+
+\[\delta \boldsymbol{q} \approx \begin{bmatrix} 1 \\ \frac{1}{2}\delta \boldsymbol{\phi}  \end{bmatrix}  \tag{1.2}\]
+
+<hr />
+
+<p>\(\)</p>
+<h4 id="what-happens-down-in-flatland-"><strong>What Happens Down in Flatland ?</strong></h4>
+
+<p>With notations at our disposal, the first question we could ask is: When the rotation vector \(\boldsymbol{\theta}\) that parameterizes \(Exp({\boldsymbol{\theta}})\) is perturbed by \(\delta \boldsymbol{\theta} \in \mathbb{R}^3\), how does \(Exp({\boldsymbol{\theta}})\) change? The change in \(Exp({\boldsymbol{\theta}})\) is locally characterized by a vector \(\delta \boldsymbol{\phi}\) that is tangent to \(Exp({\boldsymbol{\theta}})\). It is critical to make clear that unlike \(\delta \boldsymbol{\theta}\), \(\delta \boldsymbol{\phi}\) resides in a vector space <em>tangent</em> to the \(SO(3)\) manifold at \(Exp(\boldsymbol{\theta})\).</p>
+
+\[\scriptsize{
+\begin{align*} Exp(\theta) \oplus \delta \boldsymbol{\phi} &amp;= Exp(\theta + \delta \boldsymbol{\theta}) \\
+\rightarrow Exp(\boldsymbol{\theta})Exp(\delta \boldsymbol{\phi}) &amp;= Exp(\theta + \delta \boldsymbol{\theta})\\
+\rightarrow \delta \boldsymbol{\phi} = Log(Exp(\boldsymbol{\theta})^{-1} Exp(\theta + \delta \boldsymbol{\theta})) &amp;= Exp(\theta + \delta \boldsymbol{\theta}) \ominus Exp(\boldsymbol{\theta}) \tag{2.1}\\
+ \rightarrow \frac{\partial \delta \boldsymbol{\phi}}{\partial \delta \boldsymbol{\theta} } &amp;:= \frac{\partial Log(Exp(\boldsymbol{\theta})^{-1} Exp(\theta + \delta \boldsymbol{\theta}))}{\partial \delta \boldsymbol{\theta} }  \tag{2.2}\\
+ \end{align*}
+}\]
+
+<p>We have come to a deadend. Regardless of representation, the inauspicious partial derivative reveals no way forward. At this point, all we can hope is that \(\bigg[\frac{\partial \delta \boldsymbol{\phi}}{\partial \delta \boldsymbol{\theta} }\rvert_{\theta} \bigg]  \delta \boldsymbol{\theta} = \delta \boldsymbol{\phi}\) would hold.</p>
+
+<p><strong>A Detour To \(SE(3)\):</strong></p>
+
+<p>When we derived <a href="\notes\rodrigues">Rodrigues’ formula</a> for rotation matrices, we noted that a vector \(\vec{p}\) purely undergoing <em>rotational</em> motion at the angular rate \(\omega\) has an instantaneous velocity of</p>
+
+\[\scriptsize{ \dot{\vec{p}} = [\omega]_{\times} \vec{p} }\]
+
+<p>and is as a consequence instantaneously swung to \(\vec{p}' = e^{[\omega]_{\times}} \vec{p} = \boldsymbol{R_{\omega}} \vec{p}\).</p>
+
+<p>If that same vector however instantaneously rotated at the rate \(\omega\) <em>and simultaneously</em>  translated at the locally-measured rate \(\tau\), it would be displaced differently. Its instantaneous velocity due to rotational motion over an infinitesimal unit interval \(\alpha \in [0,1]\) would remain intact:</p>
+
+\[\scriptsize{ \dot{\vec{p}}_{rot} = [\omega]_{\times} \vec{p} }\]
+
+<p>Consequently, it is also swung to \(\vec{p}'_{rot} = e^{[\omega]_{\times}} \vec{p} = \boldsymbol{R_{\omega}} \vec{p}\), but its instantaneous velocity due to <em>translational</em> motion within the same infinitesimal unit interval would be</p>
+
+\[\scriptsize{ \dot{\vec{p}}_{trans}(\alpha)  = \boldsymbol{R_{\omega}}^{\alpha} \tau}\]
+
+<p>As \(\alpha\) sweeps from 0 to 1, its locally-measured rate \(\tau\) is instantly rotated by \(\boldsymbol{R_{\omega}}^{\alpha}\) into the global frame. We interpret the curious-looking \(\boldsymbol{R_{\omega}}^{\alpha}\) as the orientation of the local frame at the infinitesimal time \(\alpha\). When \(\alpha = 0\), the local frame is oriented to align with the original frame so that \(\dot{\vec{p}}_{trans}(0) = \tau\) ; when \(\alpha = 1\), this local frame has been completely oriented by \(\omega\) into \(\boldsymbol{R_{\omega}}\) so that \(\dot{\vec{p}}_{trans}(1) = \boldsymbol{R_{\omega}}\tau\). Having captured such coupling effect between \(\omega\) and \(\tau\) over this infinitesimal interval, we conclude that the instantaneous displacement caused by \(\tau\) over this infinitesimal interval must therefore be</p>
+
+\[\scriptsize{ \begin{align*} \vec{p}'_{trans}  &amp;= \int_{0}^{1}\dot{\vec{p}}_{trans}(\alpha) d\alpha\\
+&amp;= \bigg[ \int_{0}^{1} \boldsymbol{R_{\omega}}^{\alpha} d\alpha \bigg] \tau\\
+&amp;= \bigg[  \int_{0}^{1} (e^{[\omega]_{\times}})^{\alpha} d\alpha  \bigg] \tau\\
+&amp;= \bigg[  \int_{0}^{1} (e^{\alpha[\omega]_{\times}}) d\alpha  \bigg] \tau\\
+&amp;= \bigg[  \int_{0}^{1} \big( \sum_{n=0}^{\infty} \frac{1}{n!} \alpha^{n}[\omega]_{\times}^n \big) d\alpha  \bigg] \tau\\
+&amp;\text{by Taylor series of the exponential} \\
+&amp;= \bigg[  \sum_{n=0}^{\infty} \int_{0}^{1} \big( \frac{1}{n!} \alpha^{n} d\alpha  \big) [\omega]_{\times}^n  \bigg] \tau\\
+&amp;\text{by linearity of the integral} \\
+&amp;= \bigg[  \sum_{n=0}^{\infty}  \frac{1}{(n+1)!} [\omega]_{\times}^n  \bigg] \tau \tag{2.3}
+ \end{align*}}\]
+
+<p>We are now at the liberty to write the total displacement as</p>
+
+\[\scriptsize{ \begin{align*} \vec{p}' = \vec{p}'_{rot} + \vec{p}'_{trans} &amp;=  e^{[\omega]_{\times}} \vec{p} + \bigg[  \sum_{n=0}^{\infty}  \frac{1}{(n+1)!} [\omega]_{\times}^n  \bigg] \tau \\
+\rightarrow \begin{bmatrix} \vec{p}' \\ 1 \end{bmatrix} &amp;=  \begin{bmatrix} e^{[\omega]_{\times}} &amp; \bigg[  \sum_{n=0}^{\infty}  \frac{1}{(n+1)!} [\omega]_{\times}^n  \bigg] \tau  \\ 0 &amp; 1 \end{bmatrix}  \begin{bmatrix} \vec{p} \\ 1  \end{bmatrix} = \begin{bmatrix} \boldsymbol{R_{\omega}} &amp; t  \\ \vec{0}^T &amp; 1 \end{bmatrix}  \begin{bmatrix} \vec{p} \\ 1  \end{bmatrix}\tag{2.4} \\
+&amp;= \begin{bmatrix} \sum_{n=0}^{\infty} \frac{1}{n!}[\omega]_{\times}^n &amp; \bigg[  \sum_{n=0}^{\infty}  \frac{1}{(n+1)!} [\omega]_{\times}^n  \bigg] \tau  \\ \vec{0}^T &amp; 1 \end{bmatrix}  \begin{bmatrix} \vec{p} \\ 1  \end{bmatrix}\\
+&amp;= \sum_{n= 0 }^{\infty} \frac{1}{n!}\begin{bmatrix} [\omega]_{\times} &amp; \tau \\ \vec{0}^T &amp; 0 \end{bmatrix}^n \begin{bmatrix} \vec{p} \\ 1  \end{bmatrix}\\
+&amp;= \sum_{n= 0 }^{\infty} \frac{1}{n!} \big( \hat{\begin{bmatrix} \tau \\ \omega  \end{bmatrix}} \big)^n \begin{bmatrix} \vec{p} \\ 1  \end{bmatrix}\\ 
+&amp;\text{by the definition of the hat map associated with } SE(3)\\
+&amp;= exp(\big( \hat{\begin{bmatrix} \tau \\ \omega  \end{bmatrix}} \big))  \begin{bmatrix} \vec{p} \\ 1  \end{bmatrix} \\
+&amp;:= Exp\big(\begin{bmatrix} \tau \\ \omega  \end{bmatrix}\big)\begin{bmatrix} \vec{p} \\ 1  \end{bmatrix} := Exp\big( \boldsymbol{\xi} \big)\begin{bmatrix} \vec{p} \\ 1  \end{bmatrix}, \boldsymbol{\xi} \in \mathbb{R^6} 
+\end{align*}}\]
+
+<p>Eq.2.4 is reminiscent of a rigid-body transformation performed on the vector \(\vec{p}\). This transformation matrix is encoded in \(Exp\big(\boldsymbol{\xi} \big)\); it encapsulates the twisting motion or equivalently the transformed pose of \(\vec{p}\) when \(\vec{p}\) is swung and slid in the fashion we just described. For this reason, we would occasionally hear \(\boldsymbol{\xi}\) referred to as the twist coordinate of \(SE(3)\).</p>
+
+<p>In its own right, \(Exp\big(\boldsymbol{\xi} \big)\) is worthy of enshrinement; hence we say that it belongs to a matrix Lie group called <strong>S</strong>pecial <strong>E</strong>uclidean 3. It is also worth noting that in the language of Lie Theory, the surjective hat map \(\hat{(\cdot)}\) is said to take an element \(\boldsymbol{\xi} \in \mathbb{R^6}\) to a Lie algebra \(\mathfrak{se(3)}\), a vector space that locally describes \(Exp\big(\boldsymbol{\xi} \big)\) on the \(SE(3)\) manifold. Taking the matrix exponential of \(\hat{\boldsymbol{\xi}} \in \mathfrak{se(3)}\) completes the one last stride to \(SE(3)\).</p>
+
+<p><strong>A Jacobian Emerged:</strong></p>
+
+<p>Let us return to eq.2.3 and without further verbosity unpack it:</p>
+
+\[\scriptsize{ \begin{align*} \vec{p}'_{trans} = t &amp;=  \bigg[  \sum_{n=0}^{\infty}  \frac{1}{(n+1)!} [\omega]_{\times}^n  \bigg] \tau  \\
+&amp;= \bigg[  I + \sum_{m=1}^{\infty} \frac{1}{(2m+1)!}[\omega]_{\times}^{2m} + \sum_{m=0}^{\infty}\frac{1}{(2m+2)!}[\omega]_{\times}^{2m+1}  \bigg] \tau \\
+&amp;\text{by decomposing the power series of the skew-symmetric matrix into its even and odd powers}\\
+&amp;=\bigg[ I + \sum_{m=1}^{\infty}\frac{-1^{m-1} \vert \vert\omega \vert \vert^{2m-2}}{(2m+1)!}[\omega]_{\times}^{2} + \sum_{m=0}^{\infty} \frac{-1^m \vert \vert \omega \vert \vert^{2m} }{(2m+2)!} [\omega]_{\times}  \bigg] \tau \\
+&amp;= \bigg[ I + \frac{1}{\vert \vert\omega \vert \vert^3}\sum_{m=1}^{\infty}\frac{-1^{m-1} \vert \vert\omega \vert \vert^{2m+1}}{(2m+1)!}[\omega]_{\times}^{2} + \frac{1}{\vert \vert \omega \vert \vert^2}\sum_{m=0}^{\infty} \frac{-1^m \vert \vert \omega \vert \vert^{2m+2} }{(2m+2)!} [\omega]_{\times}  \bigg] \tau \\
+&amp;= \bigg[ I + \frac{\vert \vert\omega \vert \vert- sin(\vert \vert\omega \vert \vert) }{\vert \vert\omega \vert \vert^3}[\omega]_{\times}^{2} + \frac{1-cos(\vert \vert\omega \vert \vert)}{\vert \vert \omega \vert \vert^2}[\omega]_{\times}  \bigg] \tau \\
+&amp;\text{by Taylor series of sine and cosine} \\ 
+&amp;:=  [\boldsymbol{J_l}(\omega)] \tau = \bigg[ \int_{0}^{1} \boldsymbol{R_{\omega}}^{\alpha} d\alpha \bigg] \tau \tag{2.5}
+\end{align*}}\]
+
+<p>The matrix \([\boldsymbol{J_l}(\omega)]\) in eq.2.5 has a name; it is called the left Jacobian for \(SO(3)\) <a class="citation" href="#Chirikjian_vol2">(Chirikjian, 2009, p. 40)</a>. Left because it maps the translational component \(\tau\) of the parameter \(\boldsymbol{\xi}\) into the <em>globally-measured</em> translational component \(t\) of the pose in \(SE(3)\). For \(SO(3)\) because \([\boldsymbol{J_l}(\omega)]\), and hence \(t\), is in essence a function of the body’s orientation \(\boldsymbol{R_{\omega}} \in SO(3)\); the rate at which \(\tau\) is converted to \(t\) is determined by \(\boldsymbol{R_{\omega}}\). To express \(t\) in the local frame, that is in the body-fixed frame, we proceed with</p>
+
+\[\scriptsize{
+\begin{align*}	
+{}^Rt = \boldsymbol{R_{\omega}}^{-1}t &amp;= \boldsymbol{R_{\omega}}^{-1}\bigg[ \int_{0}^{1} \boldsymbol{R_{\omega}}^{\alpha} d\alpha \bigg] \tau \\
+&amp;= \bigg[ \int_{0}^{1} \boldsymbol{R_{\omega}}^{\alpha -1} d\alpha \bigg] \tau \\
+&amp;= \bigg[ \int_{-1}^{0} \boldsymbol{R_{\omega}}^{\beta} d\beta \bigg] \tau \\
+&amp;= \bigg[ \int_{-1}^{0} \sum_{n=0}^{\infty} \frac{1}{n!}\beta^{n} [\omega]_{\times}^n d\beta \bigg] \tau \\
+&amp;\text{by writing the rotation matrix first in its exponential form and then in Taylor series form }\\
+&amp;= \bigg[  \sum_{n=0}^{\infty} \int_{-1}^{0} \frac{1}{n!}\beta^{n} d\beta [\omega]_{\times}^n \bigg] \tau \\
+&amp;\text{by linearity of the integral}\\
+&amp;= \bigg[  \sum_{n=0}^{\infty} \frac{-(-1)^{n+1}}{(n+1)!} [\omega]_{\times}^n \bigg] \tau \\
+&amp;= \bigg[  \sum_{n=0}^{\infty} \frac{1}{(n+1)!} [-\omega]_{\times}^n \bigg] \tau \\
+&amp;= \bigg[ I + \frac{\vert \vert\omega \vert \vert- sin(\vert \vert\omega \vert \vert) }{\vert \vert\omega \vert \vert^3}[\omega]_{\times}^{2} - \frac{1-cos(\vert \vert\omega \vert \vert)}{\vert \vert \omega \vert \vert^2}[\omega]_{\times}  \bigg] \tau \\
+&amp;\text{by the same line of arguments leading to eq.2.5} \\
+&amp;:= [\boldsymbol{J_r}(\omega)] \tau = [\boldsymbol{J_l}(-\omega)] \tau  \tag{2.6}
+\end{align*}
+}\]
+
+<p>\([\boldsymbol{J_r}(\omega)]\) is called the right Jacobian for \(SO(3)\). It is exactly what we were initially barred from when we some lines ago encountered the impenetrable partial derivative in eq.2.2. In \(SE(3)\), the vector \(t\) is a means by which the original frame “tracks” the position of the transformed local frame as the local frame moves on the manifold. With \(SO(3)\), the locally-measured \({}^Rt\) is said to live in the vector space tangent to \(\boldsymbol{R_{\omega}} \in SO(3)\). Pictorially, the vector \({}^Rt\) is anchored to the transformed local frame \(\boldsymbol{R_{\omega}}\) and points in the direction of the original frame– in the direction of change from the frame’s previous incarnation as it too does in \(SE(3)\). If we view \(\delta \boldsymbol{\phi}\) from eq.2.2 as the vector \({}^Rt\), the perturbation \(\delta \boldsymbol{\theta}\) applied to \(\boldsymbol{\theta}\) as \(\tau\), we in one fell swoop find ourselves with</p>
+
+\[\scriptsize{ \begin{align*}
+ 	\delta \boldsymbol{\phi} &amp;= [\boldsymbol{J_r}(\theta)] \delta \boldsymbol{\theta}\\
+ &amp;= \bigg[\frac{\partial \delta \boldsymbol{\phi}}{\partial \delta \boldsymbol{\theta} }\rvert_{\theta} \bigg]  \delta \boldsymbol{\theta} \\
+ &amp;= \frac{\partial Log(Exp(\boldsymbol{\theta})^{-1} Exp(\theta + \delta \boldsymbol{\theta}))}{\partial \delta \boldsymbol{\theta} } \delta \boldsymbol{\theta} \\
+ &amp;:= \frac{\partial Exp(\boldsymbol{\theta})  }{ \partial \boldsymbol{\theta} } \delta \boldsymbol{\theta} \\ \tag{2.7}
+\end{align*}
+}\]
+
+<p>We may have entered through the back gate.</p>
+
+<hr />
+
+<p>\(\)</p>
+<h4 id="how-influential-is-a-parameter-on-motion-"><strong>How Influential Is A Parameter on Motion ?</strong></h4>
+
+<p>Another question we could then ask is: When a generic vector \(\vec{x}\) undergoes a rotation parameterized by \(\boldsymbol{\theta} \in \mathbb{R^3}\), how does the resulting rotated vector \(\vec{x}'\) change in response to change in the parameter?</p>
+
+\[\scriptsize{
+\begin{align*}
+\frac{\partial \vec{x}'}{\partial \boldsymbol{\theta}} &amp;= \frac{\partial ( \boldsymbol{q_{\theta}} \vec{x} \boldsymbol{q^*_{\theta}} )}{\partial \boldsymbol{\theta}} = \frac{\partial( \boldsymbol{R_{\theta}}\vec{x} )}{\partial \boldsymbol{\theta}} \\
+&amp;= \lim_{\delta \boldsymbol{\theta} \rightarrow 0} \frac{\boldsymbol{R\{\boldsymbol{\theta} + \delta \boldsymbol{\theta} \}}\vec{x}- R\{\boldsymbol{\theta} \}\vec{x}} {\delta \boldsymbol{\theta}} \\
+&amp;= \lim_{\delta \boldsymbol{\theta} \rightarrow 0} \frac{ \big( \boldsymbol{R\{\boldsymbol{\theta} \}} Exp(\boldsymbol{J_r} \delta \boldsymbol{\theta})- R\{\boldsymbol{\theta} \} \big) \vec{x}} {\delta \boldsymbol{\theta}} \\
+&amp;\text{by eq. 2.7}\\
+&amp;\approx \lim_{\delta \boldsymbol{\theta} \rightarrow 0} \frac{ \big( \boldsymbol{R\{\boldsymbol{\theta} \}}(I + [\boldsymbol{J_r} \delta \boldsymbol{\theta}]_{\times})- R\{\boldsymbol{\theta} \} \big) \vec{x}} {\delta \boldsymbol{\theta}} \\
+&amp;\text{by linear approximation about } \boldsymbol{R_{\theta}} \\
+&amp;= \lim_{\delta \boldsymbol{\theta} \rightarrow 0} \frac{\boldsymbol{R\{\boldsymbol{\theta} \}}[\boldsymbol{J_r} \delta \boldsymbol{\theta}]_{\times} \vec{x}} {\delta \boldsymbol{\theta}} \\
+&amp;= \lim_{\delta \boldsymbol{\theta} \rightarrow 0} \frac{-\boldsymbol{R\{\boldsymbol{\theta} \}}[\vec{x}]_{\times} \boldsymbol{J_r} \delta \boldsymbol{\theta}} {\delta \boldsymbol{\theta}} \\
+&amp;\text{by rearranging the cross product}\\
+&amp;= -\boldsymbol{R\{\boldsymbol{\theta} \}}[\vec{x}]_{\times} \boldsymbol{J_r} 
+\end{align*}	
+}\]
+
+<hr />
+
+<p>\(\)</p>
+<h4 id="what-happens-over-time-"><strong>What Happens over Time ?</strong></h4>
+
+<p>When a rotation object represented by a unit quaternion \(\boldsymbol{q}(t)\) is spun at a time-varying angular rate \(\omega(t)\), how does it evolve ? Measured locally with respect to the object itself, the <em>instantaneous</em> angular rate \(\omega(t)\) can be written in terms of a local angular perturbation \(\delta \boldsymbol{\phi} \in \mathbb{R^3}\). Formally,</p>
+
+\[\boldsymbol{\omega}(t) := \frac{d \boldsymbol{\phi}(t)}{dt} = \lim_{\delta t \rightarrow 0 } \frac{\delta \boldsymbol{\phi}}{\delta t} \tag{3.1}\]
+
+<p>so that we can write the time-derivative of \(\boldsymbol{q}\) as</p>
+
+\[\scriptsize{
+	\begin{align*}
+	\dot{\boldsymbol{q}} = \frac{d \boldsymbol{q}}{dt} &amp;:= \lim_{\delta t \rightarrow 0} \frac{\boldsymbol{q}(t+ \delta t)- \boldsymbol{q}(t)}{\delta t} \\
+	&amp;\text{by treating } \boldsymbol{q} \text{ here as a 4-vector,}\\
+	&amp; \text{the preposterous-looking vector subtraction is to be taken as} \\
+	&amp; \text{the difference in the components of } \boldsymbol{q} \text{ as opposed to rotational}\\
+	&amp; \text{ difference in the compositional inverse sense}  \\
+	&amp;= \lim_{\delta t \rightarrow 0 } \frac{\boldsymbol{q} \otimes \delta \boldsymbol{q} - \boldsymbol{q} }{\delta t} \\
+	&amp;=  \lim_{\delta t \rightarrow 0 }\frac{\boldsymbol{q}  \otimes  \big( \begin{bmatrix} 1 \\ \frac{1}{2} \delta\boldsymbol{\phi} \end{bmatrix} - \begin{bmatrix}1 \\ \vec{0} \end{bmatrix} \big)}{\delta t} \\
+	&amp; \text{by eq. 1.2} \\
+	&amp;= \frac{1}{2}\boldsymbol{q} \otimes  \begin{bmatrix} 0 \\ \omega(t) \end{bmatrix} \\
+	&amp; \text{by eq. 3.1} \\
+	&amp;= \frac{1}{2} [\omega(t)]_L \cdot \boldsymbol{q} \\
+	&amp;\text{by the matrix equivalent of the left quaternion product}
+	\end{align*}
+}\]
+
+<hr />
+
+<hr />
+<p>\(\)</p>
+<h3 id="references">References</h3>
+<ol class="bibliography"><li><span id="SolaEskf">Solà, J. (2017). Quaternion kinematics for the error-state Kalman filter. <i>CoRR</i>, <i>abs/1711.02508</i>. http://arxiv.org/abs/1711.02508</span></li>
+<li><span id="Chirikjian_vol2">Chirikjian, G. S. (2009). <i>Stochastic Models, Information Theory, and Lie Groups, Volume 2</i>. Birkhauser.</span></li></ol>
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Tutch Sottithat Winyarat</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Tutch Sottithat Winyarat</li><li><a class="u-email" href="mailto:winyarat@seas.upenn.edu">winyarat@seas.upenn.edu</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/twinyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">twinyarat</span></a></li><li><a href="https://www.linkedin.com/in/winyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">winyarat</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

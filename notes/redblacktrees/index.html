@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Tutch Sottithat Winyarat | A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Tutch Sottithat Winyarat" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<meta property="og:description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<link rel="canonical" href="twinyarat.github.io/notes/redblacktrees/" />
+<meta property="og:url" content="twinyarat.github.io/notes/redblacktrees/" />
+<meta property="og:site_name" content="Tutch Sottithat Winyarat" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Tutch Sottithat Winyarat" />
+<script type="application/ld+json">
+{"description":"A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021","headline":"Tutch Sottithat Winyarat","url":"twinyarat.github.io/notes/redblacktrees/","@type":"WebPage","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="twinyarat.github.io/feed.xml" title="Tutch Sottithat Winyarat" /><!-- for mathjax support -->
+	
+	  <script type="text/x-mathjax-config">
+	    MathJax.Hub.Config({
+	    TeX: { equationNumbers: { autoNumber: "AMS" } }
+	    });
+	  </script>
+	  <script type="text/javascript" async src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Tutch Sottithat Winyarat</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/notes/">Notes</a><a class="page-link" href="/projects/">Projects</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title"></h1>
+  </header>
+
+  <div class="post-content">
+    <h3 id="the-delicate-red-black-trees-a-family-drama"><strong>The Delicate Red-Black Trees: A Family Drama</strong></h3>
+<hr />
+<hr />
+<p>\(\)</p>
+
+<p>On an unfortunate day, the monochromatic \(n\)-node binary tree \(B\) no longer guarantees \(\mathcal{O}(lg(n))\) operation time when it is imbalanced. We could imagine the extreme of such scenario when the binary tree \(B\), instead of looking like a well-groomed French boxwood, turns into a viny doubly-linked list demanding operation time that is linear in its height \(h = n\). In order to avoid this unfavorable scenario, we would therefore like to keep the height \(h\) of our tree below \(2 \cdot lg(n + 1)\) (we will shortly see where this bound comes from). This means that if we could keep the height as wished, any simple path from the root to a leaf would be at most twice as long as any other simple paths <a class="citation" href="#Cormen">(Cormen et al., 2009, p. 311)</a>.</p>
+
+<p>With this purpose in mind, we color our binary tree \(T\) such that</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>1. Every node is either red or black.<br />2. The root is always black.<br />3. Every leaf is black and is to be represented by a single sentinel \(NIL\) node.<br />4. If a node is red, its children must both be black.<br />5. For each node, all simple paths from that node to its descendant leaves contain the same number of black nodes.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Now, let us define the black-height \(bh(x)\) of a node \(x\) to be the number of black nodes on any simple path from, but not including, \(x\). Assume for a moment that the subtree rooted at any node \(x\) contains <em>at least</em> \(2^{bh(x)} - 1\) internal nodes. Verifying the basis of our assumption on an empty tree, we know that if the tree is empty, \(x = NIL\) must be a leaf and therefore has a black-height of 0, which means that the empty subtree rooted at \(x\) contains at least \(2^{bh(x)} - 1 = 2^{0} - 1 = 0\) internal nodes. So our assumption is well founded.</p>
+
+<p>In the case when \(x\) is an internal node and has 2 children \(y\) and \(z\), each child, depending on its color, will have either a black-height of \(bh(x)\) or \(bh(x)-1\). But regardless of their colors, we can immediately conclude that \(y\) and \(z\) will each have <em>at least</em> 
+\(2^{bh(x)-1 } - 1\) internal nodes, which in turn implies that the subtree rooted at \(x\) must have <em>at least</em></p>
+
+\[(2^{bh(x)-1 } - 1) + (2^{bh(x)-1 } - 1) + 1 = 2^{bh(x)} - 1\]
+
+<p>internal nodes just as we initially assumed. Furthermore, we also know that if our tree \(T\) rooted at \(x\) does not violate property 4, its black-height must be at least half of its total height \(h\). Therefore, the total number of nodes \(n\) in \(T\)  is at least \(2^{bh(x)} - 1  \geq 2^{h/2} - 1\), which implies that</p>
+
+\[h \leq 2 \cdot lg(n + 1)  \tag{1.1}\]
+
+<p>This very desire to bound the height of our tree compels us to impose and maintain the five properties enumerated above. As we will soon see, doing so is an intricate matter of restoring some of these sacred properties broken in the aftermath of structure-altering operations such as <strong>INSERT</strong>( ) and <strong>DELETE</strong>( ). Before writing the <strong>INSERT</strong>( ) and <strong>DELETE</strong>( ) procedures, however, let’s first pick up a few handy tools that will aid us in our task. Into the garden we go.</p>
+
+<p style="font-size: 0.7em;">$$
+\begin{align*}
+\text{A quick } &amp; \text{note on notations:} \\
+&amp;\text{The root has the one black sentinel } NIL \text{ node as its parent.}\text{ This very } NIL \text{ node also represents all leaves }\\
+&amp;\text{and is a child of all terminal nodes. We point } T.nil \text{ to it. A generic node } x \text{ is a pointer to an object in memeory. }\\
+&amp;\text{This object possesses the following attributes:} \\
+&amp; a) \quad x.key: \text{ the object's comparable value} \\
+&amp; b) \quad x.p: \text{ a pointer to the object's parent} \\
+&amp; c) \quad x.right: \text{ a pointer to the object's right child} \\
+&amp; d) \quad x.left: \text{ a pointer to the object's left child}\\
+&amp; e) \quad x.color: \text{ the object's color}
+\end{align*}
+$$</p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="tools-of-the-garden"><strong>Tools of The Garden</strong></h4>
+
+<div style="text-align: left; display: flex">
+	<figure>
+		<img style="width: 60%" src="/images/rbtree/fig1.png" />
+			<figcaption> figure 1: Left and right rotations </figcaption>
+	</figure>
+</div>
+
+<p>There are 2 helper functions that we will need:</p>
+
+<ol>
+  <li><strong>ROTATE</strong>( )
+    <ul>
+      <li>
+        <p>This function has 2 variants: <strong>LEFT_ROTATE</strong>( ) and <strong>RIGHT_ROTATE</strong>( ). These variants do not violate properties of a monochromatic binary tree. Let’s examine what they do.</p>
+      </li>
+      <li>
+        <p>In figure 1, we can see that during a call to <strong>LEFT_ROTATE</strong>\((T, x )\), the \(xy\) link is pivoted counterclockwise about node \(x\). First, \(x\) adopts \(y\)’s left child \(b\) as its right child. Second, \(x\)’s original parent \(x.p\) adopts \(y\) either as its left or right child; if \(x\) itself is the root, then \(y\) becomes the new root. And lastly, \(y\) adopts \(x\) as its left child. Note that adoption happens both ways: the parent recoqnizes the new child as its child, and the child recoqnizes the new parent as its parent.</p>
+      </li>
+      <li>
+        <p>In algorithm 1, lines 1-5 execute \(x\) adopting \(y\)’s left as its right child. Lines 6-15 execute \(x.p\) adopting \(y\), considering whether \(y\) is to become the new root, a left child, or a right child. And lastly, lines 16-17 execute \(y\) adopting \(x\) as its new left child.</p>
+      </li>
+      <li>
+        <p>Because the two functions are inverses of each other, we describe similar operations for <strong>RIGHT_ROTATE</strong>( ). In figure 1, we can also see that during a call to <strong>RIGHT_ROTATE</strong>\((T, y)\), the \(yx\) link is pivoted clockwise about node \(y\). First, \(y\) adopts \(x\)’s right child \(b\) as its left child. Second, \(y\)’s original parent adopts \(x\) either as its left or right child; if \(y\) itself is the root, then \(x\) becomes the new root. And lastly, \(x\) adopts \(y\) as its right child.</p>
+      </li>
+      <li>
+        <p>In algorithm 2, lines 1-5 execute \(y\) adopting \(x\)’s right child as its left child. Lines 6-15 execute \(y.p\) adopting \(x\), considering whether \(x\) is to become the new root, a left child, or a right child. And lastly, lines 16-17 execute \(x\) adopting \(y\) as its new right child.</p>
+        <div style="align: center">
+  <figure>
+      <img style="width: 80%" src="/images/rbtree/alg1_2.png" />
+  </figure>
+  </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p><strong>TRANSPLANT</strong>( )</p>
+
+    <ul>
+      <li>
+        <p>During a call to <strong>TRANSPLANT</strong>\((T, x, y)\), node \(y\) takes over node \(x\)’s place. \(x\)’s parent adopts \(y\) either as its left child or right child; if \(x\) is itself the root, then \(y\) becomes the new root.</p>
+      </li>
+      <li>
+        <p>In algorithm 3, lines 1-9 executes \(x.p\) recoqnizing \(y\) as its new child. Line 10 sets \(x.p\) as \(y\)’s new parent. <strong>TRANSPLANT</strong>\((T, x, y)\) has an implicit effect of removing node \(x\) from our tree \(T\) since it can no longer be reached from the root.</p>
+        <div style="align: center">
+      <figure>
+          <img style="width: 35%" src="/images/rbtree/alg3.png" />
+      </figure>
+  </div>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+<p>\(\)</p>
+<h4 id="insert--a-new-member-and-its-uncle"><strong>INSERT( ): A New Member and Its Uncle</strong></h4>
+
+<p>With the tools we have picked up, we are now ready to write the <strong>INSERT</strong>( ) procedure. Two major changes take place during a call to <strong>INSERT</strong>\((T, z)\):</p>
+
+<ol>
+  <li>
+    <p>The rightful terminal node adopts the red node \(z\) as its child.</p>
+
+    <ul>
+      <li>In algorithm 4, lines 1-23 execute the adoption of \(z\). To find \(z\)’s rightful place in the tree, we keep track of 2 pointers: \(x\) to track a potential leaf node whose place \(z\) will claim, and \(y\) to track \(x\)’s parent. In lines 3-10, we descend \(T\) until a rightful leaf  node is found. Once this \(NIL\) leaf node \(x\) is found, line 11 assigns \(y\) as \(z\)’s parent. Lines 12-20 execute \(y\) adopting \(z\) either its left child or right child; if \(y\) is the root, \(z\) becomes the new root. In lines 21-23, we make \(z\) a terminal node and color it red. <br /><br />
+        <div style="align: center">
+      <figure>
+          <img style="width: 70%" src="/images/rbtree/alg4.png" />
+      </figure>
+  </div>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>When a parent \(z.p\) and its child \(z\) are both red, a red link exists between them and is in violation of property 4. We restore it by calling <strong>INSERT_RESTORE</strong>\((T, z)\) at the end of algorithm 4. How we perform this restoration depends on the color of the child’s envious uncle \(z.p.p.right\) or \(z.p.p.left\). To determine the correctness of <strong>INSERT_RESTORE</strong>( ), we will follow in the footsteps of Professor Cormen and colleagues, making use of the concept of Loop Invariants and considering six possible scenarios that could occur during a call to it:</p>
+
+    <ul>
+      <li>Three things never change before, during, and at the end of a call to <strong>INSERT_RESTORE</strong>( ):
+        <ul>
+          <li>Node \(z\) is always red.</li>
+          <li>If \(z.p\) is the root, then it is black.</li>
+          <li>Since node \(z\) is red and could potentially be made the root, it may break either property 2 or property 4 if at all but not both, namely when \(T\)’s root is no longer black or when a red link exists between \(z\) and \(z.p\). Properties 1,3, and 5 remain unviolated. <br /><br /></li>
+        </ul>
+      </li>
+      <li>
+        <p>Verifying the three loop invariants before a call to <strong>INSERT_RESTORE</strong>( ), we know that since we color \(z\) red when we insert it into the tree, it is by default red. We also know that since we have not touched any other nodes, \(z.p\) is black if it is the root. We also know that since the adopting node \(z.p\) could be red, inserting \(z\) under it would break property 4 but not property 2. We also know that since the tree could be empty when we insert \(z\), the root could become red and thereby would break property 2 but not 4. Properties 1,3, and 5 remain intact. <br /></p>
+      </li>
+      <li>
+        <p>Verifying the correctness at the end of a call to <strong>INSERT_RESTORE</strong>( ), we know that it terminates because \(z.p\) is black, so \(z\) at this point could have never violated property 4. The only possible violation is of property 2. <strong>INSERT_RESTORE</strong>( ) corrects this violation by coloring \(T.root\) black before it returns.<br /></p>
+      </li>
+      <li>Verifying the three loop invariants during a call to <strong>INSERT_RESTORE</strong>( ), we look at six possible scenarios. But because three of which are symmetric to the other three depending on whether \(z.p\) is a left or right child of \(z.p.p\), we only need to verify three of them; to avoid redundancy, we consider when \(z.p\) is a left child. We know that since we have at this point entered the while loop, \(z.p\) must be red and hence cannot be the root. This means that its parent \(z.p.p\) exists. We must now verify the three loop invariants in three different scenarios. Note that scenarios 2 and 3 are not mutually exclusive.</li>
+    </ul>
+
+    <p><br /></p>
+    <div style="text-align: left; display: flex">
+ <figure>
+     <img style="width: 100%" src="/images/rbtree/fig2.png" />
+         <figcaption> figure 2: a) Scenario 1 recolors z.p and y to eliminate the red link between z and z.p before passing the pointer z up the tree. b) Scenario 2 does not attempt to eliminate a potential red link between z and z.p; it restructures so that z can point to a left child. c) Since z is a left child in scenario 3, we can now eliminate the red link by recoloring z.p and z.p.p before right rotating z.p.p down the tree. d) All properties of our red-black tree are restored. </figcaption>
+ </figure>
+ </div>
+    <p><br /></p>
+    <div style="align: center">
+         <figure>
+             <img style="width: 70%" src="/images/rbtree/alg5.png" />
+         </figure>
+ </div>
+    <ul>
+      <li>
+        <p><strong>Scenario 1: \(z's\) uncle \(y\) is red</strong> <br />
+  We are in scenario 1 when algorithm 5 executes lines 4-8. Our purpose here is to “pass up” the red link that exists between \(z\) and its parent \(z.p\) either until \(y\) is black or until the root is reached. We do so by recoloring \(z.p\) and \(y\) black and recoloring \(z.p.p\) red. It then moves the \(z\) pointer to point to \(z.p.p = z'\). We denote the new \(z\) node of the subsequent iteration with \(z'\).<br /></p>
+
+        <p>Verifying the three loop invariants, we know that since we color \(z.p.p = z'\) red in this iteration, it must be red in the subsequent iteration. We also know that since we have not touched \(z.p.p.p\) in this iteration, \(z'.p\) must in the subsequent iteration be black if it’s the root. We also know that we have not violated properties 1,3, and 5 by recoloring and that either property 2 or 4 but not both will be violated in the subsequent iteration. If property 2 were to be violated in the subsequent iteration, it would be because \(z'\) is the root. If property 4 were to be violated in the subsequent iteration, it would be because \(z'\) and \(z'.p\) are both red. Otherwise, we would not enter the subsequent iteration and would instead terminate.</p>
+      </li>
+      <li>
+        <p><strong>Scenario 2: \(z's\) uncle \(y\) is black and \(z\) is a right child</strong><br />
+  We are in scenario 2 when algorithm 5 executes lines 10-13. Our purpose here is to transition from scenario 2 to scenario 3. It does so by moving the \(z\) pointer to point to \(z.p\) before left rotating \(z\). Note that doing so neither change the identity of \(z\)’s uncle \(y\) nor eliminate the problematic red link.</p>
+      </li>
+      <li>
+        <p><strong>Scenario 3: \(z's\) uncle \(y\) is black and \(z\) is a left child</strong><br />
+  We are in scenario 3 when algorithm 5 executes lines 14-17. We enter scenario 3 directly or through scenario 2 but never through scenario 1. It is crucial to keep in mind that since \(z.p\) is red, its right child and its parent \(z.p.p\) must both be black, and that \(y\) is also black. As seen in figure 2, our primary purpose in scenario 3 is to color \(z.p\) black so as to elimate the problematic red link between \(z\) and its parent \(z.p\). Our secondary purpose is to maintain property 5. We do so by coloring \(z.p.p\) red so that \(z.p.p\) is able to rightfully adopt the black \(z.p.right\) node as it right rotates down to make way for \(z.p\) to rise up the tree.</p>
+
+        <p>Verifying one last time the three loop invariants, we know that since in scenario 2, we have moved \(z\) to point to the red \(z.p\) and then left rotated, \(z\) must be red in the subsequent scenario 3. Lastly, we also know that by our design properties 2 and 5 are unviolated; property 2 is unviolated because if \(z.p.p\) was the root, we would have replaced it with the black \(z.p\) node as the new root through right rotation. Otherwise, the root was never touched. We restore property 4 when we elimate the red link between \(z\) and \(z.p\). This elimation of the red link was our primary purpose in scenario 3. We then gracefully exit.</p>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+<p>\(\)</p>
+<h4 id="delete--a-parting-member-a-successor-and-its-sibling"><strong>DELETE( ): A Parting Member, A Successor, and Its Sibling</strong></h4>
+
+<p>To remove \(z\) from our tree we call <strong>DELETE</strong>\((T, z )\). Removing a parting member \(z\) from our red-black tree \(T\) is more involved than inserting a new member. Much of the complication is primarily due to a transplant of a black node. This movement of a black node will violate property 5 of our sacred red-black tree. Before we examine the possible scenarios that could arise in our restoration of property 5, it is absolutely crucial to first make clear that this transplant of a black node can happen either when</p>
+
+<ol>
+  <li>A black node \(z\) is transplanted (we could think of it as being transplanted to Mars)
+    <ul>
+      <li>In algorithm 6, lines 1-9 execute when \(z\) does not have two children and its single child claims its place. A potential source of confusion, the misnomer variable \(yOriginalColor\) remembers \(z\)’s color only under <em>this</em> particular circumstance. If it is black, property 5 will be violated.</li>
+    </ul>
+
+    <p><em>or</em></p>
+  </li>
+  <li>A black successor \(y\) to \(z\) is transplanted into \(z\)’s place.
+    <ul>
+      <li>In algorithm 6, lines 10-24 execute when \(z\) has two children and is replaced by a potentially black successor \(y\). <strong>TREE_MINIMUM</strong>(z.right) in line 10 returns as \(y\) a terminal node on a path generated by left-traversing from \(z.right\). This traversal will cost us at most \(\mathcal{O}(lg(n))\) time. Please bear in mind that, unlike in case 1, we no longer care about the color of the parting node \(z\) since \(y\) will rightfully inherit \(z\)’s color and children. Instead, we care about the color of \(y\) itself and let the variable \(yOriginalColor\) remember it. Lines 13-19 consider whether or not \(y\) is a direct descendent of \(z\): if it is, lines 13-14 bring the successor \(x\) of \(y\) along with it. Otherwise, lines 16-19 first tranplant \(x\) into \(y\)’s place and then make \(y\) inherit \(z\)’s rightchild. Finally, lines 20-23 transplant \(y\) into \(z\)’s place and make it inherit \(z\)’s leftchild and color.</li>
+    </ul>
+  </li>
+</ol>
+
+<div style="align: center">
+			<figure>
+				<img style="width: 70%" src="/images/rbtree/alg6.png" />
+			</figure>
+	</div>
+
+<p>In algorithm 6, if \(yOriginalColor\) is indeed black, lines 25-26 call <strong>DELETE_RESTORE</strong>( ) to restore property 5. At this point it may be illuminating to ponder why no properties of our red-black tree are broken if \(yOriginalColor\) is red. If \(yOriginalColor\) is red, we know that no black-heights have been altered. We also know that if \(yOriginalColor\) is red, no red link can ever arise after a transplant of \(y\) because \(y\) inherits all the rightful properties of \(z\), and no red link can arise after a transplant of \(x\) because if \(y\) is red, \(x\) must be black. And lastly, if \(yOriginalColor\) is red, neither the parting \(z\) nor the traveling \(y\) can be the root; the root remains untouched.</p>
+
+<p>Before we pry open <strong>DELETE_RESTORE</strong>( ), it may be once again illuminating to ponder what properties could break if \(yOriginalColor\) is black. Firstly, if the parting black node \(z\) was the root and its successor was red, we would break property 2. Secondly, if, after the transplant of \(y\), \(x\) and its new parent \(x.p\) were red, we would create a red link and thereby break property 4. Fortunately, both of the aforementioned violations are immediately remedied in line 29 of algorithm 7; it bypasses the <strong>while</strong> loop and colors \(x\) black, resolving at once violations to properties 2, 4, and 5. However, moving the black node \(y\) when \(x\) is neither the new root nor red will break property 5, causing any simple paths through \(y\) to tragically lose one black-height. In the midst such loss, \(x\) must carry an extra black so as to compensate for the loss of \(y\)’s black; \(x\) is said to be <em>doubly</em> black while in the <strong>while</strong> loop. In this melodramatic corner of our tree, the ultimate purpose of the <strong>while</strong> loop in alogorithm 7 is therefore to find a red ancestral node willing to take \(x\)’s burdening extra black off its shoulder. How and when this unburdenning takes place depends on the color of \(x\)’s sibling \(w\) and the relationship between \(w\) and its children.</p>
+
+<p>Eight scenarios arise while the non-root \(x\) is doubly-black. But since four of them are symmetric to the other four, we only examine when \(x\) is a left child in lines 2-24; the other four symmetric scenarios in which \(x\) is a right child are subsumed by the <strong>else</strong> clause in line 26. The four scenarios that we consider are not mutually exclusive; in fact, if in scenario 1, we alter the local structure around \(x\) so as to bring ourselves either into scenarios 2, 3, or 4. If in scenario 3, we alter the local structure around \(x\) so as to bring ourselves into scenario 4. As we will in a moment see, the reason for such shifts in local structures is that scenarios 1 and 3 are merely transitional hallways and that scenarios 2 and 4 are really the two gleaming exit doors from the horrendous <strong>while</strong> loop; we can see in figure 2 that the only crucial difference between scenario 2 and scenario 4 is the color of \(w\)’s right child \(E\). If node \(E\) is black, scenario 2 keeps passing the pointer \(x\) up the tree until we find a red ancestral node willing to take the original \(x\)’s extra black. If node \(E\) is red, scenario 4 at once unburdens \(x\)’s extra black and exits.<br /></p>
+
+<div style="text-align: left; display: flex">
+	<figure>
+		<img style="width: 100%" src="/images/rbtree/fig3.png" />
+			<figcaption> figure 3: Gray nodes could be either red or black. a) Scenario 1 transitions into scenario 2. b) Scenario 2 colors w red and passes the black-burdening pointer x up the tree; if node B turns out to be red, the loop terminates. c) Scenario 3 transitions into scenario 4. d) Scenario 4 unburdens the extra black onto node B and restores property 5. Note that node D adopts the same color as that of node B.  </figcaption>
+	</figure>
+</div>
+<p><br /></p>
+<div style="align: center">
+			<figure>
+				<img style="width: 70%" src="/images/rbtree/alg7.png" />
+			</figure>
+	</div>
+
+<ul>
+  <li><strong>Scenario 1: \(x\)’s sibling \(w\) is red</strong>
+    <ul>
+      <li>We are in scenario 1 when lines 4-8 execute. Our purpose here is to bring ourselves into either scenario 2,3, or 4. Since \(w\) is red, its children must be black. We swap the colors of \(x.p\) and \(w\) and left rotate \(x.p\) down, bringing \(w\) up. Consequently, \(x\) now has a black sibling. <br /></li>
+    </ul>
+  </li>
+  <li><strong>Scenario 2: \(x\)’s sibling \(w\) is black, and both of \(w\)’s children are black</strong>
+    <ul>
+      <li>We are in scenario 2 when lines 9-11 execute. Our purpose here is to pass \(x\)’s extra black up to its parent \(x.p\). Since both children of \(w\) are black, we color \(w\) red before moving the black-burdening pointer \(x\) to point to its parent \(x.p\). If this \(x.p\) turns out to be red in the subsequent iteration of the <strong>while</strong> loop, we exit and in line 23 color it black (\(x.p\) will turn out to be red if we enter scenario 2 via scenario 1). Otherwise, the <strong>while</strong> loop does not terminate and we continue in our search for a red ancestral node willing to take in an extra black. In the worst case imaginable, this search perpetuates up to the root. But since we have been faithfully maintaining all the properties of our red-black tree, the seach will in such case cost us \(\mathcal{O}(lg(n))\) time.<br /></li>
+    </ul>
+  </li>
+  <li><strong>Scenario 3: \(x\)’s sibling \(w\) is black, and \(w\)’s left child is red, but its right child is black</strong>
+    <ul>
+      <li>We fall into scenario 3 when lines 13-18 execute. Our purpose here is to bring ourselves into scenario 4. We do so by swapping the colors of \(w\) and its left child, and then right rotating \(w\) down so as to bring \(w\)’s left child up. At this point, \(w\)’s left child is black and has become \(x\)’s new sibling while \(x\) remains burdened by the extra black. <br /></li>
+    </ul>
+  </li>
+  <li><strong>Scenario 4: \(x\)’s sibling \(w\) is black, and \(w\)’s right child is red</strong>
+    <ul>
+      <li>We are in scenario 4 when lines 19-23 execute. Our purpose here is to exit the <strong>while</strong> loop. 
+  We first let \(x.p\) take in \(x\)’s extra black; regardless of \(x.p\)’s true color, it is to become black. We then color \(w\) red and color its right child \(w.right\) black before we left rotate \(x.p\) down, making way for the now-red \(w\) to rise up. Note that since we have forcibly colored \(x.p\) black, it is able to rightfully adopt \(w.left\) regardless of color. Note also that since we have colored \(w\)’s right child black, the black-heights of paths to the right of \(w\) remain untouched. Note, for one last time, that since we have made the black \(x.p\) adopt \(w.left\), the black-heights of paths to the left of \(w\) remain untouched, too. Pointing \(x\) at the root in line 23, we exit at last.</li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+<p>\(\)</p>
+<h3 id="references">References</h3>
+<ol class="bibliography"><li><span id="Cormen">Cormen, T. H., Leiserson, C. E., Rivest, R. L., &amp; Stein, C. (2009). <i>Introduction to Algorithms</i> (3rd ed.). The MIT Press.</span></li></ol>
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Tutch Sottithat Winyarat</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Tutch Sottithat Winyarat</li><li><a class="u-email" href="mailto:winyarat@seas.upenn.edu">winyarat@seas.upenn.edu</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/twinyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">twinyarat</span></a></li><li><a href="https://www.linkedin.com/in/winyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">winyarat</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

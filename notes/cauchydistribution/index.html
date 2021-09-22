@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Tutch Sottithat Winyarat | A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Tutch Sottithat Winyarat" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<meta property="og:description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<link rel="canonical" href="twinyarat.github.io/notes/cauchydistribution/" />
+<meta property="og:url" content="twinyarat.github.io/notes/cauchydistribution/" />
+<meta property="og:site_name" content="Tutch Sottithat Winyarat" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Tutch Sottithat Winyarat" />
+<script type="application/ld+json">
+{"description":"A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021","headline":"Tutch Sottithat Winyarat","url":"twinyarat.github.io/notes/cauchydistribution/","@type":"WebPage","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="twinyarat.github.io/feed.xml" title="Tutch Sottithat Winyarat" /><!-- for mathjax support -->
+	
+	  <script type="text/x-mathjax-config">
+	    MathJax.Hub.Config({
+	    TeX: { equationNumbers: { autoNumber: "AMS" } }
+	    });
+	  </script>
+	  <script type="text/javascript" async src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Tutch Sottithat Winyarat</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/notes/">Notes</a><a class="page-link" href="/projects/">Projects</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title"></h1>
+  </header>
+
+  <div class="post-content">
+    <h3 id="the-cauchy-distribution"><strong>The Cauchy Distribution</strong></h3>
+<hr />
+<hr />
+<p>\(\)</p>
+
+<p>A peculiar cousin of the normal distribution, the Cauchy distribution or the Lorentzian distribution has undefined mean and variance. As a continuous distribution of resonance, the Cauchy distribution describes the distribution of horizontal displacements \(x\) from the origin to a point pierced by a ray that makes a random angle \(\theta \in [-\frac{\pi}{2}, \frac{\pi}{2}]\) against the y-axis. The origin of this ray is anchored at height \(b\).</p>
+
+<p>From the definition of \(tan(\cdot)\),</p>
+
+\[{\scriptsize \begin{align*}
+ &amp;tan(\theta) = \frac{x}{b} \\
+ &amp;\Rightarrow \theta = arctan(\frac{x}{b}) \\
+ &amp;\Rightarrow \frac{d \theta}{dx} = \frac{1}{1+\frac{x^2}{b^2}} \frac{1}{b} = \frac{b}{b^2+x^2} \\
+ &amp;\Rightarrow d\theta = \frac{b}{b^2+x^2} dx\\
+\end{align*} \scriptsize}\]
+
+<p><br /><br />
+Normalizing so that</p>
+
+\[\int_{\frac{-\pi}{2}}^{\frac{\pi}{2}} \frac{d \theta}{\pi} = 1\]
+
+<p>and that</p>
+
+\[\frac{1}{\pi} \int_{-\infty}^{\infty} \frac{b}{b^2+x^2} dx = \frac{1}{\pi} arctan(\frac{x}{b}) \bigg\vert^\infty_{-\infty} = \frac{1}{\pi}[\frac{\pi}{2} - (-\frac{\pi}{2})] = 1\]
+
+<p>, we therefore are left with</p>
+
+\[Cauchy(x ; b) = (\frac{1}{\pi})\frac{b}{b^2+x^2}\]
+
+<p>As \(b \rightarrow  0\), \(x\) tends to concentrate around the origin as expected. 
+<br /><br /></p>
+<div style="text-align: center;">
+	<img style="width: 50%" src="/images/cauchy.gif" />
+</div>
+<p><br /></p>
+
+<hr />
+<p><br /></p>
+<h3 id="the-distribution-of-2-step-displacements"><strong>The Distribution of 2-Step Displacements</strong></h3>
+
+<p>Since we are on the topic of displacement, let’s as well suppose, for amusement, we could take first a unit step \(x\) in any random direction and then another unit step \(y\) in any random direction from where we left off. What is the distribution of the resulting \(\vert x + y  \vert  := L(x,y)\)? In other words, what is the likelihood of us having strayed by at most \(L\)?
+<br /></p>
+
+<p>\({\scriptsize  \begin{align*}
+L(x,y) &amp;= \vert x+y \vert = \sqrt{\vert x \vert^2 +  \vert y\vert^2 - 2\vert x \vert \vert y \vert cos(\beta)} \\
+&amp;= \sqrt{2-2cos(\beta)} = L(\beta) \\
+&amp; \text{ where } \beta \text { denotes the angle } y \text{ makes with } x \\
+\end{align*} \scriptsize}\) <br /></p>
+
+<p>Define a (cummulative) distribution function \(F\) over \(l\) such that for any \(l \in [0, 2]\),  <br /></p>
+
+<p>\({ \scriptsize
+\begin{align*}
+ &amp;L(\beta) = \sqrt{2-2cos(\beta)} \leq l \\
+&amp;\Rightarrow \beta \leq cos^{-1}(1-\frac{l^2}{2})\\
+&amp;\Rightarrow d\beta \leq \frac{2l}{\sqrt{-l^2(l^2-4)}} dl
+\end{align*}
+\scriptsize}\) <br /></p>
+
+<p>Since \(\int_{0}^{\pi} d\beta = \pi\), normalizing \(F(l)\) so that all properties of a density function are satisfied gives <br /></p>
+
+\[{\scriptsize \begin{align*}
+ &amp;F(l) = \frac{1}{\pi}\bigg[cos^{-1}(1-\frac{l^2}{2})\bigg] \\
+ &amp;\text{whose probability density function is }\\
+&amp;\frac{dF}{dl} = \frac{2}{\pi \sqrt{4-l^2}}
+\end{align*}
+\scriptsize}\]
+
+<hr />
+<hr />
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Tutch Sottithat Winyarat</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Tutch Sottithat Winyarat</li><li><a class="u-email" href="mailto:winyarat@seas.upenn.edu">winyarat@seas.upenn.edu</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/twinyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">twinyarat</span></a></li><li><a href="https://www.linkedin.com/in/winyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">winyarat</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Tutch Sottithat Winyarat | A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Tutch Sottithat Winyarat" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<meta property="og:description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<link rel="canonical" href="twinyarat.github.io/notes/quadmotion/" />
+<meta property="og:url" content="twinyarat.github.io/notes/quadmotion/" />
+<meta property="og:site_name" content="Tutch Sottithat Winyarat" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Tutch Sottithat Winyarat" />
+<script type="application/ld+json">
+{"description":"A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021","headline":"Tutch Sottithat Winyarat","url":"twinyarat.github.io/notes/quadmotion/","@type":"WebPage","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="twinyarat.github.io/feed.xml" title="Tutch Sottithat Winyarat" /><!-- for mathjax support -->
+	
+	  <script type="text/x-mathjax-config">
+	    MathJax.Hub.Config({
+	    TeX: { equationNumbers: { autoNumber: "AMS" } }
+	    });
+	  </script>
+	  <script type="text/javascript" async src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Tutch Sottithat Winyarat</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/notes/">Notes</a><a class="page-link" href="/projects/">Projects</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title"></h1>
+  </header>
+
+  <div class="post-content">
+    <h3 id="a-quadrotor-and-its-equation-of-motion"><strong>A Quadrotor and Its Equation of Motion</strong></h3>
+<hr />
+<hr />
+<p>\(\)</p>
+
+<p>How does the motion of a rigid body such as a quadrotor evolve over time? To begin, let \(M\) be the number of forces acting on a rigid body B with a total mass \(m\).
+The equation of translational motion, by Newton’s second law, is</p>
+
+\[\begin{align*}
+	 \sum_{i = 1}^{M} F_i = F &amp;= \frac{d}{dt}L_c  \\
+	 &amp; = \frac{d}{dt}(mv_c)= ma_c  \tag{1 }\\
+	 \end{align*}\]
+
+<p>where \(L_c\) denotes the linear momentum of the body’s center of mass \(c\) and \(F\) the total force applied.</p>
+
+<p>Much of our effort will however be spent on building the equation of angular motion. Let</p>
+
+\[\begin{align*} H^B_c = I_c \cdot \omega^B_c  \end{align*}\]
+
+<p>denote the angular momentum of the rigid body B about its center of mass, \(I_c\) the inertia tensor, and \(\omega^B_c\) the angular velocity relative to an inertial frame \(A\) of the body-fixed frame \(B\) about its center of mass \(c\). We would like to compute the time derivative of \(H^B_c\) to obtain the total moment \(M^B_c\) applied. But there’s one caveat: The computation of the total moment \(M^B_c\) could get complicated due to the fact that the inertia tensor \(I_c\) is not constant when \(\omega^B_c\) is expressed in the coordinates of frame \(A\). It will be more convenient to proceed by expressing \(\omega^B_c\) and computing \(M^B_c\) in the body-fixed frame \(B\). This way, \(I_c\) is constant, and if frame \(B\) is aligned with the principal axes of inertia, \(I_c\) conveniently becomes diagonal as its products of inertia vanish.</p>
+
+<p>By the principle of relative motion,</p>
+
+\[\begin{align*} M^B_c = \frac{d}{dt}^A H^B_c &amp;= \frac{d}{dt}^B H^B_c + \omega^B_c \times H^B_c  \\
+&amp;= \dot{I_c} \cdot \omega^B_c + I_c \cdot \dot{\omega}^B_c + \omega^B_c \times H^B_c\\
+&amp;= 0 + I_c \cdot \dot{\omega}^B_c + \hat{\omega}^B_c I_c \cdot \omega^B_c \\ 
+ \end{align*}  \tag{2}\]
+
+<p>where \(\hat{\omega}^B_c\) is a matrix equivalence of the cross product with \(\omega^B_c\). We have just recovered Euler’s equation for rotations <a class="citation" href="#advancedDynamics">(Greenwood, 2006, p. 166)</a>. In matrix form, eq.2 can be rewritten as</p>
+
+<p>\(\)
+\(M^B_c =  \begin{bmatrix} M_x \\M_y \\M_z \end{bmatrix} =  \begin{bmatrix} I_{xx} &amp; 0 &amp;0 \\ 0 &amp; I_{yy} &amp; 0 \\ 0 &amp; 0 &amp; I_{zz}	\end{bmatrix} \begin{bmatrix} \dot{p} \\ \dot{q}\\ \dot{r}	\end{bmatrix} + \begin{bmatrix} 0 &amp; -r &amp; q \\ r &amp; 0 &amp; -p \\ -q &amp; p &amp; 0	\end{bmatrix} \begin{bmatrix} I_{xx} &amp; 0 &amp;0 \\ 0 &amp; I_{yy} &amp; 0 \\ 0 &amp; 0 &amp; I_{zz}	\end{bmatrix} \begin{bmatrix} p \\ q \\ r \end{bmatrix} \tag{3 }\)
+\(\)<br />
+where \(\begin{bmatrix} p &amp; q &amp; r \end{bmatrix}^T  = \omega^B_c\) expresses, in the body-fixed frame \(B\), the angular velocity of the rigid body B about its center of mass. For a given moment \(M^B_c\), eq.3 can be numerially integrated to uncover the time evolution of the system’s angular velocity and orientation. Interestingly, if \(I_{xx}, I_{yy},\) and \(I_{zz}\) are equal, that is the mass distribution over the rigid body is symmetric about all of its principal axes of inertia, the last term in eq.3 vanishes (A fact we exploit in the design of an <a href="\notes\quadController">SE3 controller</a>).</p>
+
+<p>Eq. 1 and Eq. 3 suggest ways for manipulating the behavior of the rigid body through a controller’s commanded thrust \(T\) and moment \(M^B_c\). Let’s rearrange those equations:</p>
+
+<p>\(\)
+\(ma_c = -m\vec{g}+ {}^A[R]^BT  \tag{4}\)<br />
+\(\)
+\(\begin{bmatrix} \dot{p} \\ \dot{q}\\ \dot{r}	\end{bmatrix}  =  \begin{bmatrix} M_x \\M_y \\M_z \end{bmatrix} - \begin{bmatrix} 0 &amp; -r &amp; q \\ r &amp; 0 &amp; -p \\ -q &amp; p &amp; 0\end{bmatrix}\begin{bmatrix} I_{xx} &amp; 0 &amp;0 \\ 0 &amp; I_{yy} &amp; 0 \\ 0 &amp; 0 &amp; I_{zz}	\end{bmatrix} \begin{bmatrix} p \\ q \\ r \end{bmatrix} \tag{5}\)<br />
+\(\)</p>
+
+<p>It’s important to note that linear acceleration \(a_c\) is expressed in the coordinates of the inertial frame \(A\), but the input thrust \(T\), angular velocity \(\begin{bmatrix} p &amp; q &amp; r	\end{bmatrix}^T\), and its derivative are expressed in the body-fixed frame’s coordinates. The input thrust \(T\) is hence mapped into the coordinates of the inertial frame via \({ }^A[R]^B\).</p>
+
+<p>We now proceed by attempting to integrate the commanded control inputs to a quadrotor such as the one in figure 1 with our equations of motion above. The quadrotor’s propeller \(i\) spins with an angular velocity of \(\omega_i\), generating a force \(F_i = k_f\omega_i^2\) in the body-fixed \(b_3\) direction and a moment \(M_i = k_m \omega_i^2\) about \(b_3\) (\(k_f\) and \(k_m\) are gains obtained from experiments). Consequently, in addition to gravity, our quadrotor experiences an input thrust</p>
+
+\[T = \begin{bmatrix} 0 \\ 0\\ \sum_{i = 1}^{4} F_i	\end{bmatrix} = u_1\]
+
+<p>which we by convention denote using \(u_1\), and an input moment</p>
+
+\[\begin{align*} \begin{bmatrix} M_x \\M_y \\M_z \end{bmatrix} &amp;= \sum_{i = 1}^{4} r_i \times F_i +  \begin{bmatrix} 0 \\ 0\\ M_1 -M_2 + M_3 - M_4	\end{bmatrix} \\
+&amp;= \begin{bmatrix} 0 &amp; L &amp; 0 &amp;-L \\ -L &amp; 0 &amp; L &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 0 \end{bmatrix} \begin{bmatrix} F_1 \\ F_2 \\ F_3 \\ F_4 \end{bmatrix} + \begin{bmatrix} 0 \\ 0\\ M_1 -M_2 + M_3 - M_4	\end{bmatrix}\\
+&amp;= \begin{bmatrix} 0 &amp; L &amp; 0 &amp;-L \\ -L &amp; 0 &amp; L &amp; 0 \\ \gamma &amp; -\gamma &amp; \gamma &amp; -\gamma \end{bmatrix} \begin{bmatrix} F_1 \\ F_2 \\ F_3 \\ F_4 \end{bmatrix} = u_2
+\end{align*}\]
+
+<p>where \(\gamma = \frac{k_m}{k_f}\). It is also important to note that although propellers 2 and 4 spin counter-clockwise about \(b_3\) according to the right-hand rule, the quadrotor itself experiences their negative moments in effect; hence the minus signs on \(M_2\) and \(M_4\). Finally, substituting the above expressions for our control input \(u\) into eq.4 and eq.5, we arrive at two coupled second order differential equations governing the position and orientation of our quadrotor:</p>
+
+\[ma_c = \begin{bmatrix} 0 \\ 0\\ -mg	\end{bmatrix} + {}^A[R]^B u_1 \tag{ 6}\]
+
+<p>\(\begin{bmatrix} I_{xx} &amp; 0 &amp;0 \\ 0 &amp; I_{yy} &amp; 0 \\ 0 &amp; 0 &amp; I_{zz}	\end{bmatrix} \begin{bmatrix} \dot{p} \\ \dot{q}\\ \dot{r}	\end{bmatrix}  = u_2  - \begin{bmatrix} 0 &amp; -r &amp; q \\ r &amp; 0 &amp; -p \\ -q &amp; p &amp; 0\end{bmatrix}\begin{bmatrix} I_{xx} &amp; 0 &amp;0 \\ 0 &amp; I_{yy} &amp; 0 \\ 0 &amp; 0 &amp; I_{zz}	\end{bmatrix} \begin{bmatrix} p \\ q \\ r \end{bmatrix}  \tag{ 7}\)<br />
+\(\)</p>
+
+<hr />
+<hr />
+<p>\(\)</p>
+<h3 id="references">References</h3>
+<ol class="bibliography"><li><span id="advancedDynamics">Greenwood, D. T. (2006). <i>Advanced Dynamics</i>. Cambridge University Press.</span></li></ol>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Tutch Sottithat Winyarat</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Tutch Sottithat Winyarat</li><li><a class="u-email" href="mailto:winyarat@seas.upenn.edu">winyarat@seas.upenn.edu</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/twinyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">twinyarat</span></a></li><li><a href="https://www.linkedin.com/in/winyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">winyarat</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

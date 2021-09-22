@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Tutch Sottithat Winyarat | A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Tutch Sottithat Winyarat" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<meta property="og:description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<link rel="canonical" href="twinyarat.github.io/projects/vo" />
+<meta property="og:url" content="twinyarat.github.io/projects/vo" />
+<meta property="og:site_name" content="Tutch Sottithat Winyarat" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Tutch Sottithat Winyarat" />
+<script type="application/ld+json">
+{"description":"A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021","headline":"Tutch Sottithat Winyarat","url":"twinyarat.github.io/projects/vo","@type":"WebPage","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="twinyarat.github.io/feed.xml" title="Tutch Sottithat Winyarat" /><!-- for mathjax support -->
+	
+	  <script type="text/x-mathjax-config">
+	    MathJax.Hub.Config({
+	    TeX: { equationNumbers: { autoNumber: "AMS" } }
+	    });
+	  </script>
+	  <script type="text/javascript" async src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Tutch Sottithat Winyarat</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/notes/">Notes</a><a class="page-link" href="/projects/">Projects</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title"></h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="stereo-visual-odometry"><strong>Stereo Visual Odometry</strong></h2>
+<hr />
+<hr />
+<p>\(\)</p>
+<h4 id="objective"><strong>Objective</strong></h4>
+<p>The objective of this project is to estimate with respect to the initial frame of reference the pose \((R_k, t_k) \in SE(3)\) of a vehicle traversing through various environments. Working purely with stereo images, we analyze and compare two approaches taken to address the issue of robustness: The method of linear least square and nonlinear optimization. Both approaches build on the same image preprocessing and feature generation pipeline. The project content is organized into the following sections:</p>
+
+<p>1). <a href="#feature-extraction-and-description">Feature Extraction and Description</a> <br />
+2). <a href="#outlier-rejection">Outlier Rejection</a> <br />
+3). <a href="#linear-least-square-motion-approximation">Linear Least Square Motion Approximation</a> <br />
+4). <a href="#nonlinear-optimization-and-bundle-adjustment">Nonlinear Optimization and Bundle Adjustment</a></p>
+
+<p><em>Feature Extraction and Description</em> contains a discussion of image preprocessing procedures such as subsampling and Gaussian smoothing as well as ORB feature generation. <em>Outlier Rejection</em> discusses a procedure used to tackle the issue of false correspondence. <em>Least Square Motion Approximation</em> discusses linearization of rotational motion and the associated discrepency vector. And lastly, <em>Nonlinear Optimization</em> discusses natural robustification under the Maximum Likelihood framework.</p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="data-set"><strong>Data Set</strong></h4>
+<p>A project of The Karlsruhe Institute of Technology and Toyota Technological Institute at Chicago, the KITTI Vision Benchmark Suite 2012 is a well recognized dataset in the computer vision and autonomous vehicle community <a class="citation" href="#Geiger2012">(Geiger et al., 2012)</a>. The dataset contains both stereo image sequences and Velodyne LIDAR readings, along with some groundtruth poses and camera calibration matrices. In this project, we evaluate our algorithms on stereo images from sequences 00, 01, and 02. For more information on the data set and the manner in which it is gathered, please refer to the <a href="http://www.cvlibs.net/datasets/kitti/eval_stereo_flow.php?benchmark=stereo">institute website</a>.</p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="feature-extraction-and-description"><strong>Feature Extraction and Description</strong></h4>
+
+<p>The preliminary stage of our visual odometry machinery consists of gray scale conversion, Gaussian smoothing, and subsampling of the original stereo images. The preprocessed images are then passed onto a feature generation stage where corner features in both left and right images are extracted and described. Inspired by <a class="citation" href="#ORBSLAM2">(Mur-Artal &amp; Tardos, 2017)</a>,  we base our feature generator on the Oriented FAST and Rotated BRIEF (ORB) feature due to its low computational cost <a class="citation" href="#ORB">(Rublee et al., 2011)</a>. The feature generator first computes FAST features by visiting every pixel of an image. For each pixel visited, its intensity is compared against the surrounding ring of pixels. We choose a ring of radius 9. A pixel is taken as a FAST feature if at least three contiguous quarters of the surrounding pixels are brighter or dimmer (above or below to a given threshold) than the center pixel’s intensity.</p>
+
+<p>The feature generator then assigns a binary descriptor to each of the FAST features detected. In order to achieve rotational invariance in feature description, the generator computes its moments \(m_{pq}\):</p>
+
+\[m_{pq} = \sum_{x,y} x^p y^{q}I(x,y)\]
+
+<p>where the summation is taken over the FAST feature patch \(\boldsymbol{p}\) with \(I(\cdot)\) denoting the image. The orientation \(\theta\) of the feature is then:</p>
+
+\[\theta = atan2(m_{01}, m_{10})\]
+
+<p>Once the orientation is obtained, a set of \(n\) normally distributed pixel-coordinate pairs</p>
+
+\[S  = \begin{pmatrix}&amp;x_{1},&amp;x_{2}, ...&amp;x_{n} \\&amp;y_{1},&amp;y_{2}, ...&amp;y_{n} \end{pmatrix}\]
+
+<p>is generated and rotated according to the feature’s orientation:</p>
+
+\[S_{\theta} = \boldsymbol{R}_{\theta} S\]
+
+<p>To avoid unnecessary work, \(\theta\) is decretized into 30 bins, each of which contains a precomputed \(S_{\theta}\) for lookup. And lastly, a Binary Robust Independent Elementary Feature (BRIEF) descriptor \(f_{n}(\boldsymbol{p})\) of length n for a feature patch \(\boldsymbol{p}\) is computed:</p>
+
+\[f_{n}(\boldsymbol{p}) = \sum_{i = 1}^{n} 2^{i-1} \tau(\boldsymbol{p}; x_i, y_i) \space \vert \space (x_i, y_i) \in S_{\theta}\]
+
+<p>where the binary test \(\tau\) is defined as</p>
+
+\[\tau(\boldsymbol{p}; x, y) = \begin{cases}
+    1 &amp; \text{if $\boldsymbol{p}(x) &lt; \boldsymbol{p}(y) $} \\
+    0 &amp; \text{otherwise}
+  \end{cases}\]
+
+<p><a class="citation" href="#BRIEF">(Calonder et al., 2012)</a>. We choose \(n := 256\) and use the hamming distance as a similarity measure between two feature descriptors in stereo matching and temporal correspondence search.</p>
+
+<div style="text-align: center;">
+	<img style="width: 100%" src="/images/feats.PNG" />
+</div>
+<p><br /></p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="outlier-rejection"><strong>Outlier Rejection</strong></h4>
+
+<p>Because the set \(\mathcal{C}\) of frame-to-frame (temporal) correspondences returned by a feature matching module such as the aforementioned one is often contaminated by false correspondences, our visual odometry machinery must at this stage handle the induced uncertainty accordingly. Even just one false correspondence can disastrously produce inaccurate estimate of the motion (especially evident in the linear regression method below). This is where a simple yet powerful algorithm called <em>RAndom Sample Consensus</em> comes in. Its goal is to compute a motion estimate from the largest subset of uncontaminated correspondences while rejecting all false ones. The true correspondences are often called inliers or outliers otherwise.</p>
+
+<p>To set the stage for this subproblem, let \(\mathcal{C}_{rand} \subset \mathcal{C}\) be a subset of the set of correspondences drawn without replacement by the algorithm. Let \(M(\cdot)\) be a function that returns a motion estimate \((\hat{R},\hat{t})\) given a set of correspondences and \(D( \cdot, \cdot )\) a function that computes the discrepency between a given motion estimate and a correspondence. The algorithm operates in the following hypothesize-then-verify fashion:
+\(\)<br />
+\(\)</p>
+
+<hr />
+<p><strong>RANSAC Algorithm</strong> <br />
+Inputs: correspondence set \(\mathcal{C}\) ,  discrepency threshold \(\epsilon\), number of samples \(m\) <br />
+Output: motion estimate \(\{ \hat{R}^*, \hat{t}^*\}\)</p>
+
+<hr />
+
+<p><span style="font-size:0.75em;">
+<strong><em>Initialize</em></strong> : <br />
+\(\quad\) Inlier Set \(\mathcal{I} \leftarrow \emptyset\) <br />
+\(\quad\) inMax  \(\leftarrow \lvert \mathcal{I} \lvert\) <br />
+<strong><em>While</em></strong> \(i &lt; k\):<br />
+\(\quad \mathcal{C}_{rand} \leftarrow\) draw \(m\) samples without replacement from  \(\mathcal{C}\) <br />
+\(\quad \{\hat{R}, \hat{t} \} \leftarrow M(\mathcal{C}_{rand})\)<br />
+\(\quad\) <strong><em>For</em></strong> each \(\mathcal{c} \in \mathcal{C} :\)<br />
+\(\qquad\) <strong><em>If</em></strong>  \(D(\mathcal{c},(\hat{R}, \hat{t}) ) &lt; \epsilon:\)<br />
+\(\quad \quad  \quad  \mathcal{I} \leftarrow \mathcal{I} \cup \{\mathcal{c} \}\)<br />
+\(\quad\) <strong><em>If</em></strong>  \(\lvert \mathcal{I} \lvert &gt; inMax\):<br />
+\(\qquad inMax \leftarrow \lvert \mathcal{I} \lvert\)<br />
+\(\qquad \{ \hat{R}^*, \hat{t}^*\} \leftarrow  M( \mathcal{I})\)<br />
+\(\quad i \leftarrow i + 1\)<br />
+return \(\{ \hat{R}^*, \hat{t}^*\}\) } </span></p>
+
+<hr />
+<p><br /></p>
+
+<p>A few questions remain: How should we decide on the value of k? And how many \(m\) samples should we use to generate the hypothesis \(\{\hat{R}, \hat{t} \}\)? To answer the first question, proceed by letting \(\eta\) denote our confidence level that at least one of the \(k\) RANSAC trails produces a hypothetical inlier set that is uncontaminated. Let \(\alpha\) denote the ratio of inliers and \(m\) the number of samples drawn from \(\mathcal{C}\). The probability that all \(m\) such samples are truly inliers is \(\alpha^{m}\), and the probability that each and every one of the \(k\) trails produces a contaminated hypothetical inlier set is thus \((1-\alpha^{m})^{k}\). The minimum number of RANSAC trials \(k\) must therefore satisfy:</p>
+
+\[\begin{align*}
+ (1-\alpha^m)^k &amp;\geq 1-\eta\\
+ \Rightarrow  k &amp;\geq \frac{log(1-\eta)}{log(1-\alpha^m)} 
+\end{align*}\]
+
+<p><a class="citation" href="#szeliski2011">(Szeliski, 2011, p. 285)</a>. Since \(\alpha\) is often an unknown prior, we can estimate it by taking the inliers ratio in the preceding image frame. Furthermore, since the chance of drawing a false correspondence increases with more samples, the number of RANSAC samples \(m\) should be the minimum number of data sufficient for generating a hypothesis \(\{\hat{R}, \hat{t} \}\).</p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="linear-least-square-motion-approximation"><strong>Linear Least Square Motion Approximation</strong></h4>
+
+<p>While the <a href="\notes\epipolar">Epipolar Geometry</a> that gives rise to the epipolar constraint is useful for recovering the relative motion between two images via the Essential Matrix decomposition technique, the method suffers from the issue of degeneracy when relative motion between image frames is purely rotational. To circumvent this issue, let us first define <em>normalized stereo coordinates</em> \((u', v', d')\) and introduce a 2D vector object \(\delta\) called the <em>discrepency vector</em>.</p>
+
+<p>Given a <em>stereo</em> correspondence, its u-pixel coordinates from the left and right images, respectively, are</p>
+
+\[{\scriptsize  \begin{align*}
+u_l &amp;= (\frac{f}{s_x})(\frac{X}{Z}) + c_x \\
+u_r &amp;= (\frac{f}{s_x})(\frac{X-b}{Z}) + c_x
+\end{align*} \scriptsize}\]
+
+<p>where \(X,Y,\) and \(Z\) are the world coordinates of the detected feature expressed in the camera frame. \(f\) is the camera focal length. \(s_x\) is the scale factor and \(b\) the baseline. The disparity \(d\), defined as the difference between \(u_l\) and \(u_r\), allows us to recover depth of the detected feature:</p>
+
+\[{\scriptsize \begin{align*} 
+d &amp;= (u_l - u_r) = (\frac{f}{s_x})(\frac{b}{Z}) \\
+\Rightarrow Z &amp;= (\frac{f}{s_x})(\frac{b}{d})
+
+\end{align*}  \scriptsize}\]
+
+<p>With depth \(Z\), we can form a normalized stereo coordinate \((u', v', d')\) as follows:</p>
+
+\[{\scriptsize \begin{align*}
+	u' &amp;= \frac{X}{Z} = \frac{(u-c_x)}{f}\\
+	v' &amp;= \frac{Y}{Z}= \frac{(v-c_y)}{f}\\
+	d' &amp;= \frac{1}{Z} = \frac{d}{fb}\\
+\end{align*} \tag{eq.1} \scriptsize}\]
+
+<p>where \((c_x,c_y)\) is the optical center of the image. \(s_x\) is assumed to be unit.</p>
+
+<p>A feature seen and expressed in frame 1 has as its coordinate \([X_1, Y_1, Z_1 ]\) that relates to a corresponding coordinate of a feature seen and expressed in frame 2, \([X_2, Y_2, Z_2 ]\),  by the following equation:</p>
+
+\[{\scriptsize \begin{align*} \begin{bmatrix} X_1 \\ Y_1 \\Z_1     \end{bmatrix} &amp;= R\begin{bmatrix} X_2 \\ Y_2 \\Z_2     \end{bmatrix} + T \\
+
+\frac{Z_1}{Z_2} \begin{bmatrix} X_1 /Z_1   \\ Y_1/Z_1   \\1   \end{bmatrix} &amp;= R\begin{bmatrix} X_2 /Z_2   \\ Y_2/Z_2   \\1   \end{bmatrix} + (\frac{1}{Z_2})T \\
+\frac{Z_1}{Z_2} \begin{bmatrix} u'_1   \\ v'_1  \\1   \end{bmatrix} &amp;= R\begin{bmatrix} u'_2  \\ v'_2   \\1   \end{bmatrix} + (d'_2)T \\
+
+\end{align*} \tag{eq.2} \scriptsize}\]
+
+<p>Given a relative pose \(\{R,T\}\) between the two frames, the discrepency vector \(\delta\) between the pose and a correspondence can be written as</p>
+
+\[{\scriptsize \begin{align*} \delta &amp;= \begin{bmatrix} 1 &amp; 0 &amp;0 \\ 0 &amp; 1 &amp; 0  \end{bmatrix} \big\{ R\begin{bmatrix} u'_2  \\ v'_2   \\1   \end{bmatrix} + (d'_2)T - \frac{Z_1}{Z_2} \begin{bmatrix} u'_1   \\ v'_1   \\1   \end{bmatrix} \big\}  \\
+
+&amp;= \begin{bmatrix} 1 &amp; 0 &amp;0 \\ 0 &amp; 1 &amp; 0  \end{bmatrix}  \big\{R\begin{bmatrix} u'_2  \\ v'_2   \\1   \end{bmatrix} + (d'_2)T - \underbrace{\begin{bmatrix}0 &amp; 0 &amp; 1 \end{bmatrix}  \big\{ R\begin{bmatrix} u'_2  \\ v'_2   \\1   \end{bmatrix} + (d'_2)T \big\} }_{:= \frac{Z_1}{Z_2} \space \text{, as implied by eq.2}} \begin{bmatrix} u'_1   \\ v'_1   \\1   \end{bmatrix} \big\}  \\
+
+&amp;= \begin{bmatrix} 1 &amp; 0 &amp;0 \\ 0 &amp; 1 &amp; 0  \end{bmatrix}  \bigg\{R\begin{bmatrix} u'_2  \\ v'_2   \\1   \end{bmatrix} + (d'_2)T - \begin{bmatrix} u'_1   \\ v'_1   \\1   \end{bmatrix} \begin{bmatrix}0 &amp; 0 &amp; 1 \end{bmatrix}  \big\{R\begin{bmatrix} u'_2  \\ v'_2   \\1   \end{bmatrix} + (d'_2)T \big\}  \bigg\}  \\
+
+&amp;= \begin{bmatrix} 1 &amp; 0 &amp; -u'_1 \\ 0 &amp; 1 &amp; -v'_1  \end{bmatrix}  \bigg\{R\begin{bmatrix} u'_2  \\ v'_2   \\1   \end{bmatrix} + (d'_2)T \bigg\}  \tag{eq.3}\\
+
+\end{align*}\scriptsize}\]
+
+<p>When the pose agrees with a temporal correspondence, we expect this discrepency vector \(\delta\) to be \(\vec{\boldsymbol{0}}\). In fact, the norm of \(\delta\) also provides us with a measure of discrepency \(D(\cdot, \cdot)\) between a pose(model) and a correspondence(datum) used to screen outliers in RANSAC. Formally, we write</p>
+
+\[{\scriptsize \delta = \begin{bmatrix} 1 &amp; 0 &amp; -u'_1 \\ 0 &amp; 1 &amp; -v'_1  \end{bmatrix}  \bigg\{ (I + \hat{\omega})R_0 \begin{bmatrix} u'_2  \\ v'_2   \\1   \end{bmatrix} + (d'_2)T \bigg\} \approx \begin{bmatrix} 0 \\ 0 \end{bmatrix}
+\tag{eq.4}
+\scriptsize}\]
+
+<p>where \(R_0\) denotes the initial orientation of frame 1 and \((I + \hat{\omega})R_0\) the first order approximation of \(R\). As a result, we can view the problem of recovering \(\{R,T \}\) as a least square problem and rewrite eq.4 as</p>
+
+\[{\scriptsize \begin{align*}
+&amp; \begin{bmatrix} 1 &amp; 0 &amp; -u'_1 \\ 0 &amp; 1 &amp; -v'_1  \end{bmatrix} \begin{bmatrix}-\hat{y}\omega &amp; +(d'_2)T \end{bmatrix} \approx -\begin{bmatrix} 1 &amp; 0 &amp; -u'_1 \\ 0 &amp; 1 &amp; -v'_1 \end{bmatrix}y \\
+
+\Rightarrow &amp; \underbrace{\begin{bmatrix} 1 &amp; 0 &amp; -u'_1 \\ 0 &amp; 1 &amp; -v'_1  \end{bmatrix}  \begin{bmatrix} 0 &amp; y_3 &amp; -y_2 &amp; d'_2 &amp; 0 &amp; 0 \\
+-y_3 &amp; 0 &amp; y_1 &amp;0 &amp; d'_2&amp; 0 \\
+y_2 &amp; -y_1 &amp; 0 &amp; 0 &amp; 0&amp; d'_2 \end{bmatrix}}_{:= A} \begin{pmatrix} \omega \\ T \end{pmatrix} \approx \underbrace{-\begin{bmatrix} 1 &amp; 0 &amp; -u'_1 \\ 0 &amp; 1 &amp; -v'_1 \end{bmatrix}y }_{:= b}
+\end{align*} \tag{eq.5} \scriptsize}\]
+
+<p>where \({\scriptsize y = R_0 \begin{bmatrix} u'_2  \\ v'_2   \\1 \end{bmatrix}  \scriptsize} .\) With one temporal correspondence providing 2 constraints, we therefore require a minimum of \(m = 3\) correspondences to fully constrain the above system of equations \(Ax \approx b\) involving the 6 unknowns in \(\omega\) and \(T\). We finally solve eq.5 iteratively until angular convergence.</p>
+
+<p>The figures below show the results of applying this linear least square method to the KITTI sequences 00, 01, and 02. Although drifts are inevitable in the absence of loop-closure, we can qualitatively see especially in sequences 01 and 02 that the RANSAC-based linear least square method produces unreliable motion estimates.</p>
+<div style="text-align: center;">
+	<img style="width: 70%" src="/images/vo_seq00.png" />
+</div>
+<div style="text-align: center;">
+	<img style="width: 70%" src="/images/vo_seq01.png" />
+</div>
+<div style="text-align: center;">
+	<img style="width: 70%" src="/images/vo_seq02.png" />
+</div>
+
+<hr />
+<p>\(\)</p>
+<h4 id="nonlinear-optimization-and-bundle-adjustment"><strong>Nonlinear Optimization and Bundle Adjustment</strong></h4>
+
+<p>While the method of linear least square discussed above is highly sensitive to outliers and therefore requires an outlier screening procedure to produce reliable motion estimates, the <a href="notes/nloptimization">nonlinear optimization</a> and bundle adjustment framework allows us to handle outliers integrally by incorporating a non-Gaussian error model that more realistically captures the total (both inliers and outliers) error distribution <a class="citation" href="#Triggs00bundleadjustment">(Triggs et al., 2000)</a>.</p>
+
+<p>Triggs stresses that poor robustness in bundle adjustment is often a result of mismodelling of the error distribution. To see the effect of such a mistake, first denote by \(\boldsymbol{x}\) a set of parameters such as camera poses and landmark locations; \(z(\boldsymbol{x})\) the reprojective observation model; and \(\underline{z}\) a given observation. The reprojective error \(\Delta z(\boldsymbol{x})\) is hence \(\Delta z(\boldsymbol{x}) = \underline{z} - z(\boldsymbol{x})\). Under the assumption that they are independently, identically, and normally distributed, the likelihood of \(n\) observations given the parameters \(\boldsymbol{X}\) is:</p>
+
+\[p(Z \vert \boldsymbol{X}) = \eta \times \prod_{i =1}^{n} exp(-\frac{1}{2}\Delta z_i(\boldsymbol{x_i})^T \Sigma^{-1} \Delta z_i(\boldsymbol{x_i}))\]
+
+<p>where \(\eta\) subsumes all constant factors. Maximizing this likelihood by minimizing its negative log likelihood yields an objective function that is quadratic in \(\Delta Z\) :</p>
+
+\[\boldsymbol{X}^{*} = \underset{ \boldsymbol{X}}{\operatorname{argmin}} \sum_{i = 1}^{n} \Delta z_i(\boldsymbol{x_i})^T \Sigma^{-1} \Delta z_i(\boldsymbol{x_i})\]
+
+<p>Consequently, the Gaussian assumption has led to yet another least square objective that is highly sensitive to large, abberant observation errors.</p>
+
+<p>If, however, the observations are assumed to be distributed according to densities with non-exponentially decaying tails, the objective function turns out to be drastically different. 
+For instance, a <a href="/notes/cauchydistribution">Cauchy distribution</a></p>
+
+\[p(z \vert \boldsymbol{x}) = \frac{1}{\pi(1+\Delta z^2)}\]
+
+<p>contributes to the objective function a negative log likelihood of the following form:</p>
+
+\[\rho := -log(p) = log(\pi) + log(1 + \Delta z^2)\]
+
+<p>whose first derivative is</p>
+
+\[\frac{d \rho}{d \Delta z} = \frac{2 \Delta z}{1+\Delta z^2}\]
+
+<p>,showing that large, abberant obervation errors cause the objective function to grow only by the order of \(\mathcal{O}( \vert \Delta z \vert^{-1})\).</p>
+
+<p>The <a href="http://ceres-solver.org"><strong>Ceres</strong></a> optimization package provides a convenient way to incorporate this more robust cost function in our nonlinear optimization problem <a class="citation" href="#ceres-solver">(Agarwal et al., n.d.)</a> . In the parlance of Ceres, the objective function</p>
+
+\[\underset{ \boldsymbol{X}}{\operatorname{min}}  \frac{1}{2} \sum_{i} \rho_{i}\big( \vert\vert f_i(\boldsymbol{X_i})     \vert \vert ^2 \big)\]
+
+<p>consists of cost functions \(f_i(\cdot) := \Delta z_i\) and loss functions \(\rho_i(f)\) which we may specify to be \(\rho_i(\Delta z_i) := log(1+ \vert \vert \Delta z_i \vert \vert ^2)\). The so-called parameter block \(\boldsymbol{X_i}\) consists of the \(i^{th}\) camera pose and \(k\) scene point locations observed by the camera. Holding the scene point locations constant, we may perform motion-only Bundle Adjustment and optimize only over the camera poses.</p>
+
+<p>The figures below show the results of applying this nonlinear optimization method to the KITTI sequences 00, 01, and 02.</p>
+
+<div style="text-align: center;">
+	<img style="width: 70%" src="/images/ba_seq00.png" />
+</div>
+<div style="text-align: center;">
+	<img style="width: 70%" src="/images/ba_seq01.png" />
+</div>
+<div style="text-align: center;">
+	<img style="width: 70%" src="/images/ba_seq02.png" />
+</div>
+<hr />
+<hr />
+<p>\(\)</p>
+<h3 id="references">References</h3>
+<ol class="bibliography"><li><span id="Geiger2012">Geiger, A., Lenz, P., &amp; Urtasun, R. (2012). Are we ready for Autonomous Driving? The KITTI Vision Benchmark Suite. <i>Conference on Computer Vision and Pattern Recognition (CVPR)</i>.</span></li>
+<li><span id="ORBSLAM2">Mur-Artal, R., &amp; Tardos, J. D. (2017). ORB-SLAM2: An Open-Source SLAM System for Monocular, Stereo, and RGB-D Cameras. <i>IEEE Transactions on Robotics</i>, <i>33</i>(5), 1255–1262. https://doi.org/10.1109/TRO.2017.2705103</span></li>
+<li><span id="ORB">Rublee, E., Rabaud, V., Konolige, K., &amp; Bradski, G. (2011). ORB: An efficient alternative to SIFT or SURF. <i>2011 International Conference on Computer Vision</i>, 2564–2571. https://doi.org/10.1109/ICCV.2011.6126544</span></li>
+<li><span id="BRIEF">Calonder, M., Lepetit, V., Ozuysal, M., Trzcinski, T., Strecha, C., &amp; Fua, P. (2012). BRIEF: Computing a Local Binary Descriptor Very Fast. <i>IEEE Transactions on Pattern Analysis and Machine Intelligence</i>, <i>34</i>(7), 1281–1298. https://doi.org/10.1109/TPAMI.2011.222</span></li>
+<li><span id="szeliski2011">Szeliski, R. (2011). <i>Computer vision algorithms and applications</i>. Springer.</span></li>
+<li><span id="Triggs00bundleadjustment">Triggs, B., McLauchlan, P., Hartley, R., &amp; Fitzgibbon, A. (2000). Bundle Adjustment – A Modern Synthesis. <i>VISION ALGORITHMS: THEORY AND PRACTICE, LNCS</i>, 298–375.</span></li>
+<li><span id="ceres-solver">Agarwal, S., Mierle, K., &amp; Others. <i>Ceres Solver</i>. http://ceres-solver.org</span></li></ol>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Tutch Sottithat Winyarat</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Tutch Sottithat Winyarat</li><li><a class="u-email" href="mailto:winyarat@seas.upenn.edu">winyarat@seas.upenn.edu</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/twinyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">twinyarat</span></a></li><li><a href="https://www.linkedin.com/in/winyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">winyarat</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Tutch Sottithat Winyarat | A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Tutch Sottithat Winyarat" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<meta property="og:description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<link rel="canonical" href="twinyarat.github.io/notes/schur/" />
+<meta property="og:url" content="twinyarat.github.io/notes/schur/" />
+<meta property="og:site_name" content="Tutch Sottithat Winyarat" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Tutch Sottithat Winyarat" />
+<script type="application/ld+json">
+{"description":"A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021","headline":"Tutch Sottithat Winyarat","url":"twinyarat.github.io/notes/schur/","@type":"WebPage","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="twinyarat.github.io/feed.xml" title="Tutch Sottithat Winyarat" /><!-- for mathjax support -->
+	
+	  <script type="text/x-mathjax-config">
+	    MathJax.Hub.Config({
+	    TeX: { equationNumbers: { autoNumber: "AMS" } }
+	    });
+	  </script>
+	  <script type="text/javascript" async src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Tutch Sottithat Winyarat</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/notes/">Notes</a><a class="page-link" href="/projects/">Projects</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title"></h1>
+  </header>
+
+  <div class="post-content">
+    <h3 id="the-schur-complement"><strong>The Schur Complement</strong></h3>
+<hr />
+<hr />
+<p>\(\)</p>
+
+<p>Given an \(n \times n\) matrix \(\boldsymbol{M} := \begin{bmatrix} A &amp; B \\ C &amp; D \end{bmatrix}\), we seek an expression of \(\boldsymbol{M}^{-1}\) in terms of A, B, C, and D. Following in the footsteps of Professor Tao <a class="citation" href="#tao_2017">(Tao, 2017)</a>, begin by performing the humble matrix multiplication</p>
+
+\[\scriptsize{ \begin{align*}
+\boldsymbol{M} \begin{bmatrix}  x \\ y\end{bmatrix} &amp;= \begin{bmatrix} a \\ b\end{bmatrix} \\
+\Rightarrow \begin{bmatrix} Ax + By   \\ Cx + Dy \end{bmatrix}        &amp;= \begin{bmatrix} a \\ b\end{bmatrix} \tag{1}
+ \end{align*}
+}\]
+
+<p>where we have stacked the \(x,y,a,\) and \(b\) column vectors. Rearranging terms on the top band gives:</p>
+
+\[\scriptsize{	x = A^{-1}(a - By) } \tag{2}\]
+
+<p>,thereby neccessitating the invertibility of \(A\). Substituting the above expression of \(x\) into the bottom band gives:</p>
+
+\[\scriptsize{ \begin{align*}
+ 		b &amp;= CA^{-1}a - CA^{-1}By + Dy  \\
+ 		\Rightarrow y &amp;= (D - CA^{-1}B )^{-1}(b - CA^{-1}a ) \tag{3}
+\end{align*} }\]
+
+<p>,thereby neccessitating as well the invertibility of \((D- CA^{-1}B)\). Substituting this expression of \(y\) back into eq.2 yields:</p>
+
+\[\scriptsize{
+\begin{align*}
+x &amp;= A^{-1}a - A^{-1}B(D - CA^{-1}B)^{-1}(b-CA^{-1})a \\
+&amp;= (A^{-1} + A^{-1}B(D -CA^{-1}B)^{-1}CA^{-1}) a - A^{-1}B(D -CA^{-1}B)^{-1}b \tag{4}
+\end{align*} }\]
+
+<p>Comparing eq.3 and eq.4 with the observation that</p>
+
+\[\scriptsize{ \begin{align*}
+\Rightarrow \begin{bmatrix} x \\ y \end{bmatrix}        &amp;= \boldsymbol{M}^{-1}\begin{bmatrix} a \\ b\end{bmatrix} \\
+ \end{align*}
+}\]
+
+<p>, we justly combine the two to arrive at</p>
+
+\[\scriptsize{ \begin{align*}
+ \begin{bmatrix} x \\ y \end{bmatrix}        = \boldsymbol{M}^{-1}\begin{bmatrix} a \\ b\end{bmatrix} &amp;= \begin{bmatrix} A^{-1} + A^{-1}B(D - CA^{-1}B)^{-1}CA^{-1}  &amp; -A^{-1}B(D -CA^{-1}B)^{-1} \\
+-(D - CA^{-1}B )^{-1}CA^{-1} &amp; (D - CA^{-1}B )^{-1} \end{bmatrix}\begin{bmatrix} a \\ b\end{bmatrix} \\
+&amp;= \begin{bmatrix} \tilde{M}_1 &amp; \tilde{M}_{1,2} \\ \tilde{M}_{2,1} &amp; \tilde{M}_2 \end{bmatrix}\begin{bmatrix} a \\ b\end{bmatrix} \tag{5}
+ \end{align*}  }\]
+
+<p>\((D - CA^{-1}B) := \boldsymbol{M}/A\) is known as the Schur complement of the block \(A\) of \(\boldsymbol{M}\).</p>
+
+<p>With \(\boldsymbol{M}\) written as such, we can conveniently extract \(A^{-1}\) and write it in terms of the blocks of \(M^{-1}\) by noticing that</p>
+
+\[\scriptsize{ \tilde{M}_1 - \tilde{M}_{1,2}\tilde{M_2}^{-1}\tilde{M}_{2,1} = A^{-1} }\]
+
+<p>Interestingly, if \(A\) is invertible, we could decompose \(\boldsymbol{M}\) into</p>
+
+\[\scriptsize{
+\boldsymbol{M} = \begin{bmatrix} I &amp; 0 \\ CA^{-1} &amp; I \end{bmatrix}\begin{bmatrix} A &amp; 0 \\ 0 &amp;  D-CA^{-1}B \end{bmatrix} \begin{bmatrix} I &amp; A^{-1}B \\ 0 &amp; I  \end{bmatrix}  }\]
+
+<p>so that \(det(M) = det(A)det(D-CA^{-1}B) = det(A)det(\tilde{M}_2^{-1})\).</p>
+
+<hr />
+<p>\(\)</p>
+<h4 id="a-brief-detour"><strong>A Brief Detour</strong></h4>
+
+<p>Let’s return for a moment to eq.1. Had we not solved for \(x\) first there and instead solved for \(y\) by rearranging the bottom band first, we would have branched off on a different path:</p>
+
+\[\scriptsize{ y = D^{-1}(b-Cx) } \tag{6}\]
+
+<p>, thereby necessitating the invertibility of \(D\).</p>
+
+<p>Substituting the above expression of \(y\) back into the top band, gives</p>
+
+\[\scriptsize{ \begin{align*} a &amp;= Ax + B(D^{-1}(b-Cx)) \\
+\Rightarrow (A-BD^{-1}C)x &amp;= a - BD^{-1}b \\
+\Rightarrow x &amp;= (A-BD^{-1}C)^{-1}(a - BD^{-1}b)  \tag{7}
+\end{align*}
+}\]
+
+<p>, thereby neccessitating as well the invertibility of \((A-BD^{-1}C)\). Substituting the expression of \(x\) back into eq.6 gives:</p>
+
+\[\scriptsize{ \begin{align*}
+y &amp;= D^{-1}(b-C(A-BD^{-1}C)^{-1}(a - BD^{-1}b)) \\
+&amp;= -D^{-1}C(A-BD^{-1}C)^{-1}a + ( D^{-1} + D^{-1}C(A-BD^{-1}C)^{-1}BD^{-1})b\tag{8} 
+\end{align*}
+}\]
+
+<p>Collecting terms in eq.7 and eq.8 yields:</p>
+
+\[\scriptsize{
+\begin{align*}
+\begin{bmatrix}  x \\ y \end{bmatrix} &amp;= \boldsymbol{M}^{-1}\begin{bmatrix} a \\b\end{bmatrix} \\
+&amp;= \begin{bmatrix} (A-BD^{-1}C)^{-1} &amp; -(A-BD^{-1}C)^{-1}BD^{-1} \\ 
+-D^{-1}(C(A-BD^{-1}C)^{-1} &amp; D^{-1} + D^{-1}C(A-BD^{-1}C)^{-1}BD^{-1} \end{bmatrix} \begin{bmatrix} a \\b\end{bmatrix} \tag{8} \\
+\end{align*} 
+}\]
+
+<p>\((A-BD^{-1}C) := \boldsymbol{M}/D\) is known as the Schur complement of the block \(D\) of \(\boldsymbol{M}\). Making a similar observation as with \(A^{-1}\), we could extract \(D^{-1}\) and write it in terms of the blocks of \(\boldsymbol{M}^{-1}\):</p>
+
+\[\scriptsize{ D^{-1} =\tilde{M}_2 - \tilde{M}_{2,1}\tilde{M}_1^{-1}\tilde{M}_{1,2}  }\]
+
+<p>If we equated the expression of \(\boldsymbol{M}^{-1}\) in eq.8 with that in eq. 5, we would arrive at</p>
+
+<p>\(\)
+\((A-BD^{-1}C)^{-1} = A^{-1} + A^{-1}B(D - CA^{-1}B)^{-1}CA^{-1} \tag{9}\)
+\(\)</p>
+
+<p>If we negated \(B\) to \(-B\) and set \(D\) to Identity \(I\), we would instantly produce</p>
+
+<p>\(\)
+\((A+BC)^{-1} = A^{-1} - A^{-1}B(I+ CA^{-1}B)^{-1}CA^{-1} \tag{10}\)
+\(\)</p>
+
+<p>Eq.10 is known as the Matrix Inversion Lemma. And lastly, if we set the composite \(BC \leftarrow uv^T\) to a perturbation matrix of rank one such that \(B := u\) and \(C := v^T\), we would then reproduce the Sherman-Morrison-Woodbury formula:</p>
+
+\[(A+uv^T)^{-1} = A^{-1} - \frac{A^{-1}uv^TA^{-1}}{1 + v^TA^{-1}u} \tag{11}\]
+
+<p>The second term follows from the fact that  \((I + CA^{-1}B)\) is a scalar in this particular setting. Eq.11 affords us the luxury of not having to directly invert the perturbed matrix once the price of inverting the original unperturbed \(A\) has been paid.</p>
+
+<hr />
+
+<hr />
+<p>\(\)</p>
+<h3 id="references">References</h3>
+<ol class="bibliography"><li><span id="tao_2017">Tao, T. (2017). <i>Inverting the Schur complement, and large-dimensional Gelfand-Tsetlin patterns</i>. https://terrytao.wordpress.com/2017/09/16/inverting-the-schur-complement-and-large-dimensional-gelfand-tsetlin-patterns/</span></li></ol>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Tutch Sottithat Winyarat</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Tutch Sottithat Winyarat</li><li><a class="u-email" href="mailto:winyarat@seas.upenn.edu">winyarat@seas.upenn.edu</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/twinyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">twinyarat</span></a></li><li><a href="https://www.linkedin.com/in/winyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">winyarat</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

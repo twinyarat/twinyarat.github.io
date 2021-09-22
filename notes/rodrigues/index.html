@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Tutch Sottithat Winyarat | A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</title>
+<meta name="generator" content="Jekyll v4.2.0" />
+<meta property="og:title" content="Tutch Sottithat Winyarat" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<meta property="og:description" content="A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021" />
+<link rel="canonical" href="twinyarat.github.io/notes/rodrigues/" />
+<meta property="og:url" content="twinyarat.github.io/notes/rodrigues/" />
+<meta property="og:site_name" content="Tutch Sottithat Winyarat" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Tutch Sottithat Winyarat" />
+<script type="application/ld+json">
+{"description":"A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021","headline":"Tutch Sottithat Winyarat","url":"twinyarat.github.io/notes/rodrigues/","@type":"WebPage","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="twinyarat.github.io/feed.xml" title="Tutch Sottithat Winyarat" /><!-- for mathjax support -->
+	
+	  <script type="text/x-mathjax-config">
+	    MathJax.Hub.Config({
+	    TeX: { equationNumbers: { autoNumber: "AMS" } }
+	    });
+	  </script>
+	  <script type="text/javascript" async src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	
+</head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Tutch Sottithat Winyarat</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/notes/">Notes</a><a class="page-link" href="/projects/">Projects</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title"></h1>
+  </header>
+
+  <div class="post-content">
+    <h3 id="rodrigues-formula"><strong>Rodrigues’ Formula</strong></h3>
+<hr />
+<hr />
+<p>\(\)</p>
+
+<p>Attributed to French mathematician Benjamin Olinde Rodrigues, Rodrigues’ formula is an expression that relates angle-axis representations to rotation matrices. Before we begin deriving the formula, it will be convenient to first study some facts about powers and exponentials of skew-symmetric matrices. Without further ado, let \(\vec{a} = \begin{bmatrix} a_1 &amp; a_2 &amp; a_3 \end{bmatrix}^T \in \mathbb{R^3}\) and</p>
+
+\[\scriptsize{  \hat{\vec{a}} = [\boldsymbol{A}] = \begin{bmatrix} 0 &amp; -a_3 &amp; a_2 \\ a_3 &amp; 0 &amp; -a_1 \\ -a_2 &amp; a_1 &amp; 0 \end{bmatrix} }\]
+
+<p>be its associated skew-symmetric matrix. Taking the second power of \([\boldsymbol{A}]\) gives<br />
+\(\)</p>
+
+\[\scriptsize{ \begin{align*}
+ [\boldsymbol{A}]^2 &amp;= \begin{bmatrix}-{a_{2}}^2-{a_{3}}^2 &amp; a_{1}\,a_{2} &amp; a_{1}\,a_{3}\\ a_{1}\,a_{2} &amp; -{a_{1}}^2-{a_{3}}^2 &amp; a_{2}\,a_{3}\\ a_{1}\,a_{3} &amp; a_{2}\,a_{3} &amp; -{a_{1}}^2-{a_{2}}^2 \end{bmatrix}
+\end{align*}}\]
+
+<p>Taking the third power gives</p>
+
+<p>\(\scriptsize{ \begin{align*}
+ [\boldsymbol{A}]^3 &amp;= \begin{bmatrix} 0 &amp; a_{3}\,{a_{1}}^2+a_{3}\,\left({a_{2}}^2+{a_{3}}^2\right) &amp; -a_{2}\,{a_{1}}^2-a_{2}\,\left({a_{2}}^2+{a_{3}}^2\right)\\ -a_{3}\,{a_{2}}^2-a_{3}\,\left({a_{1}}^2+{a_{3}}^2\right) &amp; 0 &amp; a_{1}\,{a_{2}}^2+a_{1}\,\left({a_{1}}^2+{a_{3}}^2\right)\\ a_{2}\,{a_{3}}^2+a_{2}\,\left({a_{1}}^2+{a_{2}}^2\right) &amp; -a_{1}\,{a_{3}}^2-a_{1}\,\left({a_{1}}^2+{a_{2}}^2\right) &amp; 0 \end{bmatrix} \\
+\\
+&amp;= -\lVert \vec{a} \lVert ^2 [\boldsymbol{A}]
+\end{align*} }\)
+\(\)</p>
+
+<p>Continuing in this fashion, the powers of \([\boldsymbol{A}]\) can in general be written as</p>
+
+\[[\boldsymbol{A}]^{2m+1} = (-1)^m \lVert \vec{a} \lVert^{2m}[\boldsymbol{A}] \tag{1}\]
+
+<p>for odd powers and \(\forall m \in \mathbb{Z^{0+}}\), and</p>
+
+\[[\boldsymbol{A}]^{2m} = (-1)^{m-1} \lVert \vec{a} \lVert^{2m-2}[\boldsymbol{A}]^2 \tag{2}\]
+
+<p>for even powers and \(\forall m \in \mathbb{Z^{+}}\). Exponentiating the matrix \([\boldsymbol{A}]\) then yields</p>
+
+\[\begin{align*}
+ e^{[\boldsymbol{A}]} &amp;= \sum_{n= 0}^{\infty} \frac{1}{n!}[\boldsymbol{A}]^n \\[0.8em]
+ &amp;= I + \sum_{m = 0}^{\infty} \frac{1}{(2m+1)!} [\boldsymbol{A}]^{2m+1} + \sum_{m=1}^{\infty} \frac{1}{2m!}[\boldsymbol{A}]^{2m}\\[0.8em]
+ &amp;= I + \sum_{m = 0}^{\infty} \frac{(-1)^m \lVert \vec{a} \lVert^{2m} }{(2m+1)!} [\boldsymbol{A}] + 
+ \sum_{m = 1}^{\infty} \frac{(-1)^{m-1} \lVert \vec{a} \lVert^{2m-2} }{(2m)!} [\boldsymbol{A}]^2 \\ &amp; \text{by eq.1 and 2}\\[0.8em]
+ &amp;= I + \frac{1}{\lVert \vec{a} \lVert}\sum_{m = 0}^{\infty} \frac{(-1)^m \lVert \vec{a} \lVert^{2m+1} }{(2m+1)!} [\boldsymbol{A}] - \frac{1}{\lVert \vec{a} \lVert^2}\sum_{m = 1}^{\infty} \frac{(-1)^{m} \lVert \vec{a} \lVert^{2m} }{(2m)!} [\boldsymbol{A}]^2  \\[0.8em]
+ &amp;= I + \frac{sin(\lVert \vec{a} \lVert)}{\lVert \vec{a} \lVert} [\boldsymbol{A}] +  \frac{1-cos(\lVert \vec{a} \lVert)}{\lVert \vec{a} \lVert^2}[\boldsymbol{A}]^2  \tag{3}\\[0.8em] &amp; \text{by Taylor series of sine and cosine}
+\end{align*}\]
+
+<hr />
+<p>\(\)</p>
+
+<h4 id="a-linear-differential-equation"><strong>A Linear Differential Equation</strong></h4>
+
+<p>A vector \(\vec{p} \in \mathbb{R^3}\) rotating with an angular velocity \(\omega\) has an instantaneous linear velocity</p>
+
+\[\begin{align*} \dot{\vec{p}} &amp;= \omega \times \vec{p} \\[0.8em]
+&amp;= [\boldsymbol{\hat{\omega}}]\vec{p} \tag{4}\\[0.8em]
+\end{align*}\]
+
+<p>where \([\boldsymbol{\hat{\omega}}]\) is a skew-symmetrix matrix representing a cross-product with \(\omega\).
+Now, recall that a solution to a linear differential equation of the form \(\dot{x} = \boldsymbol{A}x\) is</p>
+
+\[x(t) = e^{\boldsymbol{A}(t-t_0)}x_0 \tag{5}\]
+
+<p>We further observe that the equation for the linear velocity of \(\vec{p}\) is of this form and that its solution must therefore be of the same form as eq.5. When viewed this way, the solution \(\vec{p}'\) to the differential equation in eq.4 can be thought of as a result of instantaneously rotating \(\vec{p}\) about \(u = \frac{\omega}{\lVert \omega \rVert}\) by  \(\theta =  \lVert \omega \rVert \Delta t\). More formally, the displaced vector \(\vec{p}'\) can be written as</p>
+
+\[\begin{align*} \vec{p}' &amp;= e^{[\boldsymbol{\hat{\omega}}]\Delta t} \vec{p} \\[0.8em]
+&amp;= \bigg\{  I + \frac{sin(\lVert \omega\Delta t \lVert )}{\lVert \omega \Delta t \lVert} [\boldsymbol{\hat{\omega}}\Delta t] +  \frac{1-cos(\lVert \omega \Delta t \lVert )}{\lVert \omega \Delta t\lVert^2}[\boldsymbol{\hat{\omega}} \Delta t ]^2 \bigg\} \vec{p} \\[0.8em]
+&amp; \text{by eq.3 } \\[0.8em]
+&amp;= \bigg\{  I + \frac{sin(\lVert \omega\Delta t \lVert )}{\lVert \omega \lVert} [\boldsymbol{\hat{\omega}}] +  \frac{1-cos(\lVert \omega \Delta t \lVert )}{\lVert \omega \lVert^2}[\boldsymbol{\hat{\omega}} ]^2 \bigg\} \vec{p} \\[0.8em]
+&amp;= \bigg\{  I + \frac{sin(\lVert \omega\Delta t \lVert )}{\lVert \omega \lVert} [\boldsymbol{\hat{\omega}}] +  \frac{1-cos(\lVert \omega \Delta t \lVert )}{\lVert \omega \lVert^2} \big\{ \omega \omega^T - \lVert \omega \rVert ^2 I \big\} \bigg\} \vec{p} \\[0.8em]
+&amp;\text{by the fact that } \space [\boldsymbol{\hat{\omega}} ]^2 = \omega \omega^T - \lVert \omega \rVert ^2 I  \\[0.8em]
+&amp;= \bigg\{  I + sin(\theta) [\boldsymbol{\hat{u}}] +  (1-cos(\theta )) \big\{ uu^T - \lVert u \rVert ^2 I \big\} \bigg\} \vec{p} \\[0.8em]
+&amp;= \underbrace{\bigg\{  cos(\theta)I + uu^T(1-cos(\theta)) +sin(\theta)[\boldsymbol{\hat{u}}] \bigg\}}_{:= R} \vec{p} \tag{6}\\[0.8em]
+\end{align*}\]
+
+<p>Eq.6 is known as <em>Rodrigues’ formula</em>. It is an expression of a rotation matrix \(R\) in terms of an axis of rotation \(u\) and an angle \(\theta\). Conversely, we can also ask: Given a rotation matrix \(R\), what are its underlying angle-axis parameters? Symmetry in \(R\) allows us to write</p>
+
+\[cos(\theta) = \frac{\tau-1}{2}\]
+
+<p>so that \(\theta = arccos(\frac{\tau-1}{2})\), where \(\tau\) is the trace of \(R\). Furthermore, for a given \(\theta\), symmetry once again allows us to write</p>
+
+\[[\boldsymbol{\hat{u}}] = \frac{R-R^T}{2sin(\theta)}\]
+
+<p>to recover the axis of rotation \(u\). Note that \(\theta\) and \(u\) cannot be recovered at points of singularity, namely when \(\theta\) is an integer multiple of \(\pi\) or when \(\tau = 3\). When they are recoverable, the angle-axis of rotation pairs are however not unique due to the ambiguity inherent in \(arccos(\cdot)\). Here the algebra aligns with our spatial intuition: Rotating a point \(\vec{p}\) by \(\theta\) about \(u\) produces the same vector as rotating it by \(-\theta\) about \(-u\).</p>
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Tutch Sottithat Winyarat</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Tutch Sottithat Winyarat</li><li><a class="u-email" href="mailto:winyarat@seas.upenn.edu">winyarat@seas.upenn.edu</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/twinyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">twinyarat</span></a></li><li><a href="https://www.linkedin.com/in/winyarat"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">winyarat</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A collection of robotics research related to Optimal Control and Dynamics, Motion Planning, Mapping and Localization. University of Pennsylvania 2021</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
